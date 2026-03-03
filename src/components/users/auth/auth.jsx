@@ -105,33 +105,39 @@ const Auth = () => {
       />
       <Card className="authentication">
         {currentMutation.isPending && <LoadingSpinner asOverlay />}
-        <h2>Login Required</h2>
+        <h2>{isLoginMode ? "Welcome Back!" : "Create an Account"}</h2>
+        <p>
+          {isLoginMode
+            ? "Login to continue."
+            : "Sign up to start sharing places."}
+        </p>
         <hr />
         <form onSubmit={authSubmitHandler}>
           {!isLoginMode && (
-            <Input
-              element="input"
-              id="name"
-              type="text"
-              label="Your Name"
-              validators={[VALIDATOR_REQUIRE()]}
-              errorText="Please enter a name."
-              onInput={inputHandler}
-            />
-          )}
-          {!isLoginMode && (
-            <ImageUpload
-              center
-              id="image"
-              onInput={inputHandler}
-              errorText="Please provide an image."
-            />
+            <>
+              <ImageUpload
+                avatar
+                center
+                id="image"
+                onInput={inputHandler}
+                errorText="Please provide an image."
+              />
+              <Input
+                element="input"
+                id="name"
+                type="text"
+                label="Name"
+                validators={[VALIDATOR_REQUIRE()]}
+                errorText="Please enter a name."
+                onInput={inputHandler}
+              />
+            </>
           )}
           <Input
             element="input"
             id="email"
             type="email"
-            label="E-Mail"
+            label="Email Address"
             validators={[VALIDATOR_EMAIL()]}
             errorText="Please enter a valid email address."
             onInput={inputHandler}
@@ -145,13 +151,15 @@ const Auth = () => {
             errorText="Please enter a valid password, at least 5 characters."
             onInput={inputHandler}
           />
+        </form>
+        <div className="authentication__buttons">
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? "LOGIN" : "SIGNUP"}
           </Button>
-        </form>
-        <Button inverse onClick={switchModeHandler}>
-          SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
-        </Button>
+          <Button inverse onClick={switchModeHandler}>
+            SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
+          </Button>
+        </div>
       </Card>
     </>
   );
