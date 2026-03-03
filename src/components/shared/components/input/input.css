@@ -11,31 +11,54 @@
 .form-control label {
   font-weight: bold;
   margin-bottom: 0.5rem;
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
 
 .form-control input,
 .form-control textarea {
   width: 100%;
   font: inherit;
-  border: 1px solid #ccc;
-  background: #f8f8f8;
-  padding: 0.15rem 0.25rem;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.form-control input::placeholder,
+.form-control textarea::placeholder {
+  color: var(--light-gray);
+  opacity: 0.7;
 }
 
 .form-control input:focus,
 .form-control textarea:focus {
   outline: none;
-  background: #ebebeb;
-  border-color: #510077;
+  background: var(--input-bg);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(125, 91, 166, 0.1);
 }
 
 .form-control--invalid label,
 .form-control--invalid p {
-  color: red;
+  color: var(--accent-color);
 }
 
 .form-control--invalid input,
 .form-control--invalid textarea {
-  border-color: red;
-  background: #ffd1d1;
+  border-color: var(--accent-color);
+  background: var(--input-bg);
+}
+
+/* Dark theme specific adjustments */
+:root[data-theme='dark'] .form-control input:focus,
+:root[data-theme='dark'] .form-control textarea:focus {
+  box-shadow: 0 0 0 2px rgba(155, 127, 196, 0.2);
+}
+
+:root[data-theme='dark'] .form-control--invalid input,
+:root[data-theme='dark'] .form-control--invalid textarea {
+  background: rgba(212, 165, 179, 0.1);
 }

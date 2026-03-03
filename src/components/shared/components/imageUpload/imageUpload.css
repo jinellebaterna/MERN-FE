@@ -8,16 +8,45 @@
 .image-upload__preview {
   width: 13rem;
   height: 13rem;
-  border: 1px solid #ccc;
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   margin-bottom: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  color: var(--text-color);
+}
+
+.image-upload__preview:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border-color: var(--primary-color);
 }
 
 .image-upload__preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 6px;
+}
+
+.image-upload__preview p {
+  color: var(--text-color);
+  opacity: 0.7;
+  margin: 0;
+  padding: 1rem;
+}
+
+/* Error state */
+.image-upload__preview--invalid {
+  border-color: var(--accent-color);
+}
+
+/* Dark theme specific adjustments */
+:root[data-theme='dark'] .image-upload__preview:hover {
+  box-shadow: 0 4px 16px rgba(155, 127, 196, 0.3);
 }

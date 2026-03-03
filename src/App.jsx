@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useCallback, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Users from "./components/users/users";
 import NewPlace from "./components/places/new-place";
@@ -8,6 +10,17 @@ import UpdatePlace from "./components/places/update-place";
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/shared/context/auth-context";
+import { ThemeProvider } from "./components/shared/context/theme-context";
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 const App = () => {
   // Helper function to get valid stored data
@@ -62,6 +75,7 @@ const App = () => {
     setUserId(null);
     setTokenExpirationDate(null);
     localStorage.removeItem("userData");
+    queryClient.clear(); // Clear all cached queries on logout
   }, []);
 
   // Auto-logout when token expires (only set timer, don't logout immediately)
@@ -82,47 +96,56 @@ const App = () => {
   const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn: isLoggedIn,
-        token: token,
-        userId: userId,
-        login: login,
-        logout: logout,
-      }}
-    >
-      <BrowserRouter>
-        <Navigation />
-        <main>
-          <Routes>
-            <Route path="/" element={<Users />} />
-            <Route path="/:userId/places" element={<UserPlaces />} />
-            <Route
-              path="/places/new"
-              element={
-                isLoggedIn ? <NewPlace /> : <Navigate to="/auth" replace />
-              }
-            />
-            <Route
-              path="/places/:placeId"
-              element={
-                isLoggedIn ? <UpdatePlace /> : <Navigate to="/auth" replace />
-              }
-            />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthContext.Provider
+          value={{
+            isLoggedIn: isLoggedIn,
+            token: token,
+            userId: userId,
+            login: login,
+            logout: logout,
+          }}
+        >
+          <BrowserRouter>
+            <Navigation />
+            <main>
+              <Routes>
+                <Route path="/" element={<Users />} />
+                <Route path="/:userId/places" element={<UserPlaces />} />
+                <Route
+                  path="/places/new"
+                  element={
+                    isLoggedIn ? <NewPlace /> : <Navigate to="/auth" replace />
+                  }
+                />
+                <Route
+                  path="/places/:placeId"
+                  element={
+                    isLoggedIn ? (
+                      <UpdatePlace />
+                    ) : (
+                      <Navigate to="/auth" replace />
+                    )
+                  }
+                />
 
-            <Route
-              path="/auth"
-              element={!isLoggedIn ? <Auth /> : <Navigate to="/" replace />}
-            />
+                <Route
+                  path="/auth"
+                  element={!isLoggedIn ? <Auth /> : <Navigate to="/" replace />}
+                />
 
-            <Route
-              path="*"
-              element={<Navigate to={isLoggedIn ? "/" : "/auth"} replace />}
-            />
-          </Routes>
-        </main>
-      </BrowserRouter>
-    </AuthContext.Provider>
+                <Route
+                  path="*"
+                  element={<Navigate to={isLoggedIn ? "/" : "/auth"} replace />}
+                />
+              </Routes>
+            </main>
+          </BrowserRouter>
+        </AuthContext.Provider>
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

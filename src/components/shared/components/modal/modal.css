@@ -4,7 +4,7 @@
   top: 22vh;
   left: 10%;
   width: 80%;
-  background: white;
+  background: var(--background-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 8px;
 }
@@ -12,8 +12,10 @@
 .modal__header {
   width: 100%;
   padding: 1rem 0.5rem;
-  background: #2a006e;
+  background: var(--primary-color);
   color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .modal__header h2 {
@@ -22,10 +24,12 @@
 
 .modal__content {
   padding: 1rem 0.5rem;
+   color: #333;
 }
 
 .modal__footer {
   padding: 1rem 0.5rem;
+  text-align: right;
 }
 
 @media (min-width: 768px) {

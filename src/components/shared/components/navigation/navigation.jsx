@@ -19,7 +19,7 @@ const Navigation = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
       {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
       <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
         <nav className="main-navigation__drawer-nav">
@@ -43,7 +43,7 @@ const Navigation = () => {
           <NavLinks />
         </nav>
       </MainHeader>
-    </React.Fragment>
+    </>
   );
 };
 

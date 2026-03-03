@@ -1,18 +1,47 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
 
-
-/* COLOR VARIABLES */
-:root {
+/* LIGHT THEME (DEFAULT) */
+:root[data-theme='light'] {
   --primary-color: #7D5BA6;       /* Muted Purple */
   --accent-color: #C08F9D;        /* Dusty Rose */
   --secondary-color: #5CA4A9;     /* Soft Teal */
   --background-color: #F5F5F5;    /* Off-white */
   --light-gray: #D9D9D9;          /* For borders, subtle elements */
   --text-color: #333333;          /* Default text */
+  --card-background: #FFFFFF;     /* Card background */
+  --input-bg: #FFFFFF;            /* Input background */
+  --input-border: #D9D9D9;        /* Input border */
   --hover-bg-color: #C08F9D;      /* Button hover background */
   --hover-text-color: #FFFFFF;    /* Button hover text */
+  --nav-bg: #7D5BA6;              /* Navigation background */
+  --nav-text: #FFFFFF;            /* Navigation text */
   --nav-hover-bg: #f8df00;        /* Nav button hover background */
   --nav-hover-text: #292929;      /* Nav button hover text */
+  --button-bg: #7D5BA6;           /* Button background */
+  --button-text: #FFFFFF;         /* Button text */
+  --shadow-color: rgba(0, 0, 0, 0.26);
+}
+
+/* DARK THEME */
+:root[data-theme='dark'] {
+  --primary-color: #9B7FC4;       /* Lighter Muted Purple */
+  --accent-color: #D4A5B3;        /* Lighter Dusty Rose */
+  --secondary-color: #7BC5CA;     /* Lighter Soft Teal */
+  --background-color: #1a1a1a;    /* Dark background */
+  --light-gray: #444444;          /* Darker gray for borders */
+  --text-color: #E5E5E5;          /* Light text */
+  --card-background: #2d2d2d;     /* Dark card background */
+  --input-bg: #2d2d2d;            /* Dark input background */
+  --input-border: #444444;        /* Dark input border */
+  --hover-bg-color: #D4A5B3;      /* Button hover background */
+  --hover-text-color: #1a1a1a;    /* Button hover text */
+  --nav-bg: #9B7FC4;              /* Navigation background */
+  --nav-text: #FFFFFF;            /* Navigation text */
+  --nav-hover-bg: #f8df00;        /* Nav button hover background */
+  --nav-hover-text: #1a1a1a;      /* Nav button hover text */
+  --button-bg: #9B7FC4;           /* Button background */
+  --button-text: #FFFFFF;         /* Button text */
+  --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -26,8 +55,28 @@ html {
 body {
   margin: 0;
   background: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* SHADOWS */
+.card,
+.modal,
+.place-item__content {
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* LINKS */
+a {
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* ANIMATIONS */
 .slide-in-left-enter {
   transform: translateX(-100%);
 }
@@ -54,4 +103,20 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* THEME TOGGLE BUTTON */
+.theme-toggle {
+  background: transparent !important;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.3s ease;
+  color: var(--nav-text);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.2);
+  background: transparent !important;
 }

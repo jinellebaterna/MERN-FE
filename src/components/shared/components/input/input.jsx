@@ -9,12 +9,19 @@ const inputReducer = (state, action) => {
       return {
         ...state,
         value: action.val,
-        isValid: validate(action.val, action.validators)
+        isValid: validate(action.val, action.validators),
       };
     case "TOUCH": {
       return {
         ...state,
-        isTouched: true
+        isTouched: true,
+      };
+    }
+    case "INIT": {
+      return {
+        value: action.val,
+        isValid: action.isValid,
+        isTouched: false,
       };
     }
     default:
@@ -22,31 +29,42 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = props => {
+const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue || "",
     isTouched: false,
-    isValid: props.initialValid || false
+    isValid: props.initialValid || false,
   });
 
   const { id, onInput } = props;
   const { value, isValid } = inputState;
 
+  // Add this useEffect to handle initialValue changes
+  useEffect(() => {
+    if (props.initialValue !== undefined) {
+      dispatch({
+        type: "INIT",
+        val: props.initialValue,
+        isValid: props.initialValid,
+      });
+    }
+  }, [props.initialValue, props.initialValid]);
+
   useEffect(() => {
     onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
 
-  const changeHandler = event => {
+  const changeHandler = (event) => {
     dispatch({
       type: "CHANGE",
       val: event.target.value,
-      validators: props.validators
+      validators: props.validators,
     });
   };
 
   const touchHandler = () => {
     dispatch({
-      type: "TOUCH"
+      type: "TOUCH",
     });
   };
 
@@ -72,8 +90,9 @@ const Input = props => {
 
   return (
     <div
-      className={`form-control ${!inputState.isValid && inputState.isTouched &&
-        "form-control--invalid"}`}
+      className={`form-control ${
+        !inputState.isValid && inputState.isTouched && "form-control--invalid"
+      }`}
     >
       <label htmlFor={props.id}>{props.label}</label>
       {element}

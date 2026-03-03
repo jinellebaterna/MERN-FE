@@ -5,6 +5,31 @@
   z-index: 100;
   height: 100vh;
   width: 70%;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  background: var(--primary-color); /* muted purple to match navbar */
+  color: var(--background-color); /* off-white text for contrast */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2); /* slightly softer, deeper shadow */
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: transform 0.3s ease-out;
+  transform: translateX(-100%); /* hidden by default */
+}
+
+/* When drawer is open */
+.side-drawer.open {
+  transform: translateX(0);
+}
+
+/* Links inside drawer */
+.side-drawer a {
+  color: var(--background-color); /* off-white links */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.2s ease;
+}
+
+.side-drawer a:hover {
+  color: var(--accent-color); /* dusty rose hover for subtle accent */
 }

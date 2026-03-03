@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 import Card from "../../shared/components/card/card";
 import Button from "../../shared/components/button/button";
@@ -6,13 +8,29 @@ import Modal from "../../shared/components/modal/modal";
 import ErrorModal from "../../shared/components/errorModal/errorModal";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
-import { useHttpClient } from "../../shared/hook/http-hook";
+import { deletePlace } from "../../../api/places";
 import "./place-item.css";
 
 const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const queryClient = useQueryClient();
+  const params = useParams();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deletePlace({ placeId: props.id, token: auth.token }),
+    onSuccess: () => {
+      // Invalidate and refetch places for this user
+      queryClient.invalidateQueries(["places", params.userId]);
+      setShowConfirmModal(false);
+    },
+    onError: (error) => {
+      if (error.message === "UNAUTHORIZED") {
+        auth.logout();
+      }
+    },
+  });
+
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
@@ -21,27 +39,16 @@ const PlaceItem = (props) => {
     setShowConfirmModal(false);
   };
 
-  const confirmDeleteHandler = async () => {
-    setShowConfirmModal(false);
-
-    try {
-      await sendRequest(
-        `http://localhost:5001/api/places/${props.id}`,
-        "DELETE",
-        null,
-        {
-          Authorization: "Bearer " + auth.token,
-        }
-      );
-      props.onDelete(props.id);
-    } catch (err) {
-      console.log(err);
-    }
+  const confirmDeleteHandler = () => {
+    deleteMutation.mutate();
   };
 
   return (
     <>
-      <ErrorModal error={error} onClear={clearError} />
+      <ErrorModal
+        error={deleteMutation.error?.message}
+        onClear={() => deleteMutation.reset()}
+      />
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
@@ -65,7 +72,7 @@ const PlaceItem = (props) => {
       </Modal>
       <li className="place-item">
         <Card className="place-item__content">
-          {isLoading && <LoadingSpinner asOverlay />}
+          {deleteMutation.isPending && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
               src={`http://localhost:5001/${props.image}`}
@@ -79,14 +86,10 @@ const PlaceItem = (props) => {
           </div>
           {auth.userId === props.creatorId && (
             <div className="place-item__actions">
-              {auth.userId === props.creatorId && (
-                <Button to={`/places/${props.id}`}>EDIT</Button>
-              )}
-              {auth.userId === props.creatorId && (
-                <Button danger onClick={showDeleteWarningHandler}>
-                  DELETE
-                </Button>
-              )}
+              <Button to={`/places/${props.id}`}>EDIT</Button>
+              <Button danger onClick={showDeleteWarningHandler}>
+                DELETE
+              </Button>
             </div>
           )}
         </Card>

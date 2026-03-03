@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Input from "../shared/components/input/input";
 import Button from "../shared/components/button/button";
 import ErrorModal from "../shared/components/errorModal/errorModal";
@@ -10,14 +11,15 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
-import { useHttpClient } from "../shared/hook/http-hook";
 import { AuthContext } from "../shared/context/auth-context";
+import { createPlace } from "../../api/places";
 import "./place-form.css";
 
 const NewPlace = () => {
   const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -40,28 +42,41 @@ const NewPlace = () => {
     false
   );
 
+  const mutation = useMutation({
+    mutationFn: createPlace,
+    onSuccess: () => {
+      // Invalidate places query to refetch
+      queryClient.invalidateQueries(["places", auth.userId]);
+      navigate(`/${auth.userId}/places`);
+    },
+    onError: (error) => {
+      if (error.message === "UNAUTHORIZED") {
+        auth.logout();
+      }
+    },
+  });
+
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("title", formState.inputs.title.value);
-      formData.append("description", formState.inputs.description.value);
-      formData.append("address", formState.inputs.address.value);
-      formData.append("creator", auth.userId);
-      formData.append("image", formState.inputs.image.value);
-      await sendRequest("http://localhost:5001/api/places", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
-      });
-      navigate(`/${auth.userId}/places`);
-    } catch (err) {
-      console.log(err);
-    }
+    mutation.mutate({
+      placeData: {
+        title: formState.inputs.title.value,
+        description: formState.inputs.description.value,
+        address: formState.inputs.address.value,
+        creator: auth.userId,
+        image: formState.inputs.image.value,
+      },
+      token: auth.token,
+    });
   };
 
   return (
     <>
-      <ErrorModal error={error} onClear={clearError} />
-      {isLoading && <LoadingSpinner asOverlay />}
+      <ErrorModal
+        error={mutation.error?.message}
+        onClear={() => mutation.reset()}
+      />
+      {mutation.isPending && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeSubmitHandler}>
         <Input
           id="title"
@@ -88,7 +103,11 @@ const NewPlace = () => {
           errorText="Please enter a valid address."
           onInput={inputHandler}
         />
-        <ImageUpload id="image" onInput={inputHandler} />
+        <ImageUpload
+          id="image"
+          onInput={inputHandler}
+          errorText="Please provide an image"
+        />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
         </Button>
