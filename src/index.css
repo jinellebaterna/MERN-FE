@@ -62,11 +62,11 @@ body {
 }
 
 /* SHADOWS */
-.card,
+/* .card,
 .modal,
 .place-item__content {
   box-shadow: 0 2px 8px var(--shadow-color);
-}
+} */
 
 /* LINKS */
 a {
