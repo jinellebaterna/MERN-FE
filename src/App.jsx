@@ -11,6 +11,7 @@ import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/shared/context/auth-context";
 import { ThemeProvider } from "./components/shared/context/theme-context";
+import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -109,38 +110,48 @@ const App = () => {
         >
           <BrowserRouter>
             <Navigation />
-            <main>
-              <Routes>
-                <Route path="/" element={<Users />} />
-                <Route path="/:userId/places" element={<UserPlaces />} />
-                <Route
-                  path="/places/new"
-                  element={
-                    isLoggedIn ? <NewPlace /> : <Navigate to="/auth" replace />
-                  }
-                />
-                <Route
-                  path="/places/:placeId"
-                  element={
-                    isLoggedIn ? (
-                      <UpdatePlace />
-                    ) : (
-                      <Navigate to="/auth" replace />
-                    )
-                  }
-                />
+            <ErrorBoundary>
+              <main>
+                <Routes>
+                  <Route path="/" element={<Users />} />
+                  <Route path="/:userId/places" element={<UserPlaces />} />
+                  <Route
+                    path="/places/new"
+                    element={
+                      isLoggedIn ? (
+                        <NewPlace />
+                      ) : (
+                        <Navigate to="/auth" replace />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/places/:placeId"
+                    element={
+                      isLoggedIn ? (
+                        <UpdatePlace />
+                      ) : (
+                        <Navigate to="/auth" replace />
+                      )
+                    }
+                  />
 
-                <Route
-                  path="/auth"
-                  element={!isLoggedIn ? <Auth /> : <Navigate to="/" replace />}
-                />
+                  <Route
+                    path="/auth"
+                    element={
+                      !isLoggedIn ? <Auth /> : <Navigate to="/" replace />
+                    }
+                  />
 
-                <Route
-                  path="*"
-                  element={<Navigate to={isLoggedIn ? "/" : "/auth"} replace />}
-                />
-              </Routes>
-            </main>
+                  <Route
+                    path="*"
+                    element={
+                      <Navigate to={isLoggedIn ? "/" : "/auth"} replace />
+                    }
+                  />
+                </Routes>
+              </main>
+            </ErrorBoundary>
           </BrowserRouter>
         </AuthContext.Provider>
       </ThemeProvider>
