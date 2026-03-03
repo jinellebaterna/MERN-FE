@@ -51,19 +51,11 @@ const ImageUpload = (props) => {
         onChange={pickedHandler}
       />
       <div className={`image-upload ${props.center && "center"}`}>
-        <div
-          className={
-            props.avatar ? "image-upload__avatar" : "image-upload__preview"
-          }
-        >
+        <div className="image-upload__preview">
           {previewUrl && <img src={previewUrl} alt="preview" />}
-          {props.avatar ? (
-            <div onClick={pickImageHandler}>Upload your photo</div>
-          ) : (
-            <Button type="button" onClick={pickImageHandler}>
-              PICK IMAGE
-            </Button>
-          )}
+          <Button type="button" onClick={pickImageHandler}>
+            PICK IMAGE
+          </Button>
         </div>
       </div>
     </div>

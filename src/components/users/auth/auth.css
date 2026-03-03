@@ -12,17 +12,11 @@
 }
 
 .authentication form {
-  margin: 1.5rem 0;
-  text-align: left;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .authentication h2,
 .authentication p {
   margin: 0px;
-}
-
-.authentication__buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }

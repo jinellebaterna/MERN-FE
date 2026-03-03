@@ -147,19 +147,17 @@ const Auth = () => {
             id="password"
             type="password"
             label="Password"
-            validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="Please enter a valid password, at least 5 characters."
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText="Please enter a valid password, at least 6 characters."
             onInput={inputHandler}
           />
-        </form>
-        <div className="authentication__buttons">
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? "LOGIN" : "SIGNUP"}
           </Button>
-          <Button inverse onClick={switchModeHandler}>
-            SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
-          </Button>
-        </div>
+        </form>
+        <Button inverse onClick={switchModeHandler}>
+          SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
+        </Button>
       </Card>
     </>
   );

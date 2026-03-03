@@ -9,7 +9,7 @@
   width: 13rem;
   height: 13rem;
   border: 2px solid var(--input-border);
-  border-radius: 50%;
+  border-radius: 8px;
   background-color: var(--input-bg);
   display: flex;
   justify-content: center;
@@ -18,22 +18,6 @@
   overflow: hidden;
   transition: all 0.3s ease;
   color: var(--text-color);
-}
-
-.image-upload__avatar {
-  width: 7rem;
-  height: 7rem;
-  border: 2px solid var(--input-border);
-  border-radius: 50%;
-  background-color: var(--input-bg);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  color: var(--text-color);
-  padding: 1.5rem;
 }
 
 .image-upload__preview:hover {
