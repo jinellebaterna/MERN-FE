@@ -5,3 +5,9 @@
   padding: 1rem;
   margin: 0;
 }
+
+.all-places__load-more {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}

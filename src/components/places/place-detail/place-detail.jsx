@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../../shared/context/auth-context";
 import { likePlace, unlikePlace, fetchPlaceById } from "../../../api/places";
 import { useParams } from "react-router-dom";
+import { Heart } from "lucide-react";
 import Card from "../../shared/components/card/card";
 import "./place-detail.css";
 
@@ -57,11 +58,12 @@ const PlaceDetail = () => {
             <p>{place.description}</p>
             {auth.isLoggedIn && (
               <button
-                onClick={() =>
-                  likeMutation.mutate({ placeId, token: auth.token })
-                }
+                className={`like-btn ${isLiked ? "like-btn--liked" : ""}`}
+                onClick={() => likeMutation.mutate({ placeId, token: auth.token })}
+                disabled={likeMutation.isPending}
               >
-                {isLiked ? "Unlike" : "Like"} ({place.likes?.length || 0})
+                <Heart size={20} fill={isLiked ? "currentColor" : "none"} />
+                <span>{place.likes?.length || 0}</span>
               </button>
             )}
           </div>

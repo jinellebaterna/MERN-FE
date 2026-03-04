@@ -19,23 +19,29 @@
   color: var(--text-color);
   text-decoration: none;
   padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .nav-links a:hover,
 .nav-links a:active,
 .nav-links a.active {
   background: var(--secondary-color);
-  border-color: #292929;
-  color: #292929;
+  border-color: var(--nav-hover-text);
+  color: var(--nav-hover-text);
 }
 
 .nav-links button {
   cursor: pointer;
-  border: 1px solid #292929;
-  color: #292929;
+  border: 1px solid var(--nav-hover-text);
+  color: var(--nav-hover-text);
   background: transparent;
   padding: 0.5rem;
   font: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .nav-links button:focus {
@@ -44,7 +50,7 @@
 
 .nav-links button:hover,
 .nav-links button:active {
-  background: #292929;
+  background: var(--nav-hover-text);
   color: white;
 }
 
@@ -70,7 +76,7 @@
 
   .nav-links button:hover,
   .nav-links button:active {
-    background: #f8df00;
-    color: #292929;
+    background: var(--nav-hover-bg);
+    color: var(--nav-hover-text);
   }
 }

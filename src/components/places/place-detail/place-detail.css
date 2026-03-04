@@ -26,3 +26,32 @@
 .place-details-info p {
   margin: 0;
 }
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--light-gray);
+  border-radius: 20px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  color: var(--text-color);
+  font: inherit;
+  transition: all 0.2s ease;
+}
+
+.like-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.like-btn--liked {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.like-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { Users, MapPin, BookMarked, PlusCircle, UserPen, LogIn, LogOut } from "lucide-react";
 
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
@@ -13,36 +14,36 @@ const NavLinks = () => {
     <ul className="nav-links">
       <li>
         <NavLink to="/" end>
-          ALL USERS
+          <Users size={16} /> ALL USERS
         </NavLink>
       </li>
       <li>
-        <NavLink to="/places">ALL PLACES</NavLink>
+        <NavLink to="/places"><MapPin size={16} /> ALL PLACES</NavLink>
       </li>
       {auth.isLoggedIn && (
         <li>
-          <NavLink to={`/${auth.userId}/places`}>MY PLACES</NavLink>
+          <NavLink to={`/${auth.userId}/places`}><BookMarked size={16} /> MY PLACES</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/places/new">ADD PLACE</NavLink>
+          <NavLink to="/places/new"><PlusCircle size={16} /> ADD PLACE</NavLink>
         </li>
       )}
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/users/edit">EDIT PROFILE</NavLink>
+          <NavLink to="/users/edit"><UserPen size={16} /> EDIT PROFILE</NavLink>
         </li>
       )}
       {!auth.isLoggedIn && (
         <li>
-          <NavLink to="/auth">AUTHENTICATE</NavLink>
+          <NavLink to="/auth"><LogIn size={16} /> AUTHENTICATE</NavLink>
         </li>
       )}
 
       {auth.isLoggedIn && (
         <li>
-          <button onClick={auth.logout}>LOGOUT</button>
+          <button onClick={auth.logout}><LogOut size={16} /> LOGOUT</button>
         </li>
       )}
 

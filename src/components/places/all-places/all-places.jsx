@@ -1,6 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchPlaces } from "../../../api/places";
 import PlaceCard from "../place-card/place-card";
+import Button from "../../shared/components/button/button";
+import { ChevronDown } from "lucide-react";
 import "./all-places.css";
 
 const AllPlaces = () => {
@@ -40,9 +42,12 @@ const AllPlaces = () => {
         ))}
       </ul>
       {hasNextPage && (
-        <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Loading..." : "Load More"}
-        </button>
+        <div className="all-places__load-more">
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            <ChevronDown size={16} />
+            {isFetchingNextPage ? "Loading..." : "Load More"}
+          </Button>
+        </div>
       )}
     </>
   );

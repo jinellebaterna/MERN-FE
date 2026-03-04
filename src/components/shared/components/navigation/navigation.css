@@ -157,9 +157,23 @@
   position: relative;
 }
 
+.search-places__input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-places__icon {
+  position: absolute;
+  left: 0.6rem;
+  color: var(--nav-text);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .search-places input {
   width: 100%;
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.75rem 0.4rem 2rem;
   border-radius: 4px;
   border: 1px solid var(--nav-text);
   background: transparent;

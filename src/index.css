@@ -15,8 +15,8 @@
   --hover-text-color: #ffffff; /* Button hover text */
   --nav-bg: #7d5ba6; /* Navigation background */
   --nav-text: #ffffff; /* Navigation text */
-  --nav-hover-bg: #f8df00; /* Nav button hover background */
-  --nav-hover-text: #292929; /* Nav button hover text */
+  --nav-hover-bg: #5ca4a9; /* Nav button hover background */
+  --nav-hover-text: #ffffff; /* Nav button hover text */
   --button-bg: #7d5ba6; /* Button background */
   --button-text: #ffffff; /* Button text */
   --shadow-color: rgba(0, 0, 0, 0.26);
@@ -31,14 +31,14 @@
   --light-gray: #444444; /* Darker gray for borders */
   --text-color: #e5e5e5; /* Light text */
   --card-background: #2d2d2d; /* Dark card background */
-  --input-bg: #2d2d2d; /* Dark input background */
-  --input-border: #444444; /* Dark input border */
+  --input-bg: #3d3d3d; /* Dark input background */
+  --input-border: #555555; /* Dark input border */
   --hover-bg-color: #d4a5b3; /* Button hover background */
   --hover-text-color: #1a1a1a; /* Button hover text */
   --nav-bg: #9b7fc4; /* Navigation background */
   --nav-text: #ffffff; /* Navigation text */
-  --nav-hover-bg: #f8df00; /* Nav button hover background */
-  --nav-hover-text: #1a1a1a; /* Nav button hover text */
+  --nav-hover-bg: #7bc5ca; /* Nav button hover background */
+  --nav-hover-text: #1a1a2e; /* Nav button hover text */
   --button-bg: #9b7fc4; /* Button background */
   --button-text: #ffffff; /* Button text */
   --shadow-color: rgba(0, 0, 0, 0.5);
