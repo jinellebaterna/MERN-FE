@@ -136,9 +136,14 @@ const UpdatePlace = () => {
           initialValue={formState.inputs.description.value}
           initialValid={formState.inputs.description.isValid}
         />
-        <Button type="submit" disabled={!formState.isValid}>
-          UPDATE PLACE
-        </Button>
+        <div className="place-form__actions">
+          <Button type="button" inverse onClick={() => navigate(`/${auth.userId}/places`)}>
+            CANCEL
+          </Button>
+          <Button type="submit" disabled={!formState.isValid}>
+            UPDATE PLACE
+          </Button>
+        </div>
       </form>
     </>
   );

@@ -7,7 +7,9 @@
   color: white;
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .button:focus {
@@ -16,8 +18,9 @@
 
 .button:hover,
 .button:active {
-  background: #6a4790;
-  border-color: #6a4790;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
 }
 
 .button--inverse {
@@ -38,8 +41,8 @@
 
 .button--danger:hover,
 .button--danger:active {
-  background: #a77383;
-  border-color: #a77383;
+  background: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 .button:disabled,

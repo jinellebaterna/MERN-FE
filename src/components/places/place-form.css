@@ -1,3 +1,9 @@
+.place-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
 .place-form {
   list-style: none;
   margin: 0 auto;
