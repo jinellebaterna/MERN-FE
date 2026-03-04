@@ -20,11 +20,13 @@
   width: 100%;
   font: inherit;
   border: 1px solid var(--input-border);
-  background: var(--input-bg);
+  background-color: var(--input-bg);
   color: var(--text-color);
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
   transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .form-control input::placeholder,

@@ -35,3 +35,19 @@
   margin: 0;
   color: var(--secondary-color);
 }
+
+.place-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.tag-badge {
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+}

@@ -25,3 +25,16 @@
   align-items: center;
   gap: 0.4rem;
 }
+
+.user-profile__liked {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.user-profile__liked-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}

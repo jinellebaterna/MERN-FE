@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -21,6 +21,7 @@ const UpdatePlace = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const placeId = useParams().placeId;
+  const [tagsInput, setTagsInput] = useState("");
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -74,16 +75,24 @@ const UpdatePlace = () => {
         },
         true
       );
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTagsInput(place.tags?.join(", ") ?? "");
     }
   }, [setFormData, place]);
 
   const placeUpdateSubmitHandler = (event) => {
     event.preventDefault();
+    const tags = tagsInput
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+
     updateMutation.mutate({
       placeId,
       placeData: {
         title: formState.inputs.title.value,
         description: formState.inputs.description.value,
+        tags,
       },
       token: auth.token,
     });
@@ -136,8 +145,21 @@ const UpdatePlace = () => {
           initialValue={formState.inputs.description.value}
           initialValid={formState.inputs.description.isValid}
         />
+        <div className="place-form__field">
+          <label>Tags (comma-separated)</label>
+          <input
+            type="text"
+            placeholder="e.g. café, paris"
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value)}
+          />
+        </div>
         <div className="place-form__actions">
-          <Button type="button" inverse onClick={() => navigate(`/${auth.userId}/places`)}>
+          <Button
+            type="button"
+            inverse
+            onClick={() => navigate(`/${auth.userId}/places`)}
+          >
             CANCEL
           </Button>
           <Button type="submit" disabled={!formState.isValid}>

@@ -55,3 +55,60 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.comments-section {
+  margin-top: 2rem;
+  padding: 0 50px 50px;
+}
+
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.comment-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--light-gray);
+  position: relative;
+}
+
+.comment-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+}
+
+.comment-delete-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+  font: inherit;
+  resize: vertical;
+}
+
+.place-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}

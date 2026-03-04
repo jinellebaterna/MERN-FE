@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin } from "lucide-react";
-import { fetchUserById } from "../../../api/user";
+import { fetchUserById, fetchLikedPlaces } from "../../../api/user";
 import Avatar from "../../shared/components/avatar/avatar";
 import Card from "../../shared/components/card/card";
+import PlaceCard from "../../places/place-card/place-card";
 import "./user-profile.css";
 
 const UserProfile = () => {
@@ -16,6 +17,11 @@ const UserProfile = () => {
   } = useQuery({
     queryKey: ["user", userId],
     queryFn: () => fetchUserById(userId),
+  });
+
+  const { data: likedPlaces = [] } = useQuery({
+    queryKey: ["likedPlaces", userId],
+    queryFn: () => fetchLikedPlaces(userId),
   });
 
   if (isLoading) return <p>Loading...</p>;
@@ -39,6 +45,23 @@ const UserProfile = () => {
           <MapPin size={16} /> View Places
         </Link>
       </Card>
+      {likedPlaces.length > 0 && (
+        <div className="user-profile__liked">
+          <h3>Liked Places</h3>
+          <ul className="user-profile__liked-list">
+            {likedPlaces.map((place) => (
+              <PlaceCard
+                key={place.id}
+                id={place.id}
+                title={place.title}
+                address={place.address}
+                image={place.image}
+                tags={place.tags}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

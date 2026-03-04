@@ -17,6 +17,22 @@ const PlaceCard = (props) => {
         <div className="place-card__info">
           <h2>{props.title}</h2>
           <p>{props.address}</p>
+          {props.tags?.length > 0 && (
+            <div className="place-card__tags">
+              {props.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="tag-badge"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    props.onTagClick?.(tag);
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </Card>
     </li>

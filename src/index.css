@@ -2,6 +2,7 @@
 
 /* LIGHT THEME (DEFAULT) */
 :root[data-theme="light"] {
+  color-scheme: light;
   --primary-color: #7d5ba6; /* Muted Purple */
   --accent-color: #c08f9d; /* Dusty Rose */
   --secondary-color: #5ca4a9; /* Soft Teal */
@@ -24,6 +25,7 @@
 
 /* DARK THEME */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --primary-color: #9b7fc4; /* Lighter Muted Purple */
   --accent-color: #d4a5b3; /* Lighter Dusty Rose */
   --secondary-color: #7bc5ca; /* Lighter Soft Teal */

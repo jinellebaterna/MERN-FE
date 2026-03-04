@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Input from "../shared/components/input/input";
@@ -41,6 +41,7 @@ const NewPlace = () => {
     },
     false
   );
+  const [tagsInput, setTagsInput] = useState("");
 
   const mutation = useMutation({
     mutationFn: createPlace,
@@ -58,6 +59,11 @@ const NewPlace = () => {
 
   const placeSubmitHandler = async (event) => {
     event.preventDefault();
+    const tags = tagsInput
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+
     mutation.mutate({
       placeData: {
         title: formState.inputs.title.value,
@@ -65,6 +71,7 @@ const NewPlace = () => {
         address: formState.inputs.address.value,
         creator: auth.userId,
         image: formState.inputs.image.value,
+        tags: tags,
       },
       token: auth.token,
     });
@@ -108,6 +115,15 @@ const NewPlace = () => {
           onInput={inputHandler}
           errorText="Please provide an image"
         />
+        <div className="place-form__field">
+          <label>Tags (comma-separated)</label>
+          <input
+            type="text"
+            placeholder="e.g. café, paris"
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value)}
+          />
+        </div>
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
         </Button>

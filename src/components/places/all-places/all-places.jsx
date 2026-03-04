@@ -1,11 +1,14 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { searchPlaces } from "../../../api/places";
+import { useState } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { fetchPopularPlaces, searchPlaces } from "../../../api/places";
 import PlaceCard from "../place-card/place-card";
 import Button from "../../shared/components/button/button";
 import { ChevronDown } from "lucide-react";
 import "./all-places.css";
 
 const AllPlaces = () => {
+  const [activeTag, setActiveTag] = useState(null);
+
   const {
     data,
     isLoading,
@@ -14,8 +17,9 @@ const AllPlaces = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["places", "all"],
-    queryFn: ({ pageParam }) => searchPlaces({ page: pageParam, limit: 9 }),
+    queryKey: ["places", "all", activeTag],
+    queryFn: ({ pageParam }) =>
+      searchPlaces({ page: pageParam, limit: 9, tag: activeTag ?? "" }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.currentPage < lastPage.totalPages
@@ -23,13 +27,58 @@ const AllPlaces = () => {
         : undefined,
   });
 
+  const { data: popularPlaces = [] } = useQuery({
+    queryKey: ["places", "popular"],
+    queryFn: () => fetchPopularPlaces(6),
+  });
+
   const places = data?.pages.flatMap((page) => page.places) ?? [];
+  const allTags = [...new Set(places.flatMap((p) => p.tags ?? []))];
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong.</p>;
 
   return (
     <>
+      {popularPlaces.length > 0 && (
+        <section className="popular-section">
+          <h2>Popular Places</h2>
+          <ul className="popular-list">
+            {popularPlaces.map((place) => (
+              <PlaceCard
+                key={place.id || place._id}
+                id={place.id || place._id}
+                title={place.title}
+                address={place.address}
+                image={place.image}
+                tags={place.tags}
+                onTagClick={setActiveTag}
+              />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {allTags.length > 0 && (
+        <div className="tag-filters">
+          <span
+            className={`filter-chip ${!activeTag ? "filter-chip--active" : ""}`}
+            onClick={() => setActiveTag(null)}
+          >
+            All
+          </span>
+          {allTags.map((tag) => (
+            <span
+              key={tag}
+              className={`filter-chip ${activeTag === tag ? "filter-chip--active" : ""}`}
+              onClick={() => setActiveTag(tag)}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
       <ul className="all-places-list">
         {places.map((place) => (
           <PlaceCard
@@ -38,6 +87,8 @@ const AllPlaces = () => {
             title={place.title}
             address={place.address}
             image={place.image}
+            tags={place.tags}
+            onTagClick={setActiveTag}
           />
         ))}
       </ul>

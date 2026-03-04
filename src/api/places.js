@@ -1,4 +1,3 @@
-// src/api/places.js
 export const fetchUsers = async () => {
   const response = await fetch("http://localhost:5001/api/users");
   if (!response.ok) {
@@ -37,6 +36,10 @@ export const createPlace = async ({ placeData, token }) => {
   formData.append("address", placeData.address);
   formData.append("creator", placeData.creator);
   formData.append("image", placeData.image);
+
+  if (placeData.tags?.length) {
+    placeData.tags.forEach((t) => formData.append("tags", t));
+  }
 
   const response = await fetch("http://localhost:5001/api/places", {
     method: "POST",
@@ -103,12 +106,14 @@ export const deletePlace = async ({ placeId, token }) => {
 export const searchPlaces = async ({
   search = "",
   creator = "",
+  tag = "",
   page = 1,
   limit = 9,
 } = {}) => {
   const params = new URLSearchParams();
   if (search) params.append("search", search);
   if (creator) params.append("creator", creator);
+  if (tag) params.append("tag", tag);
   params.append("page", page);
   params.append("limit", limit);
 
@@ -148,4 +153,55 @@ export const unlikePlace = async ({ placeId, token }) => {
     throw new Error(data.message || "Failed to unlike place");
   }
   return response.json();
+};
+
+export const fetchComments = async (placeId) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/comments`
+  );
+  if (!response.ok) throw new Error("Failed to fetch comments");
+  const data = await response.json();
+  return data.comments;
+};
+
+export const addComment = async ({ placeId, text, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/comments`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ text }),
+    }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to add comment");
+  }
+  return response.json();
+};
+
+export const deleteComment = async ({ placeId, commentId, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/comments/${commentId}`,
+    { method: "DELETE", headers: { Authorization: "Bearer " + token } }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to delete comment");
+  }
+  return response.json();
+};
+
+export const fetchPopularPlaces = async (limit = 6) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/popular?limit=${limit}`
+  );
+  if (!response.ok) throw new Error("Failed to fetch popular places");
+  const data = await response.json();
+  return data.places;
 };
