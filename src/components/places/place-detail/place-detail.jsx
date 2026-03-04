@@ -15,6 +15,8 @@ import { useParams } from "react-router-dom";
 import { Heart } from "lucide-react";
 import Card from "../../shared/components/card/card";
 import "./place-detail.css";
+import WeatherWidget from "../../places/weather-widget/weather-widget";
+import ClimateChart from "../../places/climate-chart/climate-chart";
 
 const PlaceDetail = () => {
   const { placeId } = useParams();
@@ -99,6 +101,8 @@ const PlaceDetail = () => {
               </div>
             )}
             <p>{place.description}</p>
+            <WeatherWidget address={place.address} />
+            <ClimateChart address={place.address} />
             {auth.isLoggedIn && (
               <button
                 className={`like-btn ${isLiked ? "like-btn--liked" : ""}`}

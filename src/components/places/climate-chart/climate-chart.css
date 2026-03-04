@@ -1,0 +1,28 @@
+.climate-chart {
+  margin-top: 1.5rem;
+}
+
+.climate-chart h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.climate-chart table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.climate-chart th,
+.climate-chart td {
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.climate-chart th {
+  font-weight: 600;
+  color: #444;
+}
