@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { fetchPopularPlaces, searchPlaces } from "../../../api/places";
 import PlaceCard from "../place-card/place-card";
 import Button from "../../shared/components/button/button";
 import { ChevronDown } from "lucide-react";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./all-places.css";
 
 const AllPlaces = () => {
   const [activeTag, setActiveTag] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const auth = useContext(AuthContext);
 
   const {
     data,
@@ -32,8 +35,18 @@ const AllPlaces = () => {
     queryFn: () => fetchPopularPlaces(6),
   });
 
-  const places = data?.pages.flatMap((page) => page.places) ?? [];
-  const allTags = [...new Set(places.flatMap((p) => p.tags ?? []))];
+  const allPlaces = data?.pages.flatMap((page) => page.places) ?? [];
+  const allTags = [...new Set(allPlaces.flatMap((p) => p.tags ?? []))];
+
+  const places = auth.userId
+    ? allPlaces.filter((p) => {
+        if (statusFilter === "visited")
+          return p.visitedBy?.includes(auth.userId);
+        if (statusFilter === "want")
+          return p.wantToVisitBy?.includes(auth.userId);
+        return true;
+      })
+    : allPlaces;
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong.</p>;
@@ -57,6 +70,24 @@ const AllPlaces = () => {
             ))}
           </ul>
         </section>
+      )}
+
+      {auth.isLoggedIn && (
+        <div className="status-filters">
+          {["all", "visited", "want"].map((f) => (
+            <span
+              key={f}
+              className={`filter-chip ${statusFilter === f ? "filter-chip--active" : ""}`}
+              onClick={() => setStatusFilter(f)}
+            >
+              {f === "all"
+                ? "All"
+                : f === "visited"
+                  ? "✓ Visited"
+                  : "♡ Want to Visit"}
+            </span>
+          ))}
+        </div>
       )}
 
       {allTags.length > 0 && (
@@ -88,6 +119,8 @@ const AllPlaces = () => {
             address={place.address}
             images={place.images}
             tags={place.tags}
+            visitedBy={place.visitedBy}
+            wantToVisitBy={place.wantToVisitBy}
             onTagClick={setActiveTag}
           />
         ))}

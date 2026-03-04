@@ -10,6 +10,10 @@ import {
   fetchComments,
   addComment,
   deleteComment,
+  markVisited,
+  unmarkVisited,
+  markWantToVisit,
+  unmarkWantToVisit,
 } from "../../../api/places";
 import { geocodeAddress } from "../../../api/weather";
 import { useParams } from "react-router-dom";
@@ -46,6 +50,8 @@ const PlaceDetail = () => {
   });
 
   const isLiked = place?.likes?.includes(auth.userId);
+  const isVisited = place?.visitedBy?.includes(auth.userId);
+  const isWantToVisit = place?.wantToVisitBy?.includes(auth.userId);
   const [commentText, setCommentText] = useState("");
 
   const likeMutation = useMutation({
@@ -68,6 +74,50 @@ const PlaceDetail = () => {
       queryClient.invalidateQueries({ queryKey: ["place", placeId] });
     },
   });
+  const visitedMutation = useMutation({
+    mutationFn: isVisited ? unmarkVisited : markVisited,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["place", placeId] });
+      const previous = queryClient.getQueryData(["place", placeId]);
+      queryClient.setQueryData(["place", placeId], (old) => ({
+        ...old,
+        visitedBy: isVisited
+          ? old.visitedBy.filter((id) => id !== auth.userId)
+          : [...(old.visitedBy || []), auth.userId],
+        wantToVisitBy: (old.wantToVisitBy || []).filter((id) => id !== auth.userId),
+      }));
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      queryClient.setQueryData(["place", placeId], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["place", placeId] });
+    },
+  });
+
+  const wantToVisitMutation = useMutation({
+    mutationFn: isWantToVisit ? unmarkWantToVisit : markWantToVisit,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["place", placeId] });
+      const previous = queryClient.getQueryData(["place", placeId]);
+      queryClient.setQueryData(["place", placeId], (old) => ({
+        ...old,
+        wantToVisitBy: isWantToVisit
+          ? old.wantToVisitBy.filter((id) => id !== auth.userId)
+          : [...(old.wantToVisitBy || []), auth.userId],
+        visitedBy: (old.visitedBy || []).filter((id) => id !== auth.userId),
+      }));
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      queryClient.setQueryData(["place", placeId], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["place", placeId] });
+    },
+  });
+
   const addCommentMutation = useMutation({
     mutationFn: addComment,
     onSuccess: () => {
@@ -94,17 +144,28 @@ const PlaceDetail = () => {
   return (
     <div className="place-details">
       <Card>
+        <div className="place-gallery">
+          {place.images?.[0] && (
+            <img
+              className="place-gallery__hero"
+              src={`http://localhost:5001/${place.images[0]}`}
+              alt={`${place.title} 1`}
+            />
+          )}
+          {place.images?.length > 1 && (
+            <div className="place-gallery__thumbnails">
+              {place.images.slice(1).map((img, i) => (
+                <img
+                  key={i}
+                  src={`http://localhost:5001/${img}`}
+                  alt={`${place.title} ${i + 2}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
         <div className="place-details-container">
-          <div className="place-gallery">
-            {place.images?.map((img, i) => (
-              <img
-                key={i}
-                src={`http://localhost:5001/${img}`}
-                alt={`${place.title} ${i + 1}`}
-              />
-            ))}
-          </div>
-          <div className="place-details-info ">
+          <div className="place-details-info">
             <h1>{place.title}</h1>
             <p>Address: {place.address}</p>
             {locationInfo?.country && <p>Country: {locationInfo.country}</p>}
@@ -118,9 +179,6 @@ const PlaceDetail = () => {
               </div>
             )}
             <p>{place.description}</p>
-            <WeatherWidget lat={locationInfo?.lat} lon={locationInfo?.lon} />
-            <ClimateChart lat={locationInfo?.lat} lon={locationInfo?.lon} />
-
             {auth.isLoggedIn && (
               <button
                 className={`like-btn ${isLiked ? "like-btn--liked" : ""}`}
@@ -133,60 +191,84 @@ const PlaceDetail = () => {
                 <span>{place.likes?.length || 0}</span>
               </button>
             )}
-          </div>
-        </div>
-      </Card>
-      <section className="comments-section">
-        <h3>Comments</h3>
-        {comments.length === 0 && <p>No comments yet.</p>}
-        <ul className="comments-list">
-          {comments.map((comment) => (
-            <li key={comment.id} className="comment-item">
-              <div className="comment-meta">
-                <strong>{comment.author.name}</strong>
-                <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-              </div>
-              <p>{comment.text}</p>
-              {comment.author.id === auth.userId && (
+            {auth.isLoggedIn && (
+              <div className="status-buttons">
                 <button
-                  className="comment-delete-btn"
-                  onClick={() =>
-                    deleteCommentMutation.mutate({
-                      placeId,
-                      commentId: comment.id,
-                      token: auth.token,
-                    })
-                  }
+                  className={`status-btn status-btn--visited ${isVisited ? "status-btn--visited--active" : ""}`}
+                  onClick={() => visitedMutation.mutate({ placeId, token: auth.token })}
+                  disabled={visitedMutation.isPending}
                 >
-                  <Trash2 size={14} />
+                  ✓ Visited
                 </button>
-              )}
-            </li>
-          ))}
-        </ul>
-        {auth.isLoggedIn && (
-          <div className="comment-form">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Write a comment..."
-              rows={3}
-            />
-            <button
-              onClick={() =>
-                addCommentMutation.mutate({
-                  placeId,
-                  text: commentText,
-                  token: auth.token,
-                })
-              }
-              disabled={!commentText.trim() || addCommentMutation.isPending}
-            >
-              POST
-            </button>
+                <button
+                  className={`status-btn status-btn--want ${isWantToVisit ? "status-btn--want--active" : ""}`}
+                  onClick={() => wantToVisitMutation.mutate({ placeId, token: auth.token })}
+                  disabled={wantToVisitMutation.isPending}
+                >
+                  ♡ Want to Visit
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </section>
+          <WeatherWidget lat={locationInfo?.lat} lon={locationInfo?.lon} />
+        </div>
+        <div className="place-climate">
+          <ClimateChart lat={locationInfo?.lat} lon={locationInfo?.lon} />
+        </div>
+        <section className="comments-section">
+          <h3>Comments</h3>
+          {comments.length === 0 && <p>No comments yet.</p>}
+          <ul className="comments-list">
+            {comments.map((comment) => (
+              <li key={comment.id} className="comment-item">
+                <div className="comment-meta">
+                  <strong>{comment.author.name}</strong>
+                  <span>
+                    {new Date(comment.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <p>{comment.text}</p>
+                {comment.author.id === auth.userId && (
+                  <button
+                    className="comment-delete-btn"
+                    onClick={() =>
+                      deleteCommentMutation.mutate({
+                        placeId,
+                        commentId: comment.id,
+                        token: auth.token,
+                      })
+                    }
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+          {auth.isLoggedIn && (
+            <div className="comment-form">
+              <textarea
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Write a comment..."
+                rows={3}
+              />
+              <button
+                onClick={() =>
+                  addCommentMutation.mutate({
+                    placeId,
+                    text: commentText,
+                    token: auth.token,
+                  })
+                }
+                disabled={!commentText.trim() || addCommentMutation.isPending}
+              >
+                POST
+              </button>
+            </div>
+          )}
+        </section>
+      </Card>
     </div>
   );
 };

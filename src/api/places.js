@@ -171,6 +171,58 @@ export const unlikePlace = async ({ placeId, token }) => {
   return response.json();
 };
 
+export const markVisited = async ({ placeId, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/visited`,
+    { method: "POST", headers: { Authorization: "Bearer " + token } }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to mark visited");
+  }
+  return response.json();
+};
+
+export const unmarkVisited = async ({ placeId, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/visited`,
+    { method: "DELETE", headers: { Authorization: "Bearer " + token } }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to unmark visited");
+  }
+  return response.json();
+};
+
+export const markWantToVisit = async ({ placeId, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/want-to-visit`,
+    { method: "POST", headers: { Authorization: "Bearer " + token } }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to mark want-to-visit");
+  }
+  return response.json();
+};
+
+export const unmarkWantToVisit = async ({ placeId, token }) => {
+  const response = await fetch(
+    `http://localhost:5001/api/places/${placeId}/want-to-visit`,
+    { method: "DELETE", headers: { Authorization: "Bearer " + token } }
+  );
+  if (response.status === 401) throw new Error("UNAUTHORIZED");
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Failed to unmark want-to-visit");
+  }
+  return response.json();
+};
+
 export const fetchComments = async (placeId) => {
   const response = await fetch(
     `http://localhost:5001/api/places/${placeId}/comments`

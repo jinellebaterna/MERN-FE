@@ -12,6 +12,7 @@ import AllPlaces from "./components/places/all-places/all-places";
 import PlaceDetail from "./components/places/place-detail/place-detail";
 import UserProfile from "./components/users/user-profile/user-profile";
 import UpdateUser from "./components/users/update-user";
+import MapView from "./components/map-view/MapView";
 
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
@@ -145,6 +146,7 @@ const App = () => {
                     }
                   />
                   <Route path="/places" element={<AllPlaces />} />
+                  <Route path="/map" element={<MapView />} />
                   <Route
                     path="/places/view/:placeId"
                     element={<PlaceDetail />}

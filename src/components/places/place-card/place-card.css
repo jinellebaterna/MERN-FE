@@ -8,6 +8,7 @@
   display: flex;
   padding: 8px;
   cursor: pointer;
+  position: relative;
 }
 
 .place-card__image {
@@ -41,6 +42,28 @@
   flex-wrap: wrap;
   gap: 0.3rem;
   margin-top: 0.4rem;
+}
+
+.status-badge {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.status-badge--visited {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status-badge--want {
+  background: var(--primary-color);
+  color: #fff;
 }
 
 .tag-badge {

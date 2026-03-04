@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { Users, MapPin, BookMarked, PlusCircle, UserPen, LogIn, LogOut } from "lucide-react";
+import { Users, MapPin, Map, BookMarked, PlusCircle, UserPen, LogIn, LogOut } from "lucide-react";
 
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
@@ -19,6 +19,9 @@ const NavLinks = () => {
       </li>
       <li>
         <NavLink to="/places"><MapPin size={16} /> ALL PLACES</NavLink>
+      </li>
+      <li>
+        <NavLink to="/map"><Map size={16} /> MAP</NavLink>
       </li>
       {auth.isLoggedIn && (
         <li>
