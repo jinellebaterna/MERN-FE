@@ -10,6 +10,9 @@ import UpdatePlace from "./components/places/update-place";
 import SearchPlaces from "./components/places/search-places";
 import AllPlaces from "./components/places/all-places/all-places";
 import PlaceDetail from "./components/places/place-detail/place-detail";
+import UserProfile from "./components/users/user-profile/user-profile";
+import UpdateUser from "./components/users/update-user";
+
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/shared/context/auth-context";
@@ -117,6 +120,18 @@ const App = () => {
               <main>
                 <Routes>
                   <Route path="/" element={<Users />} />
+                  <Route
+                    path="/users/edit"
+                    element={
+                      isLoggedIn ? (
+                        <UpdateUser />
+                      ) : (
+                        <Navigate to="/auth" replace />
+                      )
+                    }
+                  />
+                  <Route path="/users/:userId" element={<UserProfile />} />
+
                   <Route path="/:userId/places" element={<UserPlaces />} />
                   <Route path="/search" element={<SearchPlaces />} />
                   <Route
