@@ -12,7 +12,6 @@ const UserItem = (props) => {
       <Card
         className="user-item__content"
         onClick={() => {
-          console.log("clicked");
           navigate(`/${props.id}/places`);
         }}
       >
