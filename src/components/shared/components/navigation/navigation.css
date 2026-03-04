@@ -149,3 +149,54 @@
     text-align: left;
   }
 }
+
+.search-places {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 1rem;
+  position: relative;
+}
+
+.search-places input {
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--nav-text);
+  background: transparent;
+  color: var(--nav-text);
+  font: inherit;
+  outline: transparent;
+  box-sizing: border-box;
+}
+
+.search-places__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-text);
+  border-radius: 4px;
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-places__result {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: var(--nav-text);
+  text-decoration: none;
+  display: block;
+}
+
+.search-places__result:hover {
+  background: var(--nav-hover-bg);
+  color: var(--nav-hover-text);
+}
+
+.search-places__message {
+  padding: 0.5rem 0.75rem;
+  color: var(--nav-text);
+  margin: 0;
+}

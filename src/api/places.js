@@ -99,3 +99,20 @@ export const deletePlace = async ({ placeId, token }) => {
 
   return response.json();
 };
+
+export const searchPlaces = async ({ search = "", creator = "" } = {}) => {
+  const params = new URLSearchParams();
+  if (search) params.append("search", search);
+  if (creator) params.append("creator", creator);
+
+  const response = await fetch(
+    `http://localhost:5001/api/places?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Search failed");
+  }
+
+  return response.json();
+};

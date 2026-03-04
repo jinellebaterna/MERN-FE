@@ -7,6 +7,9 @@ import Users from "./components/users/users";
 import NewPlace from "./components/places/new-place";
 import UserPlaces from "./components/places/user-places";
 import UpdatePlace from "./components/places/update-place";
+import SearchPlaces from "./components/places/search-places";
+import AllPlaces from "./components/places/all-places";
+import PlaceDetail from "./components/places/place-detail";
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/shared/context/auth-context";
@@ -115,6 +118,7 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Users />} />
                   <Route path="/:userId/places" element={<UserPlaces />} />
+                  <Route path="/search" element={<SearchPlaces />} />
                   <Route
                     path="/places/new"
                     element={
@@ -124,6 +128,11 @@ const App = () => {
                         <Navigate to="/auth" replace />
                       )
                     }
+                  />
+                  <Route path="/places" element={<AllPlaces />} />
+                  <Route
+                    path="/places/view/:placeId"
+                    element={<PlaceDetail />}
                   />
                   <Route
                     path="/places/:placeId"

@@ -2,12 +2,12 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import { AuthContext } from "../../context/auth-context";
-import {ThemeContext} from "../../context/theme-context";
+import { ThemeContext } from "../../context/theme-context";
 import "./navLinks.css";
 
 const NavLinks = () => {
   const auth = useContext(AuthContext);
-    const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
     <ul className="nav-links">
@@ -15,6 +15,9 @@ const NavLinks = () => {
         <NavLink to="/" end>
           ALL USERS
         </NavLink>
+      </li>
+      <li>
+        <NavLink to="/places">ALL PLACES</NavLink>
       </li>
       {auth.isLoggedIn && (
         <li>
@@ -36,11 +39,11 @@ const NavLinks = () => {
           <button onClick={auth.logout}>LOGOUT</button>
         </li>
       )}
-       <li>
-            <button className="theme-toggle" onClick={toggleTheme}>
-              {theme === "light" ? "🌙" : "☀️"}
-            </button>
-          </li>
+      <li>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === "light" ? "🌙" : "☀️"}
+        </button>
+      </li>
     </ul>
   );
 };

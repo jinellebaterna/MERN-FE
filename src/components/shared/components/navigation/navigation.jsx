@@ -5,6 +5,7 @@ import MainHeader from "../mainHeader/mainHeader";
 import NavLinks from "../navLinks/navLinks";
 import SideDrawer from "../sideDrawer/sideDrawer";
 import Backdrop from "../backdrop/backdrop";
+import SearchPlaces from "../../../places/search-places";
 import "./navigation.css";
 
 const Navigation = () => {
@@ -39,6 +40,7 @@ const Navigation = () => {
         <h1 className="main-navigation__title">
           <Link to="/">MonoPic</Link>
         </h1>
+        <SearchPlaces />
         <nav className="main-navigation__header-nav">
           <NavLinks />
         </nav>
