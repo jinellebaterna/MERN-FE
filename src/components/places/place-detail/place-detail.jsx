@@ -95,7 +95,15 @@ const PlaceDetail = () => {
     <div className="place-details">
       <Card>
         <div className="place-details-container">
-          <img src={`http://localhost:5001/${place.image}`} alt={place.title} />
+          <div className="place-gallery">
+            {place.images?.map((img, i) => (
+              <img
+                key={i}
+                src={`http://localhost:5001/${img}`}
+                alt={`${place.title} ${i + 1}`}
+              />
+            ))}
+          </div>
           <div className="place-details-info ">
             <h1>{place.title}</h1>
             <p>Address: {place.address}</p>

@@ -50,7 +50,7 @@ const AllPlaces = () => {
                 id={place.id || place._id}
                 title={place.title}
                 address={place.address}
-                image={place.image}
+                images={place.images}
                 tags={place.tags}
                 onTagClick={setActiveTag}
               />
@@ -86,7 +86,7 @@ const AllPlaces = () => {
             id={place.id}
             title={place.title}
             address={place.address}
-            image={place.image}
+            images={place.images}
             tags={place.tags}
             onTagClick={setActiveTag}
           />

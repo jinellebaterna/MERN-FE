@@ -35,8 +35,10 @@ export const createPlace = async ({ placeData, token }) => {
   formData.append("description", placeData.description);
   formData.append("address", placeData.address);
   formData.append("creator", placeData.creator);
-  formData.append("image", placeData.image);
 
+  if (placeData.images?.length) {
+    placeData.images.forEach((img) => formData.append("images", img));
+  }
   if (placeData.tags?.length) {
     placeData.tags.forEach((t) => formData.append("tags", t));
   }
@@ -62,13 +64,27 @@ export const createPlace = async ({ placeData, token }) => {
 };
 
 export const updatePlace = async ({ placeId, placeData, token }) => {
+  const formData = new FormData();
+  formData.append("title", placeData.title);
+  formData.append("description", placeData.description);
+  if (placeData.tags?.length) {
+    placeData.tags.forEach((t) => formData.append("tags", t));
+  }
+
+  if (placeData.newImages?.length) {
+    placeData.newImages.forEach((img) => formData.append("images", img));
+  }
+
+  if (placeData.removeImages?.length) {
+    placeData.removeImages.forEach((path) =>
+      formData.append("removeImages", path)
+    );
+  }
+
   const response = await fetch(`http://localhost:5001/api/places/${placeId}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(placeData),
+    headers: { Authorization: "Bearer " + token }, // no Content-Type — let browser set it for FormData
+    body: formData,
   });
 
   if (response.status === 401) {

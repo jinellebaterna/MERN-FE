@@ -55,7 +55,7 @@ const UserProfile = () => {
                 id={place.id}
                 title={place.title}
                 address={place.address}
-                image={place.image}
+                images={place.images}
                 tags={place.tags}
               />
             ))}

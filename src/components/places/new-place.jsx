@@ -34,10 +34,7 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
-      image: {
-        value: null,
-        isValid: false,
-      },
+      images: { value: [], isValid: false },
     },
     false
   );
@@ -70,7 +67,7 @@ const NewPlace = () => {
         description: formState.inputs.description.value,
         address: formState.inputs.address.value,
         creator: auth.userId,
-        image: formState.inputs.image.value,
+        images: formState.inputs.images.value,
         tags: tags,
       },
       token: auth.token,
@@ -111,9 +108,10 @@ const NewPlace = () => {
           onInput={inputHandler}
         />
         <ImageUpload
-          id="image"
+          id="images"
+          multiple
           onInput={inputHandler}
-          errorText="Please provide an image"
+          errorText="Please provide at least one image"
         />
         <div className="place-form__field">
           <label>Tags (comma-separated)</label>

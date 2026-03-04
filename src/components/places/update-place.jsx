@@ -7,6 +7,7 @@ import Button from "../shared/components/button/button";
 import Card from "../shared/components/card/card";
 import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/components/errorModal/errorModal";
+import ImageUpload from "../shared/components/imageUpload/imageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -21,7 +22,10 @@ const UpdatePlace = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const placeId = useParams().placeId;
+
   const [tagsInput, setTagsInput] = useState("");
+  const [removeImages, setRemoveImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -93,6 +97,8 @@ const UpdatePlace = () => {
         title: formState.inputs.title.value,
         description: formState.inputs.description.value,
         tags,
+        newImages,
+        removeImages,
       },
       token: auth.token,
     });
@@ -144,6 +150,30 @@ const UpdatePlace = () => {
           onInput={inputHandler}
           initialValue={formState.inputs.description.value}
           initialValid={formState.inputs.description.isValid}
+        />
+        <div className="existing-images">
+          {place.images
+            ?.filter((img) => !removeImages.includes(img))
+            .map((img, i) => (
+              <div key={i} className="existing-image">
+                <img
+                  src={`http://localhost:5001/${img}`}
+                  alt={`image ${i + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setRemoveImages((prev) => [...prev, img])}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+        </div>
+        <ImageUpload
+          id="newImages"
+          multiple
+          onInput={(id, files) => setNewImages(files)}
+          errorText=""
         />
         <div className="place-form__field">
           <label>Tags (comma-separated)</label>

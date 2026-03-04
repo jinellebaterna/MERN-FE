@@ -12,7 +12,10 @@ const PlaceCard = (props) => {
         onClick={() => navigate(`/places/view/${props.id}`)}
       >
         <div className="place-card__image">
-          <img src={`http://localhost:5001/${props.image}`} alt={props.title} />
+          <img
+            src={`http://localhost:5001/${props.images?.[0]}`}
+            alt={props.title}
+          />
         </div>
         <div className="place-card__info">
           <h2>{props.title}</h2>

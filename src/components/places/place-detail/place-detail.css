@@ -112,3 +112,17 @@
   flex-wrap: wrap;
   gap: 0.3rem;
 }
+
+.place-gallery {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.place-gallery img {
+  width: 100%;
+  max-width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+}
