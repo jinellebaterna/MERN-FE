@@ -11,6 +11,7 @@ import {
   addComment,
   deleteComment,
 } from "../../../api/places";
+import { geocodeAddress } from "../../../api/weather";
 import { useParams } from "react-router-dom";
 import { Heart } from "lucide-react";
 import Card from "../../shared/components/card/card";
@@ -35,6 +36,13 @@ const PlaceDetail = () => {
   const { data: comments = [] } = useQuery({
     queryKey: ["comments", placeId],
     queryFn: () => fetchComments(placeId),
+  });
+
+  const { data: locationInfo } = useQuery({
+    queryKey: ["geocode", place?.address],
+    queryFn: () => geocodeAddress(place.address),
+    enabled: !!place?.address,
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   const isLiked = place?.likes?.includes(auth.userId);
@@ -91,6 +99,7 @@ const PlaceDetail = () => {
           <div className="place-details-info ">
             <h1>{place.title}</h1>
             <p>Address: {place.address}</p>
+            {locationInfo?.country && <p>Country: {locationInfo.country}</p>}
             {place.tags?.length > 0 && (
               <div className="place-tags">
                 {place.tags.map((tag) => (
@@ -101,8 +110,9 @@ const PlaceDetail = () => {
               </div>
             )}
             <p>{place.description}</p>
-            <WeatherWidget address={place.address} />
-            <ClimateChart address={place.address} />
+            <WeatherWidget lat={locationInfo?.lat} lon={locationInfo?.lon} />
+            <ClimateChart lat={locationInfo?.lat} lon={locationInfo?.lon} />
+
             {auth.isLoggedIn && (
               <button
                 className={`like-btn ${isLiked ? "like-btn--liked" : ""}`}

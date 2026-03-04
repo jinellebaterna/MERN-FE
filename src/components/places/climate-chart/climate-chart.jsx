@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { geocodeAddress, fetchMonthlyClimate } from "../../../api/weather";
+import { fetchMonthlyClimate } from "../../../api/weather";
 import "./climate-chart.css";
 
 const MONTHS = [
@@ -25,7 +25,7 @@ const groupByMonth = (daily) => {
   }));
 
   daily.time.forEach((dateStr, i) => {
-    const month = new Date(dateStr).getMonth(); // 0–11
+    const month = new Date(dateStr).getMonth();
     if (daily.temperature_2m_max[i] != null)
       months[month].tempMax.push(daily.temperature_2m_max[i]);
     if (daily.temperature_2m_min[i] != null)
@@ -47,15 +47,15 @@ const groupByMonth = (daily) => {
   }));
 };
 
-const ClimateChart = ({ address }) => {
+const ClimateChart = ({ lat, lon }) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["climate", address],
+    queryKey: ["climate", lat, lon],
     queryFn: async () => {
-      const { lat, lon } = await geocodeAddress(address);
       const daily = await fetchMonthlyClimate(lat, lon);
       return groupByMonth(daily);
     },
-    staleTime: 1000 * 60 * 60 * 24, // cache 24 hours — climate data rarely changes
+    enabled: !!lat && !!lon,
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   if (isLoading) return <p>Loading climate data...</p>;

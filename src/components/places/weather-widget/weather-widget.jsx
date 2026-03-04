@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { geocodeAddress, fetchWeather } from "../../../api/weather";
+import { fetchWeather } from "../../../api/weather";
 
 const WMO_CODES = {
   0: "Clear sky ☀️ ",
@@ -23,14 +23,12 @@ const WMO_CODES = {
   95: "Thunderstorm ⛈️ ",
 };
 
-const WeatherWidget = ({ address }) => {
+const WeatherWidget = ({ lat, lon }) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["weather", address],
-    queryFn: async () => {
-      const { lat, lon } = await geocodeAddress(address);
-      return fetchWeather(lat, lon);
-    },
-    staleTime: 1000 * 60 * 10, // cache for 10 minutes
+    queryKey: ["weather", lat, lon],
+    queryFn: () => fetchWeather(lat, lon),
+    enabled: !!lat && !!lon,
+    staleTime: 1000 * 60 * 10,
   });
 
   if (isLoading) return <p>Loading weather...</p>;
