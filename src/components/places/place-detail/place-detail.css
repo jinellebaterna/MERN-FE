@@ -1,0 +1,28 @@
+.place-details {
+  padding: 50px;
+}
+
+.place-details-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.place-details-container img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+}
+
+.place-details-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.place-details-info h1,
+.place-details-info p {
+  margin: 0;
+}
