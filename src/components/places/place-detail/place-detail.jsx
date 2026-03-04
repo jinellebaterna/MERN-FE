@@ -1,11 +1,15 @@
+import { useContext } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "../../shared/context/auth-context";
+import { likePlace, unlikePlace, fetchPlaceById } from "../../../api/places";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPlaceById } from "../../../api/places";
 import Card from "../../shared/components/card/card";
 import "./place-detail.css";
 
 const PlaceDetail = () => {
   const { placeId } = useParams();
+  const auth = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   const {
     data: place,
@@ -14,6 +18,29 @@ const PlaceDetail = () => {
   } = useQuery({
     queryKey: ["place", placeId],
     queryFn: () => fetchPlaceById(placeId),
+  });
+
+  const isLiked = place?.likes?.includes(auth.userId);
+
+  const likeMutation = useMutation({
+    mutationFn: isLiked ? unlikePlace : likePlace,
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["place", placeId] });
+      const previous = queryClient.getQueryData(["place", placeId]);
+      queryClient.setQueryData(["place", placeId], (old) => ({
+        ...old,
+        likes: isLiked
+          ? old.likes.filter((id) => id !== auth.userId)
+          : [...(old.likes || []), auth.userId],
+      }));
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      queryClient.setQueryData(["place", placeId], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["place", placeId] });
+    },
   });
 
   if (isLoading) return <p>Loading...</p>;
@@ -28,6 +55,15 @@ const PlaceDetail = () => {
             <h1>{place.title}</h1>
             <p>Address: {place.address}</p>
             <p>{place.description}</p>
+            {auth.isLoggedIn && (
+              <button
+                onClick={() =>
+                  likeMutation.mutate({ placeId, token: auth.token })
+                }
+              >
+                {isLiked ? "Unlike" : "Like"} ({place.likes?.length || 0})
+              </button>
+            )}
           </div>
         </div>
       </Card>
