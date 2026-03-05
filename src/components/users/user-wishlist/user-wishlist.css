@@ -1,0 +1,91 @@
+.user-wishlist {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.user-wishlist__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.user-wishlist__header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-wishlist__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.user-wishlist__empty {
+  text-align: center;
+  color: var(--text-color);
+  opacity: 0.6;
+  padding: 3rem 1rem;
+  font-size: 1rem;
+}
+
+.user-wishlist__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.wishlist-card {
+  background: var(--card-background);
+  border-radius: 10px;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+  box-shadow: 0 1px 4px var(--shadow-color);
+}
+
+.wishlist-card__flag {
+  font-size: 2.5rem;
+}
+
+.wishlist-card__name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.wishlist-card__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
+  opacity: 0.4;
+  line-height: 1;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+
+.wishlist-card__remove:hover {
+  opacity: 1;
+  color: #c0392b;
+}

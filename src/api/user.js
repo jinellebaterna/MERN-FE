@@ -74,3 +74,19 @@ export const updateCountry = ({ userId, code, story, cities, token }) =>
     token,
     json: { story, cities },
   });
+
+export const fetchUserWishlist = (userId) =>
+  apiFetch(`/api/users/${userId}/wishlist`).then((d) => d.wishlist);
+
+export const addToWishlist = ({ userId, name, code, token }) =>
+  apiFetch(`/api/users/${userId}/wishlist`, {
+    method: "POST",
+    token,
+    json: { name, code },
+  });
+
+export const removeFromWishlist = ({ userId, code, token }) =>
+  apiFetch(`/api/users/${userId}/wishlist/${code}`, {
+    method: "DELETE",
+    token,
+  });

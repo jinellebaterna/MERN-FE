@@ -10,6 +10,8 @@ import {
   removeUserCountry,
   updateCountryImages,
   updateCountry,
+  fetchUserWishlist,
+  addToWishlist,
 } from "../../../api/user";
 import { uploadFiles } from "../../../api/upload";
 import CountrySearch, { getFlagEmoji } from "./CountrySearch";
@@ -35,10 +37,26 @@ const UserCountries = () => {
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [cityActiveIndex, setCityActiveIndex] = useState(-1);
 
+  const [pendingCountry, setPendingCountry] = useState(null);
+
   const { data: countries = [], isLoading } = useQuery({
     queryKey: ["countries", viewedUserId],
     queryFn: () => fetchUserCountries(viewedUserId),
     enabled: !!viewedUserId,
+  });
+
+  const { data: wishlist = [] } = useQuery({
+    queryKey: ["wishlist", viewedUserId],
+    queryFn: () => fetchUserWishlist(viewedUserId),
+    enabled: !!viewedUserId,
+  });
+
+  const wishlistAddMutation = useMutation({
+    mutationFn: ({ name, code }) =>
+      addToWishlist({ userId: auth.userId, name, code, token: auth.token }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["wishlist", auth.userId] }),
+    onError: (err) => setError(err.message),
   });
 
   const addMutation = useMutation({
@@ -143,10 +161,49 @@ const UserCountries = () => {
           <span className="user-countries__count">{countries.length}</span>
         </h2>
         {canEdit && (
-          <CountrySearch
-            excludeCodes={countries.map((c) => c.code)}
-            onSelect={({ name, code }) => addMutation.mutate({ name, code })}
-          />
+          <div className="user-countries__search-wrap">
+            <CountrySearch
+              excludeCodes={[
+                ...countries.map((c) => c.code),
+                ...wishlist.map((c) => c.code),
+              ]}
+              onSelect={(country) => setPendingCountry(country)}
+            />
+            {pendingCountry && (
+              <div className="user-countries__pending">
+                <span className="user-countries__pending-flag">
+                  {getFlagEmoji(pendingCountry.code)}
+                </span>
+                <span className="user-countries__pending-name">
+                  {pendingCountry.name}
+                </span>
+                <button
+                  className="user-countries__pending-btn user-countries__pending-btn--visited"
+                  onClick={() => {
+                    addMutation.mutate(pendingCountry);
+                    setPendingCountry(null);
+                  }}
+                >
+                  ✓ Visited
+                </button>
+                <button
+                  className="user-countries__pending-btn user-countries__pending-btn--wishlist"
+                  onClick={() => {
+                    wishlistAddMutation.mutate(pendingCountry);
+                    setPendingCountry(null);
+                  }}
+                >
+                  ♡ Want to Visit
+                </button>
+                <button
+                  className="user-countries__pending-cancel"
+                  onClick={() => setPendingCountry(null)}
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
@@ -298,14 +355,18 @@ const UserCountries = () => {
                         const filtered = citySuggestions
                           .filter(
                             (c) =>
-                              c.toLowerCase().includes(cityInput.toLowerCase()) &&
+                              c
+                                .toLowerCase()
+                                .includes(cityInput.toLowerCase()) &&
                               !(selectedCountry.cities || []).includes(c)
                           )
                           .slice(0, 8);
 
                         if (e.key === "ArrowDown") {
                           e.preventDefault();
-                          setCityActiveIndex((i) => Math.min(i + 1, filtered.length - 1));
+                          setCityActiveIndex((i) =>
+                            Math.min(i + 1, filtered.length - 1)
+                          );
                         } else if (e.key === "ArrowUp") {
                           e.preventDefault();
                           setCityActiveIndex((i) => Math.max(i - 1, 0));
@@ -318,7 +379,10 @@ const UserCountries = () => {
                             cityActiveIndex >= 0 && filtered[cityActiveIndex]
                               ? filtered[cityActiveIndex]
                               : cityInput.trim();
-                          const updated = [...(selectedCountry.cities || []), toAdd];
+                          const updated = [
+                            ...(selectedCountry.cities || []),
+                            toAdd,
+                          ];
                           updateMutation.mutate({
                             code: selectedCountry.code,
                             story: storyDraft,
@@ -329,37 +393,43 @@ const UserCountries = () => {
                         }
                       }}
                     />
-                    {cityInput.trim() && (() => {
-                      const filtered = citySuggestions
-                        .filter(
-                          (c) =>
-                            c.toLowerCase().includes(cityInput.toLowerCase()) &&
-                            !(selectedCountry.cities || []).includes(c)
-                        )
-                        .slice(0, 8);
-                      return filtered.length > 0 ? (
-                        <ul className="country-modal__city-dropdown">
-                          {filtered.map((city, i) => (
-                            <li
-                              key={city}
-                              className={`country-modal__city-option${i === cityActiveIndex ? " country-modal__city-option--active" : ""}`}
-                              onMouseDown={() => {
-                                const updated = [...(selectedCountry.cities || []), city];
-                                updateMutation.mutate({
-                                  code: selectedCountry.code,
-                                  story: storyDraft,
-                                  cities: updated,
-                                });
-                                setCityInput("");
-                                setCityActiveIndex(-1);
-                              }}
-                            >
-                              {city}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null;
-                    })()}
+                    {cityInput.trim() &&
+                      (() => {
+                        const filtered = citySuggestions
+                          .filter(
+                            (c) =>
+                              c
+                                .toLowerCase()
+                                .includes(cityInput.toLowerCase()) &&
+                              !(selectedCountry.cities || []).includes(c)
+                          )
+                          .slice(0, 8);
+                        return filtered.length > 0 ? (
+                          <ul className="country-modal__city-dropdown">
+                            {filtered.map((city, i) => (
+                              <li
+                                key={city}
+                                className={`country-modal__city-option${i === cityActiveIndex ? " country-modal__city-option--active" : ""}`}
+                                onMouseDown={() => {
+                                  const updated = [
+                                    ...(selectedCountry.cities || []),
+                                    city,
+                                  ];
+                                  updateMutation.mutate({
+                                    code: selectedCountry.code,
+                                    story: storyDraft,
+                                    cities: updated,
+                                  });
+                                  setCityInput("");
+                                  setCityActiveIndex(-1);
+                                }}
+                              >
+                                {city}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null;
+                      })()}
                   </div>
                 )}
               </div>

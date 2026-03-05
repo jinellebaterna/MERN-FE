@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import UpdateUser from "./components/users/update-user";
 import UserCountries from "./components/users/user-countries/user-countries";
+import UserWishlist from "./components/users/user-wishlist/user-wishlist";
 import ScratchMap from "./components/users/user-countries/ScratchMap";
 
 import Auth from "./components/users/auth/auth";
@@ -159,7 +160,10 @@ const App = () => {
                     path="/countries"
                     element={
                       isLoggedIn ? (
-                        <UserCountries />
+                        <>
+                          <UserCountries />
+                          <UserWishlist />
+                        </>
                       ) : (
                         <Navigate to="/auth" replace />
                       )
