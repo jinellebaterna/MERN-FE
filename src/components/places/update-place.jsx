@@ -13,6 +13,7 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
+import { useImageUpload } from "../shared/hook/use-image-upload";
 import { AuthContext } from "../shared/context/auth-context";
 import { fetchPlaceById, updatePlace } from "../../api/places";
 import "./place-form.css";
@@ -26,6 +27,9 @@ const UpdatePlace = () => {
   const [tagsInput, setTagsInput] = useState("");
   const [removeImages, setRemoveImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
+  const { imageInputHandler, isUploading, uploadError, clearUploadError } = useImageUpload(
+    (id, paths) => setNewImages(paths)
+  );
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -125,10 +129,10 @@ const UpdatePlace = () => {
   return (
     <>
       <ErrorModal
-        error={error?.message || updateMutation.error?.message}
-        onClear={() => updateMutation.reset()}
+        error={uploadError || error?.message || updateMutation.error?.message}
+        onClear={() => { clearUploadError(); updateMutation.reset(); }}
       />
-      {updateMutation.isPending && <LoadingSpinner asOverlay />}
+      {(updateMutation.isPending || isUploading) && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
         <Input
           id="title"
@@ -172,7 +176,7 @@ const UpdatePlace = () => {
         <ImageUpload
           id="newImages"
           multiple
-          onInput={(id, files) => setNewImages(files)}
+          onInput={imageInputHandler}
           errorText=""
         />
         <div className="place-form__field">
@@ -192,7 +196,7 @@ const UpdatePlace = () => {
           >
             CANCEL
           </Button>
-          <Button type="submit" disabled={!formState.isValid}>
+          <Button type="submit" disabled={!formState.isValid || isUploading}>
             UPDATE PLACE
           </Button>
         </div>

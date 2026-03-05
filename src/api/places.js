@@ -1,5 +1,4 @@
 import { apiFetch } from "./client";
-import { uploadFiles } from "./upload";
 
 export const fetchUsers = async () => {
   const data = await apiFetch("/api/users");
@@ -16,9 +15,8 @@ export const fetchPlaceById = async (placeId) => {
   return data.place;
 };
 
-export const createPlace = async ({ placeData, token }) => {
-  const { paths } = await uploadFiles(placeData.images);
-  return apiFetch("/api/places", {
+export const createPlace = ({ placeData, token }) =>
+  apiFetch("/api/places", {
     method: "POST",
     token,
     json: {
@@ -26,30 +24,23 @@ export const createPlace = async ({ placeData, token }) => {
       description: placeData.description,
       address: placeData.address,
       creator: placeData.creator,
-      images: paths,
+      images: placeData.images,
       tags: placeData.tags ?? [],
     },
   });
-};
 
-export const updatePlace = async ({ placeId, placeData, token }) => {
-  let newImagePaths = [];
-  if (placeData.newImages?.length) {
-    const { paths } = await uploadFiles(placeData.newImages);
-    newImagePaths = paths;
-  }
-  return apiFetch(`/api/places/${placeId}`, {
+export const updatePlace = ({ placeId, placeData, token }) =>
+  apiFetch(`/api/places/${placeId}`, {
     method: "PATCH",
     token,
     json: {
       title: placeData.title,
       description: placeData.description,
       tags: placeData.tags ?? [],
-      newImages: newImagePaths,
+      newImages: placeData.newImages ?? [],
       removeImages: placeData.removeImages ?? [],
     },
   });
-};
 
 export const deletePlace = ({ placeId, token }) =>
   apiFetch(`/api/places/${placeId}`, { method: "DELETE", token });

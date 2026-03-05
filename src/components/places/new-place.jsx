@@ -11,6 +11,7 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
+import { useImageUpload } from "../shared/hook/use-image-upload";
 import { AuthContext } from "../shared/context/auth-context";
 import { createPlace } from "../../api/places";
 import "./place-form.css";
@@ -39,6 +40,7 @@ const NewPlace = () => {
     false
   );
   const [tagsInput, setTagsInput] = useState("");
+  const { imageInputHandler, isUploading, uploadError, clearUploadError } = useImageUpload(inputHandler);
 
   const mutation = useMutation({
     mutationFn: createPlace,
@@ -67,7 +69,7 @@ const NewPlace = () => {
         description: formState.inputs.description.value,
         address: formState.inputs.address.value,
         creator: auth.userId,
-        images: formState.inputs.images.value,
+        images: formState.inputs.images.value, // already uploaded paths
         tags: tags,
       },
       token: auth.token,
@@ -77,10 +79,10 @@ const NewPlace = () => {
   return (
     <>
       <ErrorModal
-        error={mutation.error?.message}
-        onClear={() => mutation.reset()}
+        error={uploadError || mutation.error?.message}
+        onClear={() => { clearUploadError(); mutation.reset(); }}
       />
-      {mutation.isPending && <LoadingSpinner asOverlay />}
+      {(mutation.isPending || isUploading) && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeSubmitHandler}>
         <Input
           id="title"
@@ -110,7 +112,7 @@ const NewPlace = () => {
         <ImageUpload
           id="images"
           multiple
-          onInput={inputHandler}
+          onInput={imageInputHandler}
           errorText="Please provide at least one image"
         />
         <div className="place-form__field">
@@ -122,7 +124,7 @@ const NewPlace = () => {
             onChange={(e) => setTagsInput(e.target.value)}
           />
         </div>
-        <Button type="submit" disabled={!formState.isValid}>
+        <Button type="submit" disabled={!formState.isValid || isUploading}>
           ADD PLACE
         </Button>
       </form>
