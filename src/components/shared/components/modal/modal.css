@@ -24,7 +24,7 @@
 
 .modal__content {
   padding: 1rem 0.5rem;
-   color: #333;
+  color: var(--text-color);
 }
 
 .modal__footer {

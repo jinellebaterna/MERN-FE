@@ -7,7 +7,7 @@ import Button from "../../components/shared/components/button/button";
 import LoadingSpinner from "../../components/shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../components/shared/components/errorModal/errorModal";
 import "../places/place-form.css";
-import { VALIDATOR_REQUIRE } from "../shared/utils/validators";
+import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
 import { AuthContext } from "../shared/context/auth-context";
 import {
@@ -136,17 +136,23 @@ const UpdateUser = () => {
           });
         }}
       >
-        <input
+        <Input
+          id="currentPassword"
+          element="input"
           type="password"
-          placeholder="Current password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          label="Current Password"
+          validators={[VALIDATOR_REQUIRE()]}
+          errorText="Please enter your current password."
+          onInput={(id, value) => setCurrentPassword(value)}
         />
-        <input
+        <Input
+          id="newPassword"
+          element="input"
           type="password"
-          placeholder="New password (min 6 chars)"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          label="New Password"
+          validators={[VALIDATOR_MINLENGTH(6)]}
+          errorText="New password must be at least 6 characters."
+          onInput={(id, value) => setNewPassword(value)}
         />
         {pwSuccessMsg && <p>{pwSuccessMsg}</p>}
         <Button
