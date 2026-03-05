@@ -40,7 +40,7 @@ const NewPlace = () => {
     false
   );
   const [tagsInput, setTagsInput] = useState("");
-  const { imageInputHandler, isUploading, uploadError, clearUploadError } = useImageUpload(inputHandler);
+  const { imageInputHandler, isUploading, uploadingKeys, uploadProgress, uploadError, clearUploadError } = useImageUpload(inputHandler);
 
   const mutation = useMutation({
     mutationFn: createPlace,
@@ -82,7 +82,7 @@ const NewPlace = () => {
         error={uploadError || mutation.error?.message}
         onClear={() => { clearUploadError(); mutation.reset(); }}
       />
-      {(mutation.isPending || isUploading) && <LoadingSpinner asOverlay />}
+      {mutation.isPending && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeSubmitHandler}>
         <Input
           id="title"
@@ -114,7 +114,16 @@ const NewPlace = () => {
           multiple
           onInput={imageInputHandler}
           errorText="Please provide at least one image"
+          uploadingKeys={uploadingKeys}
         />
+        {uploadProgress !== null && (
+          <div className="upload-progress">
+            <div className="upload-progress__bar-track">
+              <div className="upload-progress__bar" style={{ width: `${uploadProgress}%` }} />
+            </div>
+            <span className="upload-progress__label">Uploading... {uploadProgress}%</span>
+          </div>
+        )}
         <div className="place-form__field">
           <label>Tags (comma-separated)</label>
           <input

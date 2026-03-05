@@ -4,6 +4,33 @@
   gap: 1rem;
 }
 
+.upload-progress {
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.upload-progress__bar-track {
+  height: 6px;
+  background: var(--input-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.upload-progress__bar {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.15s ease;
+}
+
+.upload-progress__label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
 .place-form {
   list-style: none;
   margin: 0 auto;
@@ -13,4 +40,39 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 6px;
   background: var(--card-background);
+}
+
+.existing-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+}
+
+.existing-image {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--input-border);
+  background: var(--input-bg);
+}
+
+.existing-image img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.existing-image button {
+  width: 100%;
+  padding: 0.25rem 0;
+  font-size: 0.75rem;
+  background: rgba(200, 0, 0, 0.75);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.existing-image button:hover {
+  background: rgba(160, 0, 0, 0.9);
 }

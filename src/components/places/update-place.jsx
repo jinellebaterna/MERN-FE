@@ -27,11 +27,11 @@ const UpdatePlace = () => {
   const [tagsInput, setTagsInput] = useState("");
   const [removeImages, setRemoveImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
-  const { imageInputHandler, isUploading, uploadError, clearUploadError } = useImageUpload(
+  const { imageInputHandler, isUploading, uploadingKeys, uploadProgress, uploadError, clearUploadError } = useImageUpload(
     (id, paths) => setNewImages(paths)
   );
 
-  const [formState, inputHandler, setFormData] = useForm(
+  const [formState, inputHandler] = useForm(
     {
       title: {
         value: "",
@@ -70,23 +70,9 @@ const UpdatePlace = () => {
 
   useEffect(() => {
     if (place) {
-      setFormData(
-        {
-          title: {
-            value: place.title,
-            isValid: true,
-          },
-          description: {
-            value: place.description,
-            isValid: true,
-          },
-        },
-        true
-      );
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTagsInput(place.tags?.join(", ") ?? "");
     }
-  }, [setFormData, place]);
+  }, [place]);
 
   const placeUpdateSubmitHandler = (event) => {
     event.preventDefault();
@@ -132,7 +118,7 @@ const UpdatePlace = () => {
         error={uploadError || error?.message || updateMutation.error?.message}
         onClear={() => { clearUploadError(); updateMutation.reset(); }}
       />
-      {(updateMutation.isPending || isUploading) && <LoadingSpinner asOverlay />}
+      {updateMutation.isPending && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
         <Input
           id="title"
@@ -142,8 +128,8 @@ const UpdatePlace = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid title."
           onInput={inputHandler}
-          initialValue={formState.inputs.title.value}
-          initialValid={formState.inputs.title.isValid}
+          initialValue={place.title}
+          initialValid={true}
         />
         <Input
           id="description"
@@ -152,8 +138,8 @@ const UpdatePlace = () => {
           validators={[VALIDATOR_MINLENGTH(5)]}
           errorText="Please enter a valid description (min. 5 characters)."
           onInput={inputHandler}
-          initialValue={formState.inputs.description.value}
-          initialValid={formState.inputs.description.isValid}
+          initialValue={place.description}
+          initialValid={true}
         />
         <div className="existing-images">
           {place.images
@@ -178,7 +164,16 @@ const UpdatePlace = () => {
           multiple
           onInput={imageInputHandler}
           errorText=""
+          uploadingKeys={uploadingKeys}
         />
+        {uploadProgress !== null && (
+          <div className="upload-progress">
+            <div className="upload-progress__bar-track">
+              <div className="upload-progress__bar" style={{ width: `${uploadProgress}%` }} />
+            </div>
+            <span className="upload-progress__label">Uploading... {uploadProgress}%</span>
+          </div>
+        )}
         <div className="place-form__field">
           <label>Tags (comma-separated)</label>
           <input

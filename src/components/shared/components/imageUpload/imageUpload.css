@@ -202,6 +202,13 @@
   color: orange;
 }
 
+/* Per-item uploading state */
+.image-upload__preview-item--pending img {
+  filter: grayscale(100%);
+  opacity: 0.45;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
 /* Dark theme */
 :root[data-theme="dark"] .image-upload__dropzone:hover,
 :root[data-theme="dark"] .image-upload__dropzone--active {

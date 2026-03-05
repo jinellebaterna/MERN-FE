@@ -53,6 +53,7 @@ const PlaceDetail = () => {
   const isVisited = place?.visitedBy?.includes(auth.userId);
   const isWantToVisit = place?.wantToVisitBy?.includes(auth.userId);
   const [commentText, setCommentText] = useState("");
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const likeMutation = useMutation({
     mutationFn: isLiked ? unlikePlace : likePlace,
@@ -150,6 +151,8 @@ const PlaceDetail = () => {
               className="place-gallery__hero"
               src={`http://localhost:5001/${place.images[0]}`}
               alt={`${place.title} 1`}
+              style={{ cursor: "pointer" }}
+              onClick={() => setLightboxImage(`http://localhost:5001/${place.images[0]}`)}
             />
           )}
           {place.images?.length > 1 && (
@@ -159,6 +162,7 @@ const PlaceDetail = () => {
                   key={i}
                   src={`http://localhost:5001/${img}`}
                   alt={`${place.title} ${i + 2}`}
+                  onClick={() => setLightboxImage(`http://localhost:5001/${img}`)}
                 />
               ))}
             </div>
@@ -268,6 +272,14 @@ const PlaceDetail = () => {
             </div>
           )}
         </section>
+        {lightboxImage && (
+          <div className="image-lightbox" onClick={() => setLightboxImage(null)}>
+            <div className="image-lightbox__content" onClick={(e) => e.stopPropagation()}>
+              <img src={lightboxImage} alt="Full size" />
+              <button className="image-lightbox__close" onClick={() => setLightboxImage(null)}>✕</button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );

@@ -10,12 +10,17 @@ import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinne
 import { AuthContext } from "../../shared/context/auth-context";
 import { deletePlace } from "../../../api/places";
 import "./place-item.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
   const queryClient = useQueryClient();
   const params = useParams();
+
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = props.images?.length ? props.images : [];
 
   const deleteMutation = useMutation({
     mutationFn: () => deletePlace({ placeId: props.id, token: auth.token }),
@@ -75,9 +80,47 @@ const PlaceItem = (props) => {
           {deleteMutation.isPending && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
-              src={`http://localhost:5001/${props.image}`}
+              src={`http://localhost:5001/${images[currentIndex]}`}
               alt={props.title}
             />
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  className="place-item__carousel-btn place-item__carousel-btn--prev"
+                  onClick={() =>
+                    setCurrentIndex(
+                      (i) => (i - 1 + images.length) % images.length
+                    )
+                  }
+                >
+                  <ChevronLeft />
+                </button>
+                <button
+                  type="button"
+                  className="place-item__carousel-btn place-item__carousel-btn--next"
+                  onClick={() =>
+                    setCurrentIndex((i) => (i + 1) % images.length)
+                  }
+                >
+                  <ChevronRight />
+                </button>
+                <div className="place-item__carousel-dots">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={`place-item__carousel-dot ${
+                        i === currentIndex
+                          ? "place-item__carousel-dot--active"
+                          : ""
+                      }`}
+                      onClick={() => setCurrentIndex(i)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>

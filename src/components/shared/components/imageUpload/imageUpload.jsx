@@ -10,7 +10,10 @@ const formatSize = (bytes) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
+const fileKey = (f) => `${f.name}-${f.size}`;
+
 const ImageUpload = (props) => {
+  const uploadingKeys = props.uploadingKeys || new Set();
   const maxFiles = props.maxFiles || 5;
   const [files, setFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
@@ -202,7 +205,7 @@ const ImageUpload = (props) => {
             {files.map((file, i) => (
               <div
                 key={i}
-                className={`image-upload__preview-item ${dragIndex === i ? "image-upload__preview-item--dragging" : ""}`}
+                className={`image-upload__preview-item ${dragIndex === i ? "image-upload__preview-item--dragging" : ""} ${uploadingKeys.has(fileKey(file)) ? "image-upload__preview-item--pending" : ""}`}
                 draggable
                 onDragStart={() => handleItemDragStart(i)}
                 onDragOver={(e) => handleItemDragOver(e, i)}
