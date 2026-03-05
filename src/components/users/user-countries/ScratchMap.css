@@ -1,0 +1,76 @@
+.scratch-map {
+  position: relative;
+  height: calc(100vh - 4rem);
+  width: 100%;
+  overflow: hidden;
+}
+
+.scratch-map__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.scratch-map__search-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card-background);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  min-width: 300px;
+}
+
+.scratch-map__adding {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  white-space: nowrap;
+}
+
+.scratch-map__badge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.scratch-map__tooltip {
+  background: var(--card-background);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  font-family: inherit;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.scratch-map .leaflet-interactive {
+  cursor: default !important;
+}
+
+.scratch-map .leaflet-control-container {
+  display: none;
+}

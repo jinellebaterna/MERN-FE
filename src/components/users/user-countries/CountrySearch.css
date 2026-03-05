@@ -1,0 +1,61 @@
+.country-search {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.country-search__input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.country-search__input:focus {
+  border-color: var(--primary-color);
+}
+
+.country-search__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--card-background);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.country-search__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  transition: background 0.15s;
+}
+
+.country-search__item:hover,
+.country-search__item--active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.country-search__flag {
+  font-size: 1.2rem;
+  line-height: 1;
+}

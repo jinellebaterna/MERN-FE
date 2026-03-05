@@ -24,7 +24,12 @@ export const fetchLikedPlaces = async (userId) => {
   return data.places;
 };
 
-export const changePassword = ({ userId, currentPassword, newPassword, token }) =>
+export const changePassword = ({
+  userId,
+  currentPassword,
+  newPassword,
+  token,
+}) =>
   apiFetch(`/api/users/${userId}/password`, {
     method: "PATCH",
     token,
@@ -33,3 +38,39 @@ export const changePassword = ({ userId, currentPassword, newPassword, token }) 
 
 export const deleteUser = ({ userId, token }) =>
   apiFetch(`/api/users/${userId}`, { method: "DELETE", token });
+
+export const fetchUserCountries = (userId) =>
+  apiFetch(`/api/users/${userId}/countries`).then((d) => d.countries);
+
+export const addUserCountry = ({ userId, name, code, token }) =>
+  apiFetch(`/api/users/${userId}/countries`, {
+    method: "POST",
+    token,
+    json: { name, code },
+  });
+
+export const removeUserCountry = ({ userId, code, token }) =>
+  apiFetch(`/api/users/${userId}/countries/${code}`, {
+    method: "DELETE",
+    token,
+  });
+
+export const updateCountryImages = ({
+  userId,
+  code,
+  addImages,
+  removeImages,
+  token,
+}) =>
+  apiFetch(`/api/users/${userId}/countries/${code}/images`, {
+    method: "PATCH",
+    token,
+    json: { addImages, removeImages },
+  });
+
+export const updateCountry = ({ userId, code, story, cities, token }) =>
+  apiFetch(`/api/users/${userId}/countries/${code}`, {
+    method: "PATCH",
+    token,
+    json: { story, cities },
+  });

@@ -3,22 +3,16 @@ import { useState, useCallback, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import Users from "./components/users/users";
-import NewPlace from "./components/places/new-place";
-import UserPlaces from "./components/places/user-places";
-import UpdatePlace from "./components/places/update-place";
-import SearchPlaces from "./components/places/search-places";
-import AllPlaces from "./components/places/all-places/all-places";
-import PlaceDetail from "./components/places/place-detail/place-detail";
-import UserProfile from "./components/users/user-profile/user-profile";
 import UpdateUser from "./components/users/update-user";
-import MapView from "./components/map-view/MapView";
+import UserCountries from "./components/users/user-countries/user-countries";
+import ScratchMap from "./components/users/user-countries/ScratchMap";
 
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/shared/context/auth-context";
 import { ThemeProvider } from "./components/shared/context/theme-context";
 import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
+import Home from "./components/home";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -120,7 +114,7 @@ const App = () => {
             <ErrorBoundary>
               <main>
                 <Routes>
-                  <Route path="/" element={<Users />} />
+                  <Route path="/" element={<Home />} />
                   <Route
                     path="/users/edit"
                     element={
@@ -131,8 +125,7 @@ const App = () => {
                       )
                     }
                   />
-                  <Route path="/users/:userId" element={<UserProfile />} />
-
+                  {/* <Route path="/users/:userId" element={<UserProfile />} />
                   <Route path="/:userId/places" element={<UserPlaces />} />
                   <Route path="/search" element={<SearchPlaces />} />
                   <Route
@@ -144,8 +137,8 @@ const App = () => {
                         <Navigate to="/auth" replace />
                       )
                     }
-                  />
-                  <Route path="/places" element={<AllPlaces />} />
+                  /> */}
+                  {/* <Route path="/places" element={<AllPlaces />} />
                   <Route path="/map" element={<MapView />} />
                   <Route
                     path="/places/view/:placeId"
@@ -160,15 +153,34 @@ const App = () => {
                         <Navigate to="/auth" replace />
                       )
                     }
-                  />
+                  /> */}
 
+                  <Route
+                    path="/countries"
+                    element={
+                      isLoggedIn ? (
+                        <UserCountries />
+                      ) : (
+                        <Navigate to="/auth" replace />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/map"
+                    element={
+                      isLoggedIn ? (
+                        <ScratchMap />
+                      ) : (
+                        <Navigate to="/auth" replace />
+                      )
+                    }
+                  />
                   <Route
                     path="/auth"
                     element={
                       !isLoggedIn ? <Auth /> : <Navigate to="/" replace />
                     }
                   />
-
                   <Route
                     path="*"
                     element={
