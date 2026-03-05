@@ -1,4 +1,5 @@
 import { apiFetch } from "./client";
+import { uploadFiles } from "./upload";
 
 export const fetchUserById = async (userId) => {
   const data = await apiFetch(`/api/users/${userId}`);
@@ -6,10 +7,16 @@ export const fetchUserById = async (userId) => {
 };
 
 export const updateUser = async ({ userId, userData, token }) => {
-  const formData = new FormData();
-  formData.append("name", userData.name);
-  if (userData.image) formData.append("image", userData.image);
-  return apiFetch(`/api/users/${userId}`, { method: "PATCH", token, body: formData });
+  let imagePath;
+  if (userData.image) {
+    const { paths } = await uploadFiles([userData.image]);
+    imagePath = paths[0];
+  }
+  return apiFetch(`/api/users/${userId}`, {
+    method: "PATCH",
+    token,
+    json: { name: userData.name, ...(imagePath && { image: imagePath }) },
+  });
 };
 
 export const fetchLikedPlaces = async (userId) => {

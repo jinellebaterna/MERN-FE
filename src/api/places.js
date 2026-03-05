@@ -1,4 +1,5 @@
 import { apiFetch } from "./client";
+import { uploadFiles } from "./upload";
 
 export const fetchUsers = async () => {
   const data = await apiFetch("/api/users");
@@ -16,34 +17,38 @@ export const fetchPlaceById = async (placeId) => {
 };
 
 export const createPlace = async ({ placeData, token }) => {
-  const formData = new FormData();
-  formData.append("title", placeData.title);
-  formData.append("description", placeData.description);
-  formData.append("address", placeData.address);
-  formData.append("creator", placeData.creator);
-  if (placeData.images?.length) {
-    placeData.images.forEach((img) => formData.append("images", img));
-  }
-  if (placeData.tags?.length) {
-    placeData.tags.forEach((t) => formData.append("tags", t));
-  }
-  return apiFetch("/api/places", { method: "POST", token, body: formData });
+  const { paths } = await uploadFiles(placeData.images);
+  return apiFetch("/api/places", {
+    method: "POST",
+    token,
+    json: {
+      title: placeData.title,
+      description: placeData.description,
+      address: placeData.address,
+      creator: placeData.creator,
+      images: paths,
+      tags: placeData.tags ?? [],
+    },
+  });
 };
 
 export const updatePlace = async ({ placeId, placeData, token }) => {
-  const formData = new FormData();
-  formData.append("title", placeData.title);
-  formData.append("description", placeData.description);
-  if (placeData.tags?.length) {
-    placeData.tags.forEach((t) => formData.append("tags", t));
-  }
+  let newImagePaths = [];
   if (placeData.newImages?.length) {
-    placeData.newImages.forEach((img) => formData.append("images", img));
+    const { paths } = await uploadFiles(placeData.newImages);
+    newImagePaths = paths;
   }
-  if (placeData.removeImages?.length) {
-    placeData.removeImages.forEach((path) => formData.append("removeImages", path));
-  }
-  return apiFetch(`/api/places/${placeId}`, { method: "PATCH", token, body: formData });
+  return apiFetch(`/api/places/${placeId}`, {
+    method: "PATCH",
+    token,
+    json: {
+      title: placeData.title,
+      description: placeData.description,
+      tags: placeData.tags ?? [],
+      newImages: newImagePaths,
+      removeImages: placeData.removeImages ?? [],
+    },
+  });
 };
 
 export const deletePlace = ({ placeId, token }) =>
