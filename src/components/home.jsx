@@ -5,6 +5,7 @@ import { AuthContext } from "./shared/context/auth-context";
 import { fetchAllUsers, followUser, unfollowUser } from "../api/user";
 import { getFlagEmoji } from "./users/user-countries/CountrySearch";
 import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
+import FollowersModal from "./followersModal";
 import "./home.css";
 
 const IMG_BASE = "http://localhost:5001";
@@ -14,6 +15,7 @@ const Home = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const [modalUser, setModalUser] = useState(null);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users"],
@@ -113,6 +115,8 @@ const Home = () => {
     .filter((u) => u.id !== auth.userId)
     .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()));
 
+  const loggedInUserData = users.find((u) => u.id === auth.userId);
+
   return (
     <div className="home">
       <div className="home__header">
@@ -151,11 +155,6 @@ const Home = () => {
                 className="traveler-card__info"
                 onClick={() => navigate(`/countries?user=${user.id}`)}
               >
-                <div className="traveler-card__name">{user.name}</div>
-                <div className="traveler-card__meta">
-                  {user.countries?.length || 0} countries · {coverage}% of the
-                  world ·{user.followers?.length || 0} followers
-                </div>
                 {user.countries?.length > 0 && (
                   <div className="traveler-card__flags">
                     {user.countries.slice(0, 5).map((c) => (
@@ -168,6 +167,20 @@ const Home = () => {
                     )}
                   </div>
                 )}
+                <div className="traveler-card__name">{user.name}</div>
+                <div className="traveler-card__meta">
+                  {user.countries?.length || 0} countries · {coverage}% of the
+                  world ·{" "}
+                  <button
+                    className="traveler-card__followers-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalUser(user);
+                    }}
+                  >
+                    {user.followers?.length || 0} followers
+                  </button>
+                </div>
               </div>
               <div className="traveler-card__actions">
                 <button
@@ -190,6 +203,15 @@ const Home = () => {
           );
         })}
       </div>
+      <FollowersModal
+        show={!!modalUser}
+        targetUser={modalUser}
+        allUsers={users}
+        loggedInUserData={loggedInUserData}
+        onClose={() => setModalUser(null)}
+        followMutation={followMutation}
+        auth={auth}
+      />
     </div>
   );
 };

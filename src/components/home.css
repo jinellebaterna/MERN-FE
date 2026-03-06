@@ -305,3 +305,20 @@
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
+
+.traveler-card__followers-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--text-color);
+  opacity: 0.6;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  padding: 0;
+}
+
+.traveler-card__followers-btn:hover {
+  opacity: 1;
+  color: var(--primary-color);
+}

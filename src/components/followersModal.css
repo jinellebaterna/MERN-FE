@@ -1,0 +1,110 @@
+.followers-modal__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--light-gray);
+  margin-bottom: 0.75rem;
+}
+
+.followers-modal__tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.6rem 0;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.followers-modal__tab--active {
+  border-bottom: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  opacity: 1;
+}
+
+.followers-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.followers-modal__empty {
+  text-align: center;
+  opacity: 0.5;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+}
+
+.followers-modal__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.followers-modal__row:hover {
+  background: var(--background-color);
+}
+
+.followers-modal__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.followers-modal__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.followers-modal__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.followers-modal__meta {
+  font-size: 0.78rem;
+  color: var(--text-color);
+  opacity: 0.55;
+}
+
+.followers-modal__action {
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid var(--primary-color);
+  background: var(--primary-color);
+  color: #fff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.followers-modal__action--unfollow {
+  background: transparent;
+  color: var(--primary-color);
+}
+
+.followers-modal__action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
