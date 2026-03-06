@@ -22,6 +22,7 @@ import {
 import CountrySearch, { getFlagEmoji } from "./CountrySearch";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../shared/components/errorModal/errorModal";
+import ContinentStats from "../user-countries/continentStats";
 import "./user-countries.css";
 
 const IMG_BASE = "http://localhost:5001";
@@ -252,7 +253,51 @@ const UserCountries = () => {
           clearUploadError();
         }}
       />
-
+      {canEdit && (
+        <div className="user-countries__search-wrap">
+          <CountrySearch
+            excludeCodes={[
+              ...countries.map((c) => c.code),
+              ...wishlist.map((c) => c.code),
+            ]}
+            onSelect={(country) => setPendingCountry(country)}
+          />
+          {pendingCountry && (
+            <div className="user-countries__pending">
+              <span className="user-countries__pending-flag">
+                {getFlagEmoji(pendingCountry.code)}
+              </span>
+              <span className="user-countries__pending-name">
+                {pendingCountry.name}
+              </span>
+              <button
+                className="user-countries__pending-btn user-countries__pending-btn--visited"
+                onClick={() => {
+                  addMutation.mutate(pendingCountry);
+                  setPendingCountry(null);
+                }}
+              >
+                ✓ Visited
+              </button>
+              <button
+                className="user-countries__pending-btn user-countries__pending-btn--wishlist"
+                onClick={() => {
+                  wishlistAddMutation.mutate(pendingCountry);
+                  setPendingCountry(null);
+                }}
+              >
+                ♡ Want to Visit
+              </button>
+              <button
+                className="user-countries__pending-cancel"
+                onClick={() => setPendingCountry(null)}
+              >
+                &times;
+              </button>
+            </div>
+          )}
+        </div>
+      )}
       <div className="user-countries__header">
         <h2>
           {canEdit
@@ -260,51 +305,6 @@ const UserCountries = () => {
             : `${viewedUser?.name ?? "Their"} Countries`}
           <span className="user-countries__count">{countries.length}</span>
         </h2>
-        {canEdit && (
-          <div className="user-countries__search-wrap">
-            <CountrySearch
-              excludeCodes={[
-                ...countries.map((c) => c.code),
-                ...wishlist.map((c) => c.code),
-              ]}
-              onSelect={(country) => setPendingCountry(country)}
-            />
-            {pendingCountry && (
-              <div className="user-countries__pending">
-                <span className="user-countries__pending-flag">
-                  {getFlagEmoji(pendingCountry.code)}
-                </span>
-                <span className="user-countries__pending-name">
-                  {pendingCountry.name}
-                </span>
-                <button
-                  className="user-countries__pending-btn user-countries__pending-btn--visited"
-                  onClick={() => {
-                    addMutation.mutate(pendingCountry);
-                    setPendingCountry(null);
-                  }}
-                >
-                  ✓ Visited
-                </button>
-                <button
-                  className="user-countries__pending-btn user-countries__pending-btn--wishlist"
-                  onClick={() => {
-                    wishlistAddMutation.mutate(pendingCountry);
-                    setPendingCountry(null);
-                  }}
-                >
-                  ♡ Want to Visit
-                </button>
-                <button
-                  className="user-countries__pending-cancel"
-                  onClick={() => setPendingCountry(null)}
-                >
-                  &times;
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       {countries.length === 0 && (
@@ -314,7 +314,7 @@ const UserCountries = () => {
             : "No countries visited yet."}
         </div>
       )}
-
+      <ContinentStats countries={countries} />
       <div className="user-countries__grid">
         {countries.map((country) => (
           <div
