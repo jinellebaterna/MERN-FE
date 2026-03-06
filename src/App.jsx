@@ -3,17 +3,17 @@ import { useState, useCallback, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import UpdateUser from "./components/users/update-user";
+import UpdateUser from "./components/update-user";
 import UserCountries from "./components/shared/user-countries/user-countries";
 import UserWishlist from "./components/shared/user-wishlist/user-wishlist";
-import ScratchMap from "./components/shared/scratch-map/ScratchMap";
+import ScratchMap from "./components/shared/scratch-map/scratch-map";
 
-import Auth from "./components/users/auth/auth";
+import Auth from "./components/shared/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
-import Home from "./components/home";
+import Home from "./components/shared/home/home";
 
 // Create a client
 const queryClient = new QueryClient({

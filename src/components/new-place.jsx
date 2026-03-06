@@ -1,19 +1,19 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Input from "../shared/components/input/input";
-import Button from "../shared/components/button/button";
-import ErrorModal from "../shared/components/errorModal/errorModal";
-import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
-import ImageUpload from "../shared/components/imageUpload/imageUpload";
+import Input from "./shared/components/input/input";
+import Button from "./shared/components/button/button";
+import ErrorModal from "./shared/components/errorModal/errorModal";
+import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
+import ImageUpload from "./shared/components/imageUpload/imageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
-} from "../shared/utils/validators";
-import { useForm } from "../shared/hook/form-hook";
-import { useImageUpload } from "../shared/hook/use-image-upload";
+} from "./shared/utils/validators";
+import { useForm } from "./shared/hook/form-hook";
+import { useImageUpload } from "./shared/hook/use-image-upload";
 import { AuthContext } from "../shared/context/auth-context";
-import { createPlace } from "../../api/places";
+import { createPlace } from "../api/places";
 import "./place-form.css";
 
 const NewPlace = () => {
@@ -40,7 +40,14 @@ const NewPlace = () => {
     false
   );
   const [tagsInput, setTagsInput] = useState("");
-  const { imageInputHandler, isUploading, uploadingKeys, uploadProgress, uploadError, clearUploadError } = useImageUpload(inputHandler);
+  const {
+    imageInputHandler,
+    isUploading,
+    uploadingKeys,
+    uploadProgress,
+    uploadError,
+    clearUploadError,
+  } = useImageUpload(inputHandler);
 
   const mutation = useMutation({
     mutationFn: createPlace,
@@ -80,7 +87,10 @@ const NewPlace = () => {
     <>
       <ErrorModal
         error={uploadError || mutation.error?.message}
-        onClear={() => { clearUploadError(); mutation.reset(); }}
+        onClear={() => {
+          clearUploadError();
+          mutation.reset();
+        }}
       />
       {mutation.isPending && <LoadingSpinner asOverlay />}
       <form className="place-form" onSubmit={placeSubmitHandler}>
@@ -119,9 +129,14 @@ const NewPlace = () => {
         {uploadProgress !== null && (
           <div className="upload-progress">
             <div className="upload-progress__bar-track">
-              <div className="upload-progress__bar" style={{ width: `${uploadProgress}%` }} />
+              <div
+                className="upload-progress__bar"
+                style={{ width: `${uploadProgress}%` }}
+              />
             </div>
-            <span className="upload-progress__label">Uploading... {uploadProgress}%</span>
+            <span className="upload-progress__label">
+              Uploading... {uploadProgress}%
+            </span>
           </div>
         )}
         <div className="place-form__field">

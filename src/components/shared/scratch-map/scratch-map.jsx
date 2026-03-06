@@ -8,8 +8,8 @@ import "leaflet/dist/leaflet.css";
 import { AuthContext } from "../../context/auth-context";
 import { fetchUserCountries, fetchUserById } from "../../../api/user";
 import { fetchWorldGeoJSON } from "../../../api/countries";
-import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
-import "./ScratchMap.css";
+import LoadingSpinner from "../components/loadingSpinner/loadingSpinner";
+import "./scratch-map.css";
 
 const VISITED_COLOR = "#7d5ba6";
 const DEFAULT_COLOR = "#d1d5db";

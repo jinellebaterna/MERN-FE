@@ -2,24 +2,24 @@ import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Input from "../../components/shared/components/input/input";
-import Button from "../../components/shared/components/button/button";
-import LoadingSpinner from "../../components/shared/components/loadingSpinner/loadingSpinner";
-import ErrorModal from "../../components/shared/components/errorModal/errorModal";
-import "../places/place-form.css";
+import Input from "./shared/components/input/input";
+import Button from "./shared/components/button/button";
+import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
+import ErrorModal from "./shared/components/errorModal/errorModal";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
-} from "../shared/utils/validators";
-import { useForm } from "../shared/hook/form-hook";
-import { AuthContext } from "../context/auth-context";
+} from "./shared/utils/validators";
+import { useForm } from "./shared/hook/form-hook";
+import { AuthContext } from "./context/auth-context";
 import {
   fetchUserById,
   updateUser,
   changePassword,
   deleteUser,
-} from "../../api/user";
-import Modal from "../../components/shared/components/modal/modal";
+} from "../api/user";
+import Modal from "./shared/components/modal/modal";
+import "../components/places/place-form.css";
 
 const UpdateUser = () => {
   const auth = useContext(AuthContext);
