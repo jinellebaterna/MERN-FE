@@ -12,7 +12,7 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
-import { AuthContext } from "../shared/context/auth-context";
+import { AuthContext } from "../context/auth-context";
 import {
   fetchUserById,
   updateUser,

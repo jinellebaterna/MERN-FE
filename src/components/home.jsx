@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthContext } from "./shared/context/auth-context";
+import { AuthContext } from "./context/auth-context";
 import { fetchAllUsers, followUser, unfollowUser } from "../api/user";
 import { getFlagEmoji } from "./shared/country-search/CountrySearch";
 import LoadingSpinner from "../components/shared/components/loadingSpinner/loadingSpinner";

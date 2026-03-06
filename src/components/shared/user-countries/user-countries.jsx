@@ -5,7 +5,7 @@ import { fetchCitiesForCountry } from "../../../api/cities";
 
 import ImageUpload from "../../shared/components/imageUpload/imageUpload";
 import { useImageUpload } from "../../shared/hook/use-image-upload";
-import { AuthContext } from "../../shared/context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 import {
   fetchUserCountries,
   fetchUserById,

@@ -5,7 +5,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { AuthContext } from "../../shared/context/auth-context";
+import { AuthContext } from "../../context/auth-context";
 import { fetchUserCountries, fetchUserById } from "../../../api/user";
 import { fetchWorldGeoJSON } from "../../../api/countries";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";

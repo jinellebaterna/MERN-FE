@@ -5,8 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAllUsers, followUser, unfollowUser } from "../../../../api/user";
 import FollowersModal from "../../followers-modal/followersModal";
 
-import { AuthContext } from "../../context/auth-context";
-import { ThemeContext } from "../../context/theme-context";
+import { AuthContext } from "../../../context/auth-context";
+import { ThemeContext } from "../../../context/theme-context";
 import "./navLinks.css";
 
 const IMG_BASE = "http://localhost:5001";

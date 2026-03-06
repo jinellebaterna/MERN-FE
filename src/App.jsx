@@ -10,8 +10,8 @@ import ScratchMap from "./components/shared/scratch-map/ScratchMap";
 
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
-import { AuthContext } from "./components/shared/context/auth-context";
-import { ThemeProvider } from "./components/shared/context/theme-context";
+import { AuthContext } from "./components/context/auth-context";
+import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
 import Home from "./components/home";
 
