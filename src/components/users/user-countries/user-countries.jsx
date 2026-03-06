@@ -170,8 +170,11 @@ const UserCountries = () => {
         cities,
         token: auth.token,
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["countries", auth.userId] });
+      setSelectedCountry((prev) =>
+        prev ? { ...prev, ...data.country } : null
+      );
     },
     onError: (err) => setError(err.message),
   });
