@@ -14,14 +14,15 @@ const FollowersModal = ({
   onClose,
   followMutation,
   auth,
+  initialTab = "followers",
 }) => {
   const [tab, setTab] = useState("followers");
   const navigate = useNavigate();
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (show) setTab("followers");
-  }, [show]);
+    if (show) setTab(initialTab);
+  }, [show, initialTab]);
 
   if (!targetUser) return null;
 

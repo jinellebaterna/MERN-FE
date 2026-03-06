@@ -1,11 +1,17 @@
 import { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  fetchUserById,
+  fetchAllUsers,
+  followUser,
+  unfollowUser,
+} from "../../../../api/user";
+import FollowersModal from "../../../followersModal";
 
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
-import { fetchUserById } from "../../../../api/user";
 import "./navLinks.css";
 
 const IMG_BASE = "http://localhost:5001";
@@ -16,6 +22,9 @@ const NavLinks = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [modalTab, setModalTab] = useState("followers");
+
   const dropdownRef = useRef(null);
 
   const mapParams = new URLSearchParams(location.search);
@@ -28,6 +37,24 @@ const NavLinks = () => {
     queryKey: ["user", auth.userId],
     queryFn: () => fetchUserById(auth.userId),
     enabled: !!auth.isLoggedIn && !!auth.userId,
+  });
+  const queryClient = useQueryClient();
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchAllUsers,
+    enabled: !!auth.isLoggedIn,
+  });
+
+  const followMutation = useMutation({
+    mutationFn: ({ userId, isFollowing }) =>
+      isFollowing
+        ? unfollowUser({ userId, token: auth.token })
+        : followUser({ userId, token: auth.token }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["user", auth.userId] });
+    },
   });
 
   // Close dropdown when clicking outside
@@ -99,6 +126,17 @@ const NavLinks = () => {
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
+                    setModalTab("followers");
+                    setModalShow(true);
+                  }}
+                >
+                  Followers
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setDropdownOpen(false);
                     navigate("/users/edit");
                   }}
                 >
@@ -125,6 +163,16 @@ const NavLinks = () => {
           {theme === "light" ? "🌙" : "☀️ "}
         </button>
       </li>
+      <FollowersModal
+        show={modalShow}
+        targetUser={user}
+        allUsers={allUsers}
+        loggedInUserData={user}
+        onClose={() => setModalShow(false)}
+        followMutation={followMutation}
+        auth={auth}
+        initialTab={modalTab}
+      />
     </ul>
   );
 };
