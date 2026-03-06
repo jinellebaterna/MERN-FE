@@ -19,10 +19,10 @@ import {
   addCountryComment,
   deleteCountryComment,
 } from "../../../api/user";
-import CountrySearch, { getFlagEmoji } from "../country-search/CountrySearch";
+import CountrySearch, { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../shared/components/errorModal/errorModal";
-import ContinentStats from "../continent-stats/continentStats";
+import ContinentStats from "../continent-stats/continent-stats";
 import "./user-countries.css";
 
 const IMG_BASE = "http://localhost:5001";

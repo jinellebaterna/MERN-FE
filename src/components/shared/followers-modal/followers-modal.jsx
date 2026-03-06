@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/modal/modal";
 import Button from "../components/button/button";
-import "./followersModal.css";
+import "./followers-modal.css";
 
 const IMG_BASE = "http://localhost:5001";
 

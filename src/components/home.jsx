@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "./context/auth-context";
 import { fetchAllUsers, followUser, unfollowUser } from "../api/user";
-import { getFlagEmoji } from "./shared/country-search/CountrySearch";
+import { getFlagEmoji } from "./shared/country-search/country-search";
 import LoadingSpinner from "../components/shared/components/loadingSpinner/loadingSpinner";
-import FollowersModal from "../components/shared/followers-modal/followersModal";
+import FollowersModal from "./shared/followers-modal/followers-modal";
 import "./home.css";
 
 const IMG_BASE = "http://localhost:5001";

@@ -1,5 +1,5 @@
 import COUNTRIES from "../../../data/countries";
-import "./continentStats.css";
+import "./continent-stats.css";
 
 const CONTINENT_ORDER = [
   "Africa",
