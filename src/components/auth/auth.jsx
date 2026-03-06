@@ -10,7 +10,7 @@ import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from "../shared/utils/validators";
+} from "../../utils/validators";
 import { useForm } from "../../hook/form-hook";
 import { AuthContext } from "../context/auth-context";
 import { loginUser, signupUser } from "../../api/auth";

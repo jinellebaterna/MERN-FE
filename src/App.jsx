@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import UpdateUser from "./components/update-user";
 import UserCountries from "./components/user-countries/user-countries";
-import UserWishlist from "./components/shared/user-wishlist/user-wishlist";
+import UserWishlist from "./components/user-wishlist/user-wishlist";
 import ScratchMap from "./components/scratch-map/scratch-map";
 
 import Auth from "./components/auth/auth";
