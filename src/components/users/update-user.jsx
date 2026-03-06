@@ -7,7 +7,10 @@ import Button from "../../components/shared/components/button/button";
 import LoadingSpinner from "../../components/shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../components/shared/components/errorModal/errorModal";
 import "../places/place-form.css";
-import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../shared/utils/validators";
+import {
+  VALIDATOR_REQUIRE,
+  VALIDATOR_MINLENGTH,
+} from "../shared/utils/validators";
 import { useForm } from "../shared/hook/form-hook";
 import { AuthContext } from "../shared/context/auth-context";
 import {
@@ -95,82 +98,89 @@ const UpdateUser = () => {
         error={updateMutation.error?.message}
         onClear={() => updateMutation.reset()}
       />
-      {updateMutation.isPending && <LoadingSpinner asOverlay />}
-      <form className="place-form" onSubmit={submitHandler}>
-        <Input
-          id="name"
-          element="input"
-          type="text"
-          label="Name"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid name."
-          onInput={inputHandler}
-          initialValue={formState.inputs.name.value}
-          initialValid={formState.inputs.name.isValid}
-        />
-        <input
-          type="file"
-          accept=".jpg,.jpeg,.png"
-          onChange={(e) => setSelectedImage(e.target.files[0])}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          UPDATE PROFILE
-        </Button>
-      </form>
       <ErrorModal
         error={changePasswordMutation.error?.message}
         onClear={() => changePasswordMutation.reset()}
       />
-      <form
-        className="place-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setPwSuccessMsg("");
-
-          if (newPassword.length < 6) return;
-          changePasswordMutation.mutate({
-            userId: auth.userId,
-            currentPassword,
-            newPassword,
-            token: auth.token,
-          });
-        }}
-      >
-        <Input
-          id="currentPassword"
-          element="input"
-          type="password"
-          label="Current Password"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter your current password."
-          onInput={(id, value) => setCurrentPassword(value)}
-        />
-        <Input
-          id="newPassword"
-          element="input"
-          type="password"
-          label="New Password"
-          validators={[VALIDATOR_MINLENGTH(6)]}
-          errorText="New password must be at least 6 characters."
-          onInput={(id, value) => setNewPassword(value)}
-        />
-        {pwSuccessMsg && <p>{pwSuccessMsg}</p>}
-        <Button
-          type="submit"
-          disabled={!currentPassword || newPassword.length < 6}
-        >
-          CHANGE PASSWORD
-        </Button>
-      </form>
-
-      {/* Delete Account */}
       <ErrorModal
         error={deleteUserMutation.error?.message}
         onClear={() => deleteUserMutation.reset()}
       />
-      <Button danger onClick={() => setShowDeleteModal(true)}>
-        DELETE ACCOUNT
-      </Button>
+      {updateMutation.isPending && <LoadingSpinner asOverlay />}
+
+      <div className="place-form">
+        <h3>Edit Profile</h3>
+        <form onSubmit={submitHandler}>
+          <Input
+            id="name"
+            element="input"
+            type="text"
+            label="Name"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter a valid name."
+            onInput={inputHandler}
+            initialValue={formState.inputs.name.value}
+            initialValid={formState.inputs.name.isValid}
+          />
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png"
+            onChange={(e) => setSelectedImage(e.target.files[0])}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            UPDATE PROFILE
+          </Button>
+        </form>
+
+        <hr />
+
+        <h3>Change Password</h3>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPwSuccessMsg("");
+            if (newPassword.length < 6) return;
+            changePasswordMutation.mutate({
+              userId: auth.userId,
+              currentPassword,
+              newPassword,
+              token: auth.token,
+            });
+          }}
+        >
+          <Input
+            id="currentPassword"
+            element="input"
+            type="password"
+            label="Current Password"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please enter your current password."
+            onInput={(id, value) => setCurrentPassword(value)}
+          />
+          <Input
+            id="newPassword"
+            element="input"
+            type="password"
+            label="New Password"
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText="New password must be at least 6 characters."
+            onInput={(id, value) => setNewPassword(value)}
+          />
+          {pwSuccessMsg && <p>{pwSuccessMsg}</p>}
+          <Button
+            type="submit"
+            disabled={!currentPassword || newPassword.length < 6}
+          >
+            CHANGE PASSWORD
+          </Button>
+        </form>
+
+        <hr />
+
+        <Button inverse onClick={() => setShowDeleteModal(true)}>
+          DELETE ACCOUNT
+        </Button>
+      </div>
 
       <Modal
         show={showDeleteModal}
