@@ -237,3 +237,71 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+.home__stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--light-gray);
+  border-bottom: 1px solid var(--light-gray);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.home__stat {
+  text-align: center;
+}
+
+.home__stat strong {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.home__stat span {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.65;
+}
+
+.traveler-card__flags {
+  display: flex;
+  gap: 2px;
+  margin-top: 4px;
+  font-size: 1.1rem;
+}
+
+.traveler-card__flags-more {
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.5;
+  align-self: center;
+}
+
+.traveler-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.traveler-card__map-btn {
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  border: 1px solid var(--light-gray);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.traveler-card__map-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}

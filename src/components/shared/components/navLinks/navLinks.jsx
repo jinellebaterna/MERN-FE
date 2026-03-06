@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { Users, Globe, Flag, UserPen, LogIn, LogOut } from "lucide-react";
+import { Globe, Flag, UserPen, LogIn, LogOut } from "lucide-react";
 
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";

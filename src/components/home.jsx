@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "./shared/context/auth-context";
 import { fetchAllUsers, followUser, unfollowUser } from "../api/user";
+import { getFlagEmoji } from "./users/user-countries/CountrySearch";
 import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
 import "./home.css";
 
@@ -33,10 +34,10 @@ const Home = () => {
       <>
         <div className="home home--guest">
           <div className="home__hero">
-            <h1>Track Every Country You've Visited</h1>
+            <h1>Map Your Journey Across the World</h1>
             <p>
-              Pin countries on your personal world map, track your adventures,
-              and relive your travel memories.
+              Track every country you've visited, capture your stories, and
+              connect with travelers around the world.
             </p>
             <div className="home__hero-actions">
               <button
@@ -47,12 +48,14 @@ const Home = () => {
               </button>
             </div>
           </div>
+
           <div className="home__features">
             <div className="home__feature">
               <div className="home__feature-icon">🗺️ </div>
               <h3>Interactive Map</h3>
               <p>
-                Click countries you've visited and visualize your world travels.
+                Visualize every country you've visited on your personal world
+                map.
               </p>
             </div>
             <div className="home__feature">
@@ -68,17 +71,29 @@ const Home = () => {
             <div className="home__feature">
               <div className="home__feature-icon">✈️ </div>
               <h3>Bucket List</h3>
+              <p>Track countries you dream of visiting next.</p>
+            </div>
+            <div className="home__feature">
+              <div className="home__feature-icon">🌍</div>
+              <h3>Follow Travelers</h3>
               <p>
-                Track countries you want to visit and follow other travelers.
+                Follow other travelers, view their maps and country stories.
+              </p>
+            </div>
+            <div className="home__feature">
+              <div className="home__feature-icon">📖</div>
+              <h3>Travel Stories</h3>
+              <p>
+                Write about your experiences and keep a journal for each
+                country.
               </p>
             </div>
           </div>
         </div>
+
         <div className="home__cta">
-          <h2>Start Mapping Your Adventures</h2>
-          <p>
-            Join travelers who are documenting their journeys around the world.
-          </p>
+          <h2>Start Your Wayfarer Journey</h2>
+          <p>Track Every Country. Remember Every Story.</p>
           <button
             className="home__hero-btn home__hero-btn--primary"
             onClick={() => navigate("/auth")}
@@ -86,8 +101,9 @@ const Home = () => {
             Create Free Account
           </button>
         </div>
+
         <footer className="home__footer">
-          © 2026 Explore. Track. Remember.
+          © 2026 Wayfarer — Track Every Country. Remember Every Story.
         </footer>
       </>
     );
@@ -119,6 +135,10 @@ const Home = () => {
       <div className="home__grid">
         {filtered.map((user) => {
           const isFollowing = user.followers?.includes(auth.userId);
+          const coverage = (
+            ((user.countries?.length || 0) / 195) *
+            100
+          ).toFixed(1);
           return (
             <div key={user.id} className="traveler-card">
               <img
@@ -133,19 +153,39 @@ const Home = () => {
               >
                 <div className="traveler-card__name">{user.name}</div>
                 <div className="traveler-card__meta">
-                  {user.countries?.length || 0} countries ·{" "}
-                  {user.followers?.length || 0} followers
+                  {user.countries?.length || 0} countries · {coverage}% of the
+                  world ·{user.followers?.length || 0} followers
                 </div>
+                {user.countries?.length > 0 && (
+                  <div className="traveler-card__flags">
+                    {user.countries.slice(0, 5).map((c) => (
+                      <span key={c.code}>{getFlagEmoji(c.code)}</span>
+                    ))}
+                    {user.countries.length > 5 && (
+                      <span className="traveler-card__flags-more">
+                        +{user.countries.length - 5}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
-              <button
-                className={`traveler-card__follow${isFollowing ? " traveler-card__follow--following" : ""}`}
-                onClick={() =>
-                  followMutation.mutate({ userId: user.id, isFollowing })
-                }
-                disabled={followMutation.isPending}
-              >
-                {isFollowing ? "Following" : "Follow"}
-              </button>
+              <div className="traveler-card__actions">
+                <button
+                  className={`traveler-card__follow${isFollowing ? " traveler-card__follow--following" : ""}`}
+                  onClick={() =>
+                    followMutation.mutate({ userId: user.id, isFollowing })
+                  }
+                  disabled={followMutation.isPending}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </button>
+                <button
+                  className="traveler-card__map-btn"
+                  onClick={() => navigate(`/map?user=${user.id}`)}
+                >
+                  View Map
+                </button>
+              </div>
             </div>
           );
         })}
