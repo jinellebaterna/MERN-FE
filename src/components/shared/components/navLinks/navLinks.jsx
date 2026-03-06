@@ -2,12 +2,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  fetchUserById,
-  fetchAllUsers,
-  followUser,
-  unfollowUser,
-} from "../../../../api/user";
+import { fetchAllUsers, followUser, unfollowUser } from "../../../../api/user";
 import FollowersModal from "../../../followersModal";
 
 import { AuthContext } from "../../context/auth-context";
@@ -33,11 +28,6 @@ const NavLinks = () => {
     !!mapParams.get("user") &&
     mapParams.get("user") !== auth.userId;
 
-  const { data: user } = useQuery({
-    queryKey: ["user", auth.userId],
-    queryFn: () => fetchUserById(auth.userId),
-    enabled: !!auth.isLoggedIn && !!auth.userId,
-  });
   const queryClient = useQueryClient();
 
   const { data: allUsers = [] } = useQuery({
@@ -45,6 +35,8 @@ const NavLinks = () => {
     queryFn: fetchAllUsers,
     enabled: !!auth.isLoggedIn,
   });
+
+  const loggedInUser = allUsers.find((u) => u.id === auth.userId);
 
   const followMutation = useMutation({
     mutationFn: ({ userId, isFollowing }) =>
@@ -107,15 +99,15 @@ const NavLinks = () => {
             className="avatar-btn"
             onClick={() => setDropdownOpen((o) => !o)}
           >
-            {user?.image ? (
+            {auth.image ? (
               <img
-                src={`${IMG_BASE}/${user.image}`}
+                src={`${IMG_BASE}/${auth.image}`}
                 alt="avatar"
                 className="avatar-img"
               />
             ) : (
               <div className="avatar-placeholder">
-                {user?.name?.[0]?.toUpperCase() ?? "?"}
+                {auth.name?.[0]?.toUpperCase() ?? "?"}
               </div>
             )}
           </button>
@@ -165,9 +157,9 @@ const NavLinks = () => {
       </li>
       <FollowersModal
         show={modalShow}
-        targetUser={user}
+        targetUser={loggedInUser}
         allUsers={allUsers}
-        loggedInUserData={user}
+        loggedInUserData={loggedInUser}
         onClose={() => setModalShow(false)}
         followMutation={followMutation}
         auth={auth}

@@ -50,7 +50,8 @@ const UpdateUser = () => {
 
   const updateMutation = useMutation({
     mutationFn: updateUser,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      auth.updateProfile(data.user.name, data.user.image);
       queryClient.invalidateQueries(["user", auth.userId]);
       navigate(`/users/${auth.userId}`);
     },

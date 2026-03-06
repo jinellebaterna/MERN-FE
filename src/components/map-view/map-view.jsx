@@ -7,12 +7,13 @@ import { AuthContext } from "../shared/context/auth-context";
 import { searchPlaces } from "../../api/places";
 import { geocodeAddress } from "../../api/weather";
 import "leaflet/dist/leaflet.css";
-import "./MapView.css";
+import "./map-view.css";
 
 // Fix default marker icon paths broken by webpack
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
@@ -90,7 +91,11 @@ const MapView = () => {
               onClick={() => setFilter(f)}
               style={{ cursor: "pointer" }}
             >
-              {f === "all" ? "All" : f === "visited" ? "✓ Visited" : "♡ Want to Visit"}
+              {f === "all"
+                ? "All"
+                : f === "visited"
+                  ? "✓ Visited"
+                  : "♡ Want to Visit"}
             </span>
           ))}
         </div>

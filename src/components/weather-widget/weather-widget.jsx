@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchWeather } from "../../../api/weather";
+import { fetchWeather } from "../../api/weather";
 
 const WMO_CODES = {
   0: "Clear sky ☀️ ",

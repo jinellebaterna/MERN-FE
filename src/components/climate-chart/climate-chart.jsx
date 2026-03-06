@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchMonthlyClimate } from "../../../api/weather";
+import { fetchMonthlyClimate } from "../../api/weather";
 import "./climate-chart.css";
 
 const MONTHS = [

@@ -37,14 +37,14 @@ const Auth = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      auth.login(data.userId, data.token);
+      auth.login(data.userId, data.token, null, data.name, data.image);
     },
   });
 
   const signupMutation = useMutation({
     mutationFn: signupUser,
     onSuccess: (data) => {
-      auth.login(data.userId, data.token);
+      auth.login(data.userId, data.token, null, data.name, data.image);
     },
   });
 

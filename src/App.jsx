@@ -57,11 +57,23 @@ const App = () => {
     return data ? new Date(data.expiration) : null;
   });
 
-  const login = useCallback((uid, token, expirationDate) => {
+  const [name, setName] = useState(() => {
+    const data = getStoredData();
+    return data?.name || null;
+  });
+
+  const [image, setImage] = useState(() => {
+    const data = getStoredData();
+    return data?.image || null;
+  });
+
+  const login = useCallback((uid, token, expirationDate, name, image) => {
     setToken(token);
     setUserId(uid);
+    setName(name);
+    setImage(image);
     const tokenExpiryDate =
-      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60); // 1 hour
+      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(tokenExpiryDate);
     localStorage.setItem(
       "userData",
@@ -69,6 +81,8 @@ const App = () => {
         userId: uid,
         token: token,
         expiration: tokenExpiryDate.toISOString(),
+        name: name,
+        image: image,
       })
     );
   }, []);
@@ -79,6 +93,18 @@ const App = () => {
     setTokenExpirationDate(null);
     localStorage.removeItem("userData");
     queryClient.clear(); // Clear all cached queries on logout
+  }, []);
+
+  const updateProfile = useCallback((name, image) => {
+    setName(name);
+    setImage(image);
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+    if (storedData) {
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({ ...storedData, name, image })
+      );
+    }
   }, []);
 
   // Auto-logout when token expires (only set timer, don't logout immediately)
@@ -106,8 +132,11 @@ const App = () => {
             isLoggedIn: isLoggedIn,
             token: token,
             userId: userId,
+            name: name,
+            image: image,
             login: login,
             logout: logout,
+            updateProfile: updateProfile,
           }}
         >
           <BrowserRouter>
