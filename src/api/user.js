@@ -90,3 +90,30 @@ export const removeFromWishlist = ({ userId, code, token }) =>
     method: "DELETE",
     token,
   });
+
+export const fetchAllUsers = () => apiFetch("/api/users").then((d) => d.users);
+
+export const followUser = ({ userId, token }) =>
+  apiFetch(`/api/users/${userId}/follow`, { method: "POST", token });
+
+export const unfollowUser = ({ userId, token }) =>
+  apiFetch(`/api/users/${userId}/follow`, { method: "DELETE", token });
+
+export const toggleLikeCountry = ({ userId, code, token }) =>
+  apiFetch(`/api/users/${userId}/countries/${code}/like`, {
+    method: "POST",
+    token,
+  });
+
+export const addCountryComment = ({ userId, code, text, token }) =>
+  apiFetch(`/api/users/${userId}/countries/${code}/comments`, {
+    method: "POST",
+    token,
+    json: { text },
+  });
+
+export const deleteCountryComment = ({ userId, code, commentId, token }) =>
+  apiFetch(`/api/users/${userId}/countries/${code}/comments/${commentId}`, {
+    method: "DELETE",
+    token,
+  });

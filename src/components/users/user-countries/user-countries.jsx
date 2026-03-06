@@ -12,6 +12,9 @@ import {
   updateCountry,
   fetchUserWishlist,
   addToWishlist,
+  toggleLikeCountry,
+  addCountryComment,
+  deleteCountryComment,
 } from "../../../api/user";
 import { uploadFiles } from "../../../api/upload";
 import CountrySearch, { getFlagEmoji } from "./CountrySearch";
@@ -36,8 +39,8 @@ const UserCountries = () => {
   const fileInputRef = useRef(null);
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [cityActiveIndex, setCityActiveIndex] = useState(-1);
-
   const [pendingCountry, setPendingCountry] = useState(null);
+  const [commentInput, setCommentInput] = useState("");
 
   const { data: countries = [], isLoading } = useQuery({
     queryKey: ["countries", viewedUserId],
@@ -95,6 +98,77 @@ const UserCountries = () => {
     onError: (err) => setError(err.message),
   });
 
+  const likeMutation = useMutation({
+    mutationFn: ({ code }) =>
+      toggleLikeCountry({ userId: viewedUserId, code, token: auth.token }),
+    // eslint-disable-next-line no-unused-vars
+    onSuccess: (data, { code }) => {
+      setSelectedCountry((prev) =>
+        prev ? { ...prev, likes: data.likes } : null
+      );
+      queryClient.invalidateQueries({ queryKey: ["countries", viewedUserId] });
+    },
+    onError: (err) => setError(err.message),
+  });
+
+  const commentMutation = useMutation({
+    mutationFn: ({ code, text }) =>
+      addCountryComment({
+        userId: viewedUserId,
+        code,
+        text,
+        token: auth.token,
+      }),
+    onSuccess: (data) => {
+      setSelectedCountry((prev) =>
+        prev
+          ? { ...prev, comments: [...(prev.comments || []), data.comment] }
+          : null
+      );
+      setCommentInput("");
+    },
+    onError: (err) => setError(err.message),
+  });
+
+  const deleteCommentMutation = useMutation({
+    mutationFn: ({ code, commentId }) =>
+      deleteCountryComment({
+        userId: viewedUserId,
+        code,
+        commentId,
+        token: auth.token,
+      }),
+    onSuccess: (_, { commentId }) => {
+      setSelectedCountry((prev) =>
+        prev
+          ? {
+              ...prev,
+              comments: prev.comments.filter((c) => c.id !== commentId),
+            }
+          : null
+      );
+    },
+    onError: (err) => setError(err.message),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ code, story, cities }) =>
+      updateCountry({
+        userId: auth.userId,
+        code,
+        story,
+        cities,
+        token: auth.token,
+      }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["countries", auth.userId] });
+      setSelectedCountry((prev) =>
+        prev ? { ...prev, ...data.country } : null
+      );
+    },
+    onError: (err) => setError(err.message),
+  });
+
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
     if (!files.length || !selectedCountry) return;
@@ -121,24 +195,6 @@ const UserCountries = () => {
       removeImages: [imgPath],
     });
   };
-
-  const updateMutation = useMutation({
-    mutationFn: ({ code, story, cities }) =>
-      updateCountry({
-        userId: auth.userId,
-        code,
-        story,
-        cities,
-        token: auth.token,
-      }),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["countries", auth.userId] });
-      setSelectedCountry((prev) =>
-        prev ? { ...prev, ...data.country } : null
-      );
-    },
-    onError: (err) => setError(err.message),
-  });
 
   const openModal = async (country) => {
     setSelectedCountry(country);
@@ -432,6 +488,80 @@ const UserCountries = () => {
                       })()}
                   </div>
                 )}
+              </div>
+
+              <div className="country-modal__social">
+                <div className="country-modal__likes">
+                  {auth.isLoggedIn && (
+                    <button
+                      className={`country-modal__like-btn${
+                        (selectedCountry.likes || []).includes(auth.userId)
+                          ? " country-modal__like-btn--liked"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        likeMutation.mutate({ code: selectedCountry.code })
+                      }
+                      disabled={likeMutation.isPending}
+                    >
+                      ♥ {(selectedCountry.likes || []).length}
+                    </button>
+                  )}
+                  {!auth.isLoggedIn && (
+                    <span className="country-modal__like-count">
+                      ♥ {(selectedCountry.likes || []).length}
+                    </span>
+                  )}
+                </div>
+
+                <div className="country-modal__comments">
+                  <h4>Comments</h4>
+                  {(selectedCountry.comments || []).length === 0 && (
+                    <p className="country-modal__no-comments">
+                      No comments yet.
+                    </p>
+                  )}
+                  {(selectedCountry.comments || []).map((comment) => (
+                    <div key={comment.id} className="country-modal__comment">
+                      <span className="country-modal__comment-author">
+                        {comment.user?.name || "User"}
+                      </span>
+                      <span className="country-modal__comment-text">
+                        {comment.text}
+                      </span>
+                      {(auth.userId === comment.user?._id || canEdit) && (
+                        <button
+                          className="country-modal__comment-delete"
+                          onClick={() =>
+                            deleteCommentMutation.mutate({
+                              code: selectedCountry.code,
+                              commentId: comment.id,
+                            })
+                          }
+                        >
+                          &times;
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {auth.isLoggedIn && (
+                    <div className="country-modal__comment-input">
+                      <input
+                        value={commentInput}
+                        onChange={(e) => setCommentInput(e.target.value)}
+                        placeholder="Add a comment..."
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && commentInput.trim()) {
+                            commentMutation.mutate({
+                              code: selectedCountry.code,
+                              text: commentInput,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="country-modal__actions">
