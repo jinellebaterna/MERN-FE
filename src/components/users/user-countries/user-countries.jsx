@@ -220,7 +220,9 @@ const UserCountries = () => {
 
       <div className="user-countries__header">
         <h2>
-          {canEdit ? "My Countries" : `${viewedUser?.name ?? "Their"} Countries`}
+          {canEdit
+            ? "My Countries"
+            : `${viewedUser?.name ?? "Their"} Countries`}
           <span className="user-countries__count">{countries.length}</span>
         </h2>
         {canEdit && (
@@ -289,22 +291,6 @@ const UserCountries = () => {
               {getFlagEmoji(country.code)}
             </div>
             <div className="country-card__name">{country.name}</div>
-            <div className="country-card__photos">
-              {country.images.length > 0 ? (
-                <img
-                  src={`${IMG_BASE}/${country.images[0]}`}
-                  alt={country.name}
-                  className="country-card__thumb"
-                />
-              ) : (
-                <div className="country-card__no-photo">No photos</div>
-              )}
-              {country.images.length > 1 && (
-                <span className="country-card__photo-count">
-                  +{country.images.length - 1}
-                </span>
-              )}
-            </div>
           </div>
         ))}
       </div>
