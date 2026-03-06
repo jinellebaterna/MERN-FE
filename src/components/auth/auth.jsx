@@ -11,7 +11,7 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../shared/utils/validators";
-import { useForm } from "../shared/hook/form-hook";
+import { useForm } from "../../hook/form-hook";
 import { AuthContext } from "../context/auth-context";
 import { loginUser, signupUser } from "../../api/auth";
 import "./auth.css";

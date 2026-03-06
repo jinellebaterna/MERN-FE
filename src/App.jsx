@@ -13,7 +13,7 @@ import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
-import Home from "./components/shared/home/home";
+import Home from "./components/home/home";
 
 // Create a client
 const queryClient = new QueryClient({

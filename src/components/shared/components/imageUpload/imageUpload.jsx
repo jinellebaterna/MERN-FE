@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import Button from "../button/button";
 import "./imageUpload.css";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB

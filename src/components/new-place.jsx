@@ -10,7 +10,7 @@ import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "./shared/utils/validators";
-import { useForm } from "./shared/hook/form-hook";
+import { useForm } from "../hook/form-hook";
 import { useImageUpload } from "./shared/hook/use-image-upload";
 import { AuthContext } from "../shared/context/auth-context";
 import { createPlace } from "../api/places";

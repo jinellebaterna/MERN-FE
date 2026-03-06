@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../../api/cities";
 
 import ImageUpload from "../../shared/components/imageUpload/imageUpload";
-import { useImageUpload } from "../../shared/hook/use-image-upload";
+import { useImageUpload } from "../../../hook/use-image-upload";
 import { AuthContext } from "../../context/auth-context";
 import {
   fetchUserCountries,
