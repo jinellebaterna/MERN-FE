@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import UpdateUser from "./components/users/update-user";
-import UserCountries from "./components/users/user-countries/user-countries";
-import UserWishlist from "./components/users/user-wishlist/user-wishlist";
-import ScratchMap from "./components/users/user-countries/ScratchMap";
+import UserCountries from "./components/shared/user-countries/user-countries";
+import UserWishlist from "./components/shared/user-wishlist/user-wishlist";
+import ScratchMap from "./components/shared/scratch-map/ScratchMap";
 
 import Auth from "./components/users/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";

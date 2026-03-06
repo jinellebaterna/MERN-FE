@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAllUsers, followUser, unfollowUser } from "../../../../api/user";
-import FollowersModal from "../../../followersModal";
+import FollowersModal from "../../followers-modal/followersModal";
 
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";

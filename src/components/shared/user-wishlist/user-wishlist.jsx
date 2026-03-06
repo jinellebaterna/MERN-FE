@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { AuthContext } from "../../shared/context/auth-context";
 import { fetchUserWishlist, removeFromWishlist } from "../../../api/user";
-import { getFlagEmoji } from "../user-countries/CountrySearch";
+import { getFlagEmoji } from "../../shared/country-search/CountrySearch";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../shared/components/errorModal/errorModal";
 import "./user-wishlist.css";
