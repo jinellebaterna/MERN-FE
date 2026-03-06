@@ -1,12 +1,12 @@
 import { useContext, useMemo, useEffect, useRef } from "react";
 import { MapContainer, useMap } from "react-leaflet";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { AuthContext } from "../../shared/context/auth-context";
-import { fetchUserCountries } from "../../../api/user";
+import { fetchUserCountries, fetchUserById } from "../../../api/user";
 import { fetchWorldGeoJSON } from "../../../api/countries";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import "./ScratchMap.css";
@@ -50,7 +50,16 @@ const CountryLayer = ({ geoJSON, visitedCodes }) => {
 const ScratchMap = () => {
   const auth = useContext(AuthContext);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const viewedUserId = searchParams.get("user") || auth.userId;
+
+  const isOwnMap = viewedUserId === auth.userId;
+
+  const { data: viewedUser } = useQuery({
+    queryKey: ["user", viewedUserId],
+    queryFn: () => fetchUserById(viewedUserId),
+    enabled: !!viewedUserId && !isOwnMap,
+  });
 
   const { data: countries = [], isLoading: countriesLoading } = useQuery({
     queryKey: ["countries", viewedUserId],
@@ -73,6 +82,17 @@ const ScratchMap = () => {
 
   return (
     <div className="scratch-map">
+      {!isOwnMap && viewedUser && (
+        <div className="scratch-map__title">
+          {viewedUser.name}'s Map
+          <button
+            className="scratch-map__countries-btn"
+            onClick={() => navigate(`/countries?user=${viewedUserId}`)}
+          >
+            View Countries
+          </button>
+        </div>
+      )}
       {isLoading && (
         <div className="scratch-map__loading">
           <LoadingSpinner asOverlay />

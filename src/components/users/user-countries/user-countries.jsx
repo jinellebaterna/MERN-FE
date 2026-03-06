@@ -6,6 +6,7 @@ import { fetchCitiesForCountry } from "../../../api/cities";
 import { AuthContext } from "../../shared/context/auth-context";
 import {
   fetchUserCountries,
+  fetchUserById,
   addUserCountry,
   removeUserCountry,
   updateCountryImages,
@@ -41,6 +42,12 @@ const UserCountries = () => {
   const [cityActiveIndex, setCityActiveIndex] = useState(-1);
   const [pendingCountry, setPendingCountry] = useState(null);
   const [commentInput, setCommentInput] = useState("");
+
+  const { data: viewedUser } = useQuery({
+    queryKey: ["user", viewedUserId],
+    queryFn: () => fetchUserById(viewedUserId),
+    enabled: !!viewedUserId && !canEdit,
+  });
 
   const { data: countries = [], isLoading } = useQuery({
     queryKey: ["countries", viewedUserId],
@@ -213,7 +220,7 @@ const UserCountries = () => {
 
       <div className="user-countries__header">
         <h2>
-          {canEdit ? "My Countries" : "Countries Visited"}
+          {canEdit ? "My Countries" : `${viewedUser?.name ?? "Their"} Countries`}
           <span className="user-countries__count">{countries.length}</span>
         </h2>
         {canEdit && (
