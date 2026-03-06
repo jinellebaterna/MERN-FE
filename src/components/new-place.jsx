@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Input from "./shared/components/input/input";
-import Button from "./shared/components/button/button";
-import ErrorModal from "./shared/components/errorModal/errorModal";
-import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
-import ImageUpload from "./shared/components/imageUpload/imageUpload";
+import Input from "./shared/input/input";
+import Button from "./shared/button/button";
+import ErrorModal from "./shared/errorModal/errorModal";
+import LoadingSpinner from "./shared/loadingSpinner/loadingSpinner";
+import ImageUpload from "./shared/imageUpload/imageUpload";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../utils/validators";
 import { useForm } from "../hook/form-hook";
 import { useImageUpload } from "./shared/hook/use-image-upload";

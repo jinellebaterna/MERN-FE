@@ -9,10 +9,10 @@ import UserWishlist from "./components/user-wishlist/user-wishlist";
 import ScratchMap from "./components/scratch-map/scratch-map";
 
 import Auth from "./components/auth/auth";
-import Navigation from "./components/shared/components/navigation/navigation";
+import Navigation from "./components/shared/navigation/navigation";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";
-import ErrorBoundary from "./components/shared/components/errorBoundary/errorBoundary";
+import ErrorBoundary from "./components/shared/errorBoundary/errorBoundary";
 import Home from "./components/home/home";
 
 // Create a client

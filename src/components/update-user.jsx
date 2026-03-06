@@ -2,10 +2,10 @@ import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Input from "./shared/components/input/input";
-import Button from "./shared/components/button/button";
-import LoadingSpinner from "./shared/components/loadingSpinner/loadingSpinner";
-import ErrorModal from "./shared/components/errorModal/errorModal";
+import Input from "./shared/input/input";
+import Button from "./shared/button/button";
+import LoadingSpinner from "./shared/loadingSpinner/loadingSpinner";
+import ErrorModal from "./shared/errorModal/errorModal";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../utils/validators";
 import { useForm } from "../hook/form-hook";
 import { AuthContext } from "./context/auth-context";
@@ -15,7 +15,7 @@ import {
   changePassword,
   deleteUser,
 } from "../api/user";
-import Modal from "./shared/components/modal/modal";
+import Modal from "./shared/modal/modal";
 import "./place-form.css";
 
 const UpdateUser = () => {

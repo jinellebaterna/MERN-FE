@@ -2,11 +2,11 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchAllUsers, followUser, unfollowUser } from "../../../../api/user";
-import FollowersModal from "../../../followers-modal/followers-modal";
+import { fetchAllUsers, followUser, unfollowUser } from "../../../api/user";
+import FollowersModal from "../../followers-modal/followers-modal";
 
-import { AuthContext } from "../../../context/auth-context";
-import { ThemeContext } from "../../../context/theme-context";
+import { AuthContext } from "../../context/auth-context";
+import { ThemeContext } from "../../context/theme-context";
 import "./navLinks.css";
 
 const IMG_BASE = "http://localhost:5001";

@@ -13,7 +13,7 @@ const ModalOverlay = React.forwardRef((props, ref) => {
       </header>
       <form
         onSubmit={
-          props.onSubmit ? props.onSubmit : event => event.preventDefault()
+          props.onSubmit ? props.onSubmit : (event) => event.preventDefault()
         }
       >
         <div className={`modal__content ${props.contentClass}`}>
@@ -28,9 +28,9 @@ const ModalOverlay = React.forwardRef((props, ref) => {
   return ReactDOM.createPortal(content, document.getElementById("modal-hook"));
 });
 
-const Modal = props => {
+const Modal = (props) => {
   const nodeRef = useRef(null);
-  
+
   return (
     <React.Fragment>
       {props.show && <Backdrop onClick={props.onCancel} />}

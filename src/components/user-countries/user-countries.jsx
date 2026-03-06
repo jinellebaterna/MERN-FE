@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../api/cities";
 
-import ImageUpload from "../shared/components/imageUpload/imageUpload";
+import ImageUpload from "../shared/imageUpload/imageUpload";
 import { useImageUpload } from "../../hook/use-image-upload";
 import { AuthContext } from "../context/auth-context";
 import {
@@ -20,8 +20,8 @@ import {
   deleteCountryComment,
 } from "../../api/user";
 import CountrySearch, { getFlagEmoji } from "../country-search/country-search";
-import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
-import ErrorModal from "../shared/components/errorModal/errorModal";
+import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
+import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import "./user-countries.css";
 

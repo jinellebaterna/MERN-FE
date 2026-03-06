@@ -1,17 +1,17 @@
 import { useState, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import Card from "../shared/card/card";
-import Input from "../shared/input/input";
-import Button from "../shared/button/button";
-import ImageUpload from "../shared/imageUpload/imageUpload";
-import ErrorModal from "../shared/errorModal/errorModal";
-import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
+import Card from "../card/card";
+import Input from "../input/input";
+import Button from "../button/button";
+import ImageUpload from "../imageUpload/imageUpload";
+import ErrorModal from "../errorModal/errorModal";
+import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from "../../utils/validators";
-import { useForm } from "../../hook/form-hook";
+} from "../shared/utils/validators";
+import { useForm } from "../shared/hook/form-hook";
 import { AuthContext } from "../context/auth-context";
 import { loginUser, signupUser } from "../../api/auth";
 import "./auth.css";

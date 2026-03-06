@@ -5,10 +5,10 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { AuthContext } from "../auth/auth";
+import { AuthContext } from "../context/auth-context";
 import { fetchUserCountries, fetchUserById } from "../../api/user";
 import { fetchWorldGeoJSON } from "../../api/countries";
-import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
+import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import "./scratch-map.css";
 
 const VISITED_COLOR = "#7d5ba6";

@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../../components/context/auth-context";
 import { fetchAllUsers, followUser, unfollowUser } from "../../api/user";
 import { getFlagEmoji } from "../country-search/country-search";
-import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
+import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import FollowersModal from "../followers-modal/followers-modal";
 import "./home.css";
 
