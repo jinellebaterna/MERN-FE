@@ -1,8 +1,10 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../../api/cities";
 
+import ImageUpload from "../../shared/components/imageUpload/imageUpload";
+import { useImageUpload } from "../../shared/hook/use-image-upload";
 import { AuthContext } from "../../shared/context/auth-context";
 import {
   fetchUserCountries,
@@ -17,7 +19,6 @@ import {
   addCountryComment,
   deleteCountryComment,
 } from "../../../api/user";
-import { uploadFiles } from "../../../api/upload";
 import CountrySearch, { getFlagEmoji } from "./CountrySearch";
 import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
 import ErrorModal from "../../shared/components/errorModal/errorModal";
@@ -34,14 +35,16 @@ const UserCountries = () => {
 
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [uploading, setUploading] = useState(false);
+
   const [storyDraft, setStoryDraft] = useState("");
   const [cityInput, setCityInput] = useState("");
-  const fileInputRef = useRef(null);
+
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [cityActiveIndex, setCityActiveIndex] = useState(-1);
   const [pendingCountry, setPendingCountry] = useState(null);
   const [commentInput, setCommentInput] = useState("");
+  const [pendingPaths, setPendingPaths] = useState([]);
+  const [imageUploadKey, setImageUploadKey] = useState(0);
 
   const { data: viewedUser } = useQuery({
     queryKey: ["user", viewedUserId],
@@ -167,31 +170,36 @@ const UserCountries = () => {
         cities,
         token: auth.token,
       }),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["countries", auth.userId] });
-      setSelectedCountry((prev) =>
-        prev ? { ...prev, ...data.country } : null
-      );
     },
     onError: (err) => setError(err.message),
   });
 
-  const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
-    if (!files.length || !selectedCountry) return;
-    e.target.value = "";
-    setUploading(true);
+  const handleSave = async () => {
     try {
-      const { paths } = await uploadFiles(files);
-      await imagesMutation.mutateAsync({
-        code: selectedCountry.code,
-        addImages: paths,
-        removeImages: [],
-      });
+      const tasks = [
+        updateMutation.mutateAsync({
+          code: selectedCountry.code,
+          story: storyDraft,
+          cities: selectedCountry.cities,
+        }),
+      ];
+      if (pendingPaths.length > 0) {
+        tasks.push(
+          imagesMutation.mutateAsync({
+            code: selectedCountry.code,
+            addImages: pendingPaths,
+            removeImages: [],
+          })
+        );
+      }
+      await Promise.all(tasks);
+      setSelectedCountry(null);
+      setPendingPaths([]);
+      setImageUploadKey((k) => k + 1);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -203,20 +211,44 @@ const UserCountries = () => {
     });
   };
 
+  const handleImagePaths = useCallback((id, paths, isValid) => {
+    setPendingPaths(isValid ? paths : []);
+  }, []);
+
+  const {
+    imageInputHandler,
+    uploadingKeys,
+    uploadProgress,
+    uploadError,
+    clearUploadError,
+  } = useImageUpload(handleImagePaths);
+
   const openModal = async (country) => {
     setSelectedCountry(country);
     setStoryDraft(country.story || "");
+    setPendingPaths([]);
+    setImageUploadKey((k) => k + 1);
     const cities = await fetchCitiesForCountry(country.name);
     setCitySuggestions(cities);
   };
 
-  const closeModal = () => setSelectedCountry(null);
+  const closeModal = () => {
+    setSelectedCountry(null);
+    setPendingPaths([]);
+    setImageUploadKey((k) => k + 1);
+  };
 
   if (isLoading) return <LoadingSpinner asOverlay />;
 
   return (
     <div className="user-countries">
-      <ErrorModal error={error} onClear={() => setError(null)} />
+      <ErrorModal
+        error={error || uploadError}
+        onClear={() => {
+          setError(null);
+          clearUploadError();
+        }}
+      />
 
       <div className="user-countries__header">
         <h2>
@@ -330,27 +362,36 @@ const UserCountries = () => {
                   )}
                 </div>
               ))}
-              {canEdit && (
-                <>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".jpg,.jpeg,.png"
-                    multiple
-                    style={{ display: "none" }}
-                    onChange={handleFileChange}
-                  />
-                  <button
-                    className="country-modal__btn country-modal__btn--upload country-modal__gallery-upload"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading || imagesMutation.isPending}
-                  >
-                    {uploading ? "Uploading..." : "Add Photos"}
-                  </button>
-                </>
-              )}
             </div>
+
             <div className="country-modal__body">
+              {canEdit && (
+                <div className="country-modal__upload-section">
+                  <h4>Add Photos</h4>
+                  <ImageUpload
+                    key={imageUploadKey}
+                    id="country-images"
+                    multiple
+                    maxFiles={10}
+                    onInput={imageInputHandler}
+                    uploadingKeys={uploadingKeys}
+                  />
+                  {uploadProgress !== null && (
+                    <div className="upload-progress">
+                      <div className="upload-progress__bar-track">
+                        <div
+                          className="upload-progress__bar"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                      <span className="upload-progress__label">
+                        Uploading... {uploadProgress}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="country-modal__story">
                 <h4>Travel Story</h4>
                 {canEdit ? (
@@ -562,16 +603,14 @@ const UserCountries = () => {
                 <>
                   <button
                     className="country-modal__btn country-modal__btn--save"
-                    onClick={() =>
-                      updateMutation.mutate({
-                        code: selectedCountry.code,
-                        story: storyDraft,
-                        cities: selectedCountry.cities,
-                      })
+                    onClick={handleSave}
+                    disabled={
+                      updateMutation.isPending || imagesMutation.isPending
                     }
-                    disabled={updateMutation.isPending}
                   >
-                    {updateMutation.isPending ? "Saving..." : "Save"}
+                    {updateMutation.isPending || imagesMutation.isPending
+                      ? "Saving..."
+                      : "Save"}
                   </button>
                   <button
                     className="country-modal__btn country-modal__btn--remove"
