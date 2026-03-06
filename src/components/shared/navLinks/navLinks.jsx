@@ -5,11 +5,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAllUsers, followUser, unfollowUser } from "../../../api/user";
 import FollowersModal from "../../followers-modal/followers-modal";
 
+import { IMG_BASE } from "../../../data/data";
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
 import "./navLinks.css";
-
-const IMG_BASE = "http://localhost:5001";
 
 const NavLinks = () => {
   const auth = useContext(AuthContext);

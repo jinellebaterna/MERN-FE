@@ -25,7 +25,7 @@ import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import "./user-countries.css";
 
-const IMG_BASE = "http://localhost:5001";
+import { IMG_BASE } from "../../data/data";
 
 const UserCountries = () => {
   const auth = useContext(AuthContext);

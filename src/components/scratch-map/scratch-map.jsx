@@ -109,7 +109,11 @@ const ScratchMap = () => {
         zoom={2}
         minZoom={1}
         maxZoom={6}
-        style={{ height: "100%", width: "100%", background: "#a8c8e8" }}
+        style={{
+          height: "100%",
+          width: "100%",
+          background: "var(--background-color)",
+        }}
         zoomControl={true}
         scrollWheelZoom={true}
       >

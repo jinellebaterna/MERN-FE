@@ -1,4 +1,4 @@
-const COUNTRIES = [
+export const COUNTRIES = [
   { name: "Afghanistan", code: "AF", continent: "Asia" },
   { name: "Albania", code: "AL", continent: "Europe" },
   { name: "Algeria", code: "DZ", continent: "Africa" },
@@ -201,4 +201,4 @@ const COUNTRIES = [
   { name: "Zimbabwe", code: "ZW", continent: "Africa" },
 ];
 
-export default COUNTRIES;
+export const IMG_BASE = "http://localhost:5001";

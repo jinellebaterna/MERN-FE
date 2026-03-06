@@ -6,9 +6,8 @@ import { fetchAllUsers, followUser, unfollowUser } from "../../api/user";
 import { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import FollowersModal from "../followers-modal/followers-modal";
+import { IMG_BASE } from "../../data/data";
 import "./home.css";
-
-const IMG_BASE = "http://localhost:5001";
 
 const Home = () => {
   const auth = useContext(AuthContext);

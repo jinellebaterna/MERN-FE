@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5001";
+import { IMG_BASE } from "../data/data";
 
 export const uploadFiles = (files, onProgress) =>
   new Promise((resolve, reject) => {
@@ -11,15 +11,23 @@ export const uploadFiles = (files, onProgress) =>
       };
     }
     xhr.onload = () => {
-      if (xhr.status === 401) { reject(new Error("UNAUTHORIZED")); return; }
+      if (xhr.status === 401) {
+        reject(new Error("UNAUTHORIZED"));
+        return;
+      }
       if (xhr.status < 200 || xhr.status >= 300) {
-        try { reject(new Error(JSON.parse(xhr.responseText).message || "Upload failed")); }
-        catch { reject(new Error("Upload failed")); }
+        try {
+          reject(
+            new Error(JSON.parse(xhr.responseText).message || "Upload failed")
+          );
+        } catch {
+          reject(new Error("Upload failed"));
+        }
         return;
       }
       resolve(JSON.parse(xhr.responseText));
     };
     xhr.onerror = () => reject(new Error("Upload failed"));
-    xhr.open("POST", `${BASE_URL}/api/uploads`);
+    xhr.open("POST", `${IMG_BASE}/api/uploads`);
     xhr.send(formData);
   });
