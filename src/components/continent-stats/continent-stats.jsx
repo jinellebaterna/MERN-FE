@@ -1,4 +1,4 @@
-import COUNTRIES from "../../../data/countries";
+import COUNTRIES from "../../data/countries";
 import "./continent-stats.css";
 
 const CONTINENT_ORDER = [

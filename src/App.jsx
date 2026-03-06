@@ -8,7 +8,7 @@ import UserCountries from "./components/shared/user-countries/user-countries";
 import UserWishlist from "./components/shared/user-wishlist/user-wishlist";
 import ScratchMap from "./components/shared/scratch-map/scratch-map";
 
-import Auth from "./components/shared/auth/auth";
+import Auth from "./components/auth/auth";
 import Navigation from "./components/shared/components/navigation/navigation";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";

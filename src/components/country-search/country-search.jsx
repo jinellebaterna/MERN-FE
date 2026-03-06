@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import COUNTRIES from "../../../data/countries";
+import COUNTRIES from "../../data/countries";
 import "./country-search.css";
 
 const CountrySearch = ({ onSelect, excludeCodes = [] }) => {

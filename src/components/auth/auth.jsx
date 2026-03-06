@@ -1,19 +1,19 @@
 import { useState, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import Card from "../../shared/components/card/card";
-import Input from "../../shared/components/input/input";
-import Button from "../../shared/components/button/button";
-import ImageUpload from "../../shared/components/imageUpload/imageUpload";
-import ErrorModal from "../../shared/components/errorModal/errorModal";
-import LoadingSpinner from "../../shared/components/loadingSpinner/loadingSpinner";
+import Card from "../shared/components/card/card";
+import Input from "../shared/components/input/input";
+import Button from "../shared/components/button/button";
+import ImageUpload from "../shared/components/imageUpload/imageUpload";
+import ErrorModal from "../shared/components/errorModal/errorModal";
+import LoadingSpinner from "../shared/components/loadingSpinner/loadingSpinner";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
-} from "../../shared/utils/validators";
-import { useForm } from "../../shared/hook/form-hook";
-import { AuthContext } from "../../context/auth-context";
-import { loginUser, signupUser } from "../../../api/auth";
+} from "../shared/utils/validators";
+import { useForm } from "../shared/hook/form-hook";
+import { AuthContext } from "../context/auth-context";
+import { loginUser, signupUser } from "../../api/auth";
 import "./auth.css";
 
 const Auth = () => {

@@ -19,7 +19,7 @@ import {
   deleteUser,
 } from "../api/user";
 import Modal from "./shared/components/modal/modal";
-import "../components/places/place-form.css";
+import "./place-form.css";
 
 const UpdateUser = () => {
   const auth = useContext(AuthContext);
