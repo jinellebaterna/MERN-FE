@@ -1,6 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { reorderWishlist } from "../../api/user";
 
 import { AuthContext } from "../context/auth-context";
 import { fetchUserWishlist, removeFromWishlist } from "../../api/user";
@@ -8,6 +23,48 @@ import { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import "./user-wishlist.css";
+
+const SortableWishlistCard = ({ country, onRemove, canEdit, isRemoving }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: country.code });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: canEdit ? "grab" : "default",
+  };
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...(canEdit ? listeners : {})}
+      className="wishlist-card"
+    >
+      <div className="wishlist-card__flag">{getFlagEmoji(country.code)}</div>
+      <div className="wishlist-card__name">{country.name}</div>
+      {canEdit && (
+        <button
+          className="wishlist-card__remove"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(country.code);
+          }}
+          disabled={isRemoving}
+          title="Remove"
+        >
+          &times;
+        </button>
+      )}
+    </div>
+  );
+};
 
 const UserWishlist = () => {
   const auth = useContext(AuthContext);
@@ -23,6 +80,8 @@ const UserWishlist = () => {
     enabled: !!viewedUserId && canEdit,
   });
 
+  const [localWishlist, setLocalWishlist] = useState(wishlist);
+
   const removeMutation = useMutation({
     mutationFn: (code) =>
       removeFromWishlist({ userId: auth.userId, code, token: auth.token }),
@@ -30,6 +89,33 @@ const UserWishlist = () => {
       queryClient.invalidateQueries({ queryKey: ["wishlist", auth.userId] }),
     onError: (err) => setError(err.message),
   });
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setLocalWishlist(wishlist), [wishlist]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const reorderMutation = useMutation({
+    mutationFn: reorderWishlist,
+    onError: () =>
+      queryClient.invalidateQueries({ queryKey: ["wishlist", viewedUserId] }),
+  });
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = localWishlist.findIndex((c) => c.code === active.id);
+    const newIndex = localWishlist.findIndex((c) => c.code === over.id);
+    const reordered = arrayMove(localWishlist, oldIndex, newIndex);
+    setLocalWishlist(reordered);
+    reorderMutation.mutate({
+      userId: auth.userId,
+      codes: reordered.map((c) => c.code),
+      token: auth.token,
+    });
+  };
 
   // All early returns AFTER hooks
   if (isLoading) return <LoadingSpinner asOverlay />;
@@ -54,26 +140,28 @@ const UserWishlist = () => {
         </div>
       )}
 
-      <div className="user-wishlist__grid">
-        {wishlist.map((country) => (
-          <div key={country.code} className="wishlist-card">
-            <div className="wishlist-card__flag">
-              {getFlagEmoji(country.code)}
-            </div>
-            <div className="wishlist-card__name">{country.name}</div>
-            {canEdit && (
-              <button
-                className="wishlist-card__remove"
-                onClick={() => removeMutation.mutate(country.code)}
-                disabled={removeMutation.isPending}
-                title="Remove"
-              >
-                &times;
-              </button>
-            )}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={canEdit ? handleDragEnd : undefined}
+      >
+        <SortableContext
+          items={localWishlist.map((c) => c.code)}
+          strategy={rectSortingStrategy}
+        >
+          <div className="user-wishlist__grid">
+            {localWishlist.map((country) => (
+              <SortableWishlistCard
+                key={country.code}
+                country={country}
+                onRemove={(code) => removeMutation.mutate(code)}
+                canEdit={canEdit}
+                isRemoving={removeMutation.isPending}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };

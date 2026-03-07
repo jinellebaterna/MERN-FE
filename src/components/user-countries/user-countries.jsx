@@ -1,7 +1,21 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../api/cities";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import ImageUpload from "../shared/imageUpload/imageUpload";
 import { useImageUpload } from "../../hook/use-image-upload";
@@ -18,6 +32,7 @@ import {
   toggleLikeCountry,
   addCountryComment,
   deleteCountryComment,
+  reorderCountries,
 } from "../../api/user";
 import CountrySearch, { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
@@ -26,6 +41,36 @@ import ContinentStats from "../continent-stats/continent-stats";
 import "./user-countries.css";
 
 import { IMG_BASE } from "../../data/data";
+
+const SortableCountryCard = ({ country, onClick, canEdit }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: country.code });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: canEdit ? "grab" : "pointer",
+  };
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...(canEdit ? listeners : {})}
+      className="country-card"
+      onClick={() => onClick(country)}
+    >
+      <div className="country-card__flag">{getFlagEmoji(country.code)}</div>
+      <div className="country-card__name">{country.name}</div>
+    </div>
+  );
+};
 
 const UserCountries = () => {
   const auth = useContext(AuthContext);
@@ -58,6 +103,35 @@ const UserCountries = () => {
     queryFn: () => fetchUserCountries(viewedUserId),
     enabled: !!viewedUserId,
   });
+
+  const [localCountries, setLocalCountries] = useState(countries);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setLocalCountries(countries), [countries]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const reorderMutation = useMutation({
+    mutationFn: reorderCountries,
+    onError: () =>
+      queryClient.invalidateQueries({ queryKey: ["countries", viewedUserId] }),
+  });
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = localCountries.findIndex((c) => c.code === active.id);
+    const newIndex = localCountries.findIndex((c) => c.code === over.id);
+    const reordered = arrayMove(localCountries, oldIndex, newIndex);
+    setLocalCountries(reordered);
+    reorderMutation.mutate({
+      userId: auth.userId,
+      codes: reordered.map((c) => c.code),
+      token: auth.token,
+    });
+  };
 
   const { data: wishlist = [] } = useQuery({
     queryKey: ["wishlist", viewedUserId],
@@ -315,20 +389,27 @@ const UserCountries = () => {
         </div>
       )}
       <ContinentStats countries={countries} />
-      <div className="user-countries__grid">
-        {countries.map((country) => (
-          <div
-            key={country.code}
-            className="country-card"
-            onClick={() => openModal(country)}
-          >
-            <div className="country-card__flag">
-              {getFlagEmoji(country.code)}
-            </div>
-            <div className="country-card__name">{country.name}</div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={canEdit ? handleDragEnd : undefined}
+      >
+        <SortableContext
+          items={localCountries.map((c) => c.code)}
+          strategy={rectSortingStrategy}
+        >
+          <div className="user-countries__grid">
+            {localCountries.map((country) => (
+              <SortableCountryCard
+                key={country.code}
+                country={country}
+                onClick={openModal}
+                canEdit={canEdit}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
 
       {selectedCountry && (
         <div className="country-modal__backdrop" onClick={closeModal}>

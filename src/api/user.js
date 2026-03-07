@@ -117,3 +117,17 @@ export const deleteCountryComment = ({ userId, code, commentId, token }) =>
     method: "DELETE",
     token,
   });
+
+export const reorderCountries = ({ userId, codes, token }) =>
+  apiFetch(`/api/users/${userId}/countries/reorder`, {
+    method: "PATCH",
+    token,
+    json: { codes },
+  });
+
+export const reorderWishlist = ({ userId, codes, token }) =>
+  apiFetch(`/api/users/${userId}/wishlist/reorder`, {
+    method: "PATCH",
+    token,
+    json: { codes },
+  });
