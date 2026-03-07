@@ -1,51 +1,12 @@
 import { apiFetch } from "./client";
 
-export const fetchUsers = async () => {
-  const data = await apiFetch("/api/users");
-  return data.users;
-};
-
-export const fetchPlacesByUser = async (userId) => {
-  const data = await apiFetch(`/api/places/user/${userId}`);
-  return data.places;
-};
-
-export const fetchPlaceById = async (placeId) => {
-  const data = await apiFetch(`/api/places/${placeId}`);
-  return data.place;
-};
-
-export const createPlace = ({ placeData, token }) =>
-  apiFetch("/api/places", {
-    method: "POST",
-    token,
-    json: {
-      title: placeData.title,
-      description: placeData.description,
-      address: placeData.address,
-      creator: placeData.creator,
-      images: placeData.images,
-      tags: placeData.tags ?? [],
-    },
-  });
-
-export const updatePlace = ({ placeId, placeData, token }) =>
-  apiFetch(`/api/places/${placeId}`, {
-    method: "PATCH",
-    token,
-    json: {
-      title: placeData.title,
-      description: placeData.description,
-      tags: placeData.tags ?? [],
-      newImages: placeData.newImages ?? [],
-      removeImages: placeData.removeImages ?? [],
-    },
-  });
-
-export const deletePlace = ({ placeId, token }) =>
-  apiFetch(`/api/places/${placeId}`, { method: "DELETE", token });
-
-export const searchPlaces = ({ search = "", creator = "", tag = "", page = 1, limit = 9 } = {}) => {
+export const searchPlaces = ({
+  search = "",
+  creator = "",
+  tag = "",
+  page = 1,
+  limit = 9,
+} = {}) => {
   const params = new URLSearchParams();
   if (search) params.append("search", search);
   if (creator) params.append("creator", creator);
@@ -79,10 +40,17 @@ export const fetchComments = async (placeId) => {
 };
 
 export const addComment = ({ placeId, text, token }) =>
-  apiFetch(`/api/places/${placeId}/comments`, { method: "POST", token, json: { text } });
+  apiFetch(`/api/places/${placeId}/comments`, {
+    method: "POST",
+    token,
+    json: { text },
+  });
 
 export const deleteComment = ({ placeId, commentId, token }) =>
-  apiFetch(`/api/places/${placeId}/comments/${commentId}`, { method: "DELETE", token });
+  apiFetch(`/api/places/${placeId}/comments/${commentId}`, {
+    method: "DELETE",
+    token,
+  });
 
 export const fetchPopularPlaces = async (limit = 6) => {
   const data = await apiFetch(`/api/places/popular?limit=${limit}`);

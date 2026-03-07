@@ -19,11 +19,6 @@ export const updateUser = async ({ userId, userData, token }) => {
   });
 };
 
-export const fetchLikedPlaces = async (userId) => {
-  const data = await apiFetch(`/api/users/${userId}/liked-places`);
-  return data.places;
-};
-
 export const changePassword = ({
   userId,
   currentPassword,
