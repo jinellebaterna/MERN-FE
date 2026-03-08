@@ -176,7 +176,7 @@
 .country-modal__gallery {
   overflow-y: auto;
   max-height: 200px;
-  padding: 1rem;
+  /* padding: 1rem; */
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.75rem;
@@ -274,7 +274,7 @@
 
 /* Travel story */
 .country-modal__story {
-  padding: 1rem 1.25rem 0;
+  padding-top: 1rem;
 }
 
 .country-modal__story h4,
@@ -318,9 +318,9 @@
 }
 
 /* Cities visited */
-.country-modal__cities {
+/* .country-modal__cities {
   padding: 1rem 1.25rem 0;
-}
+} */
 
 .country-modal__city-tags {
   display: flex;
@@ -384,7 +384,7 @@
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  padding-bottom: 1rem;
+  padding: 1rem;
 }
 
 .country-modal__city-input {
@@ -590,7 +590,6 @@
 }
 
 .country-modal__upload-section {
-  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--light-gray);
 }
 

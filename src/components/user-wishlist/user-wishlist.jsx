@@ -22,9 +22,19 @@ import { fetchUserWishlist, removeFromWishlist } from "../../api/user";
 import { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
+import { geocodeAddress } from "../../api/weather";
+import WeatherWidget from "../weather-widget/weather-widget";
+import ClimateChart from "../climate-chart/climate-chart";
+
 import "./user-wishlist.css";
 
-const SortableWishlistCard = ({ country, onRemove, canEdit, isRemoving }) => {
+const SortableWishlistCard = ({
+  country,
+  onRemove,
+  canEdit,
+  isRemoving,
+  onClick,
+}) => {
   const {
     attributes,
     listeners,
@@ -46,6 +56,7 @@ const SortableWishlistCard = ({ country, onRemove, canEdit, isRemoving }) => {
       {...attributes}
       {...(canEdit ? listeners : {})}
       className="wishlist-card"
+      onClick={() => onClick(country)}
     >
       <div className="wishlist-card__flag">{getFlagEmoji(country.code)}</div>
       <div className="wishlist-card__name">{country.name}</div>
@@ -73,6 +84,8 @@ const UserWishlist = () => {
   const canEdit = auth.userId === viewedUserId;
   const queryClient = useQueryClient();
   const [error, setError] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [coords, setCoords] = useState(null);
 
   const { data: wishlist = [], isLoading } = useQuery({
     queryKey: ["wishlist", viewedUserId],
@@ -117,6 +130,19 @@ const UserWishlist = () => {
     });
   };
 
+  const openModal = async (country) => {
+    setSelectedCountry(country);
+    setCoords(null);
+    geocodeAddress(country.name)
+      .then((c) => setCoords({ lat: c.lat, lon: c.lon }))
+      .catch(() => {});
+  };
+
+  const closeModal = () => {
+    setSelectedCountry(null);
+    setCoords(null);
+  };
+
   // All early returns AFTER hooks
   if (isLoading) return <LoadingSpinner asOverlay />;
   if (!canEdit) return null;
@@ -154,6 +180,7 @@ const UserWishlist = () => {
               <SortableWishlistCard
                 key={country.code}
                 country={country}
+                onClick={openModal}
                 onRemove={(code) => removeMutation.mutate(code)}
                 canEdit={canEdit}
                 isRemoving={removeMutation.isPending}
@@ -162,6 +189,25 @@ const UserWishlist = () => {
           </div>
         </SortableContext>
       </DndContext>
+      {selectedCountry && (
+        <div className="country-modal__backdrop" onClick={closeModal}>
+          <div className="country-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="country-modal__header">
+              <span className="country-modal__flag">
+                {getFlagEmoji(selectedCountry.code)}
+              </span>
+              <h3>{selectedCountry.name}</h3>
+              <button className="country-modal__close" onClick={closeModal}>
+                &times;
+              </button>
+            </div>
+            <div className="country-modal__body">
+              <WeatherWidget lat={coords?.lat} lon={coords?.lon} />
+              <ClimateChart lat={coords?.lat} lon={coords?.lon} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
