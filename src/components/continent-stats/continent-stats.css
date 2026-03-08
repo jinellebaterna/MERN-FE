@@ -12,6 +12,18 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.continent-stats__card:hover {
+  box-shadow: 0 3px 10px var(--shadow-color);
+}
+
+.continent-stats__card--active {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--card-background));
 }
 
 .continent-stats__name {

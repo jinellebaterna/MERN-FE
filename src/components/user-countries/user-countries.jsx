@@ -40,7 +40,7 @@ import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import "./user-countries.css";
 
-import { IMG_BASE } from "../../data/data";
+import { IMG_BASE, COUNTRIES } from "../../data/data";
 
 const SortableCountryCard = ({ country, onClick, canEdit }) => {
   const {
@@ -81,6 +81,7 @@ const UserCountries = () => {
 
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedContinent, setSelectedContinent] = useState(null);
 
   const [storyDraft, setStoryDraft] = useState("");
   const [cityInput, setCityInput] = useState("");
@@ -316,6 +317,17 @@ const UserCountries = () => {
     setImageUploadKey((k) => k + 1);
   };
 
+  const handleContinentSelect = (continent) => {
+    setSelectedContinent((prev) => (prev === continent ? null : continent));
+  };
+
+  const displayedCountries = selectedContinent
+    ? localCountries.filter((c) => {
+        const found = COUNTRIES.find((a) => a.code === c.code);
+        return found?.continent === selectedContinent;
+      })
+    : localCountries;
+
   if (isLoading) return <LoadingSpinner asOverlay />;
 
   return (
@@ -388,7 +400,11 @@ const UserCountries = () => {
             : "No countries visited yet."}
         </div>
       )}
-      <ContinentStats countries={countries} />
+      <ContinentStats
+        countries={countries}
+        selectedContinent={selectedContinent}
+        onSelect={handleContinentSelect}
+      />
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -399,7 +415,7 @@ const UserCountries = () => {
           strategy={rectSortingStrategy}
         >
           <div className="user-countries__grid">
-            {localCountries.map((country) => (
+            {displayedCountries.map((country) => (
               <SortableCountryCard
                 key={country.code}
                 country={country}

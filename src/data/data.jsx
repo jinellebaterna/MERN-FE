@@ -202,3 +202,25 @@ export const COUNTRIES = [
 ];
 
 export const IMG_BASE = "http://localhost:5001";
+
+export const WMO_CODES = {
+  0: "Clear sky ☀️ ",
+  1: "Mainly clear 🌤️ ",
+  2: "Partly cloudy ⛅",
+  3: "Overcast ☁️ ",
+  45: "Fog 🌫️ ",
+  48: "Fog 🌫️ ",
+  51: "Light drizzle 🌦️ ",
+  53: "Drizzle 🌦️ ",
+  55: "Heavy drizzle 🌦️ ",
+  61: "Light rain 🌧️ ",
+  63: "Rain 🌧️ ",
+  65: "Heavy rain 🌧️ ",
+  71: "Light snow ❄️ ",
+  73: "Snow ❄️ ",
+  75: "Heavy snow ❄️ ",
+  80: "Showers 🌦️ ",
+  81: "Showers 🌦️ ",
+  82: "Heavy showers 🌦️ ",
+  95: "Thunderstorm ⛈️ ",
+};

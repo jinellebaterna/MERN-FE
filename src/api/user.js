@@ -126,3 +126,17 @@ export const reorderWishlist = ({ userId, codes, token }) =>
     token,
     json: { codes },
   });
+
+export const updateWishlistDetails = ({
+  userId,
+  code,
+  notes,
+  priority,
+  targetYear,
+  token,
+}) =>
+  apiFetch(`/api/users/${userId}/wishlist/${code}/details`, {
+    method: "PATCH",
+    token,
+    json: { notes, priority, targetYear },
+  });

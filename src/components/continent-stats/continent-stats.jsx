@@ -10,7 +10,7 @@ const CONTINENT_ORDER = [
   "Oceania",
 ];
 
-const ContinentStats = ({ countries }) => {
+const ContinentStats = ({ countries, selectedContinent, onSelect }) => {
   const totals = COUNTRIES.reduce((acc, c) => {
     acc[c.continent] = (acc[c.continent] || 0) + 1;
     return acc;
@@ -30,7 +30,11 @@ const ContinentStats = ({ countries }) => {
         const pct = total ? (count / total) * 100 : 0;
 
         return (
-          <div key={continent} className="continent-stats__card">
+          <div
+            key={continent}
+            className={`continent-stats__card${selectedContinent === continent ? " continent-stats__card--active" : ""}`}
+            onClick={() => onSelect(continent)}
+          >
             <div className="continent-stats__name">{continent}</div>
             <div className="continent-stats__count">
               {count} / {total} countries

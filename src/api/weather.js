@@ -29,3 +29,38 @@ export const fetchMonthlyClimate = async (lat, lon) => {
   const data = await res.json();
   return data.daily;
 };
+
+export const fetchCountryInfo = async (code) => {
+  const res = await fetch(
+    `https://restcountries.com/v3.1/alpha/${code}?fields=currencies,languages`
+  );
+  if (!res.ok) return null;
+  const data = await res.json();
+  const currency = Object.values(data.currencies || {})[0]?.symbol || null;
+  const language = Object.values(data.languages || {})[0] || null;
+  return { currency, language };
+};
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+export const getBestMonths = (dailyData) => {
+  if (!dailyData?.time) return null;
+  const monthly = Array.from({ length: 12 }, () => ({ temps: [], precip: 0 }));
+  dailyData.time.forEach((date, i) => {
+    const m = new Date(date).getMonth();
+    const avg = (dailyData.temperature_2m_max[i] + dailyData.temperature_2m_min[i]) / 2;
+    monthly[m].temps.push(avg);
+    monthly[m].precip += dailyData.precipitation_sum[i] || 0;
+  });
+  const good = monthly
+    .map((m, i) => {
+      const avgTemp = m.temps.reduce((s, t) => s + t, 0) / (m.temps.length || 1);
+      return { i, avgTemp, precip: m.precip };
+    })
+    .filter(({ avgTemp, precip }) => avgTemp >= 10 && avgTemp <= 28 && precip < 100)
+    .map(({ i }) => i);
+  if (!good.length) return null;
+  const first = MONTHS[good[0]];
+  const last = MONTHS[good[good.length - 1]];
+  return first === last ? first : `${first}–${last}`;
+};

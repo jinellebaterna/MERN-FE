@@ -15,15 +15,26 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { reorderWishlist } from "../../api/user";
+import {
+  reorderWishlist,
+  addUserCountry,
+  fetchUserWishlist,
+  removeFromWishlist,
+  updateWishlistDetails,
+} from "../../api/user";
 
 import { AuthContext } from "../context/auth-context";
-import { fetchUserWishlist, removeFromWishlist } from "../../api/user";
 import { getFlagEmoji } from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
-import { geocodeAddress } from "../../api/weather";
-import WeatherWidget from "../weather-widget/weather-widget";
+import {
+  geocodeAddress,
+  fetchMonthlyClimate,
+  fetchCountryInfo,
+  fetchWeather,
+  getBestMonths,
+} from "../../api/weather";
+import { WMO_CODES } from "../../data/data";
 import ClimateChart from "../climate-chart/climate-chart";
 
 import "./user-wishlist.css";
@@ -60,6 +71,12 @@ const SortableWishlistCard = ({
     >
       <div className="wishlist-card__flag">{getFlagEmoji(country.code)}</div>
       <div className="wishlist-card__name">{country.name}</div>
+      <div className="wishlist-card__date">
+        {new Date(country.addedAt).toLocaleDateString(undefined, {
+          month: "short",
+          year: "numeric",
+        })}
+      </div>
       {canEdit && (
         <button
           className="wishlist-card__remove"
@@ -86,6 +103,13 @@ const UserWishlist = () => {
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [coords, setCoords] = useState(null);
+  const [countryInfo, setCountryInfo] = useState(null);
+  const [bestMonths, setBestMonths] = useState(null);
+  const [notesDraft, setNotesDraft] = useState("");
+  const [priorityDraft, setPriorityDraft] = useState("medium");
+  const [targetYearDraft, setTargetYearDraft] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [savedIndicator, setSavedIndicator] = useState(false);
 
   const { data: wishlist = [], isLoading } = useQuery({
     queryKey: ["wishlist", viewedUserId],
@@ -133,15 +157,70 @@ const UserWishlist = () => {
   const openModal = async (country) => {
     setSelectedCountry(country);
     setCoords(null);
+    setCountryInfo(null);
+    setBestMonths(null);
+    setNotesDraft(country.notes || "");
+    setPriorityDraft(country.priority || "medium");
+    setTargetYearDraft(country.targetYear ? String(country.targetYear) : "");
+
+    fetchCountryInfo(country.code)
+      .then(setCountryInfo)
+      .catch(() => {});
+
     geocodeAddress(country.name)
-      .then((c) => setCoords({ lat: c.lat, lon: c.lon }))
+      .then(async ({ lat, lon }) => {
+        setCoords({ lat, lon });
+        fetchWeather(lat, lon)
+          .then(setWeather)
+          .catch(() => {});
+        const climate = await fetchMonthlyClimate(lat, lon);
+        setBestMonths(getBestMonths(climate));
+      })
       .catch(() => {});
   };
 
   const closeModal = () => {
     setSelectedCountry(null);
     setCoords(null);
+    setCountryInfo(null);
+    setBestMonths(null);
+    setNotesDraft("");
+    setPriorityDraft("medium");
+    setTargetYearDraft("");
+    setWeather(null);
+    setSavedIndicator(false);
   };
+
+  const markVisitedMutation = useMutation({
+    mutationFn: ({ name, code }) =>
+      addUserCountry({ userId: auth.userId, name, code, token: auth.token }),
+    onSuccess: (_, { code }) => {
+      removeMutation.mutate(code);
+      queryClient.invalidateQueries({ queryKey: ["countries", auth.userId] });
+      closeModal();
+    },
+    onError: (err) => setError(err.message),
+  });
+
+  const detailsMutation = useMutation({
+    mutationFn: ({ code, notes, priority, targetYear }) =>
+      updateWishlistDetails({
+        userId: auth.userId,
+        code,
+        notes,
+        priority,
+        targetYear,
+        token: auth.token,
+      }),
+    onSuccess: (data) => {
+      setSelectedCountry((prev) =>
+        prev ? { ...prev, ...data.country } : null
+      );
+      setSavedIndicator(true);
+      setTimeout(() => setSavedIndicator(false), 1500);
+    },
+    onError: (err) => setError(err.message),
+  });
 
   // All early returns AFTER hooks
   if (isLoading) return <LoadingSpinner asOverlay />;
@@ -189,6 +268,7 @@ const UserWishlist = () => {
           </div>
         </SortableContext>
       </DndContext>
+
       {selectedCountry && (
         <div className="country-modal__backdrop" onClick={closeModal}>
           <div className="country-modal" onClick={(e) => e.stopPropagation()}>
@@ -201,10 +281,125 @@ const UserWishlist = () => {
                 &times;
               </button>
             </div>
+
             <div className="country-modal__body">
-              <WeatherWidget lat={coords?.lat} lon={coords?.lon} />
+              {(bestMonths || countryInfo) && (
+                <div className="wishlist-modal__info-strip">
+                  {bestMonths && <span>📅 Best Time: {bestMonths}</span>}
+                  {countryInfo?.currency && (
+                    <span>💰 Currency: {countryInfo.currency}</span>
+                  )}
+                  {countryInfo?.language && (
+                    <span>🗣 Language: {countryInfo.language}</span>
+                  )}
+                  {weather && (
+                    <span>
+                      {WMO_CODES[weather.weather_code] ?? "🌡️ "}{" "}
+                      {weather.temperature_2m}°
+                    </span>
+                  )}
+                </div>
+              )}
+
               <ClimateChart lat={coords?.lat} lon={coords?.lon} />
+
+              {canEdit && savedIndicator && (
+                <span className="wishlist-modal__saved">Saved ✓</span>
+              )}
+
+              {canEdit && (
+                <div className="wishlist-modal__planning">
+                  <div className="wishlist-modal__field">
+                    <label>🔥 Priority</label>
+                    <select
+                      value={priorityDraft}
+                      onChange={(e) => {
+                        setPriorityDraft(e.target.value);
+                        detailsMutation.mutate({
+                          code: selectedCountry.code,
+                          notes: notesDraft,
+                          priority: e.target.value,
+                          targetYear: targetYearDraft
+                            ? Number(targetYearDraft)
+                            : null,
+                        });
+                      }}
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+                  <div className="wishlist-modal__field">
+                    <label>🎯 Target Year</label>
+                    <input
+                      type="number"
+                      value={targetYearDraft}
+                      min={new Date().getFullYear()}
+                      max={2100}
+                      placeholder="e.g. 2027"
+                      onChange={(e) => setTargetYearDraft(e.target.value)}
+                      onBlur={() =>
+                        detailsMutation.mutate({
+                          code: selectedCountry.code,
+                          notes: notesDraft,
+                          priority: priorityDraft,
+                          targetYear: targetYearDraft
+                            ? Number(targetYearDraft)
+                            : null,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="country-modal__notes">
+                <h4>📝 Notes</h4>
+                {canEdit ? (
+                  <textarea
+                    value={notesDraft}
+                    onChange={(e) => setNotesDraft(e.target.value)}
+                    placeholder="Why do you want to visit? What do you want to do there?"
+                    rows={3}
+                    onBlur={() => {
+                      if (notesDraft !== (selectedCountry.notes || ""))
+                        detailsMutation.mutate({
+                          code: selectedCountry.code,
+                          notes: notesDraft,
+                          priority: priorityDraft,
+                          targetYear: targetYearDraft
+                            ? Number(targetYearDraft)
+                            : null,
+                        });
+                    }}
+                  />
+                ) : (
+                  <p>{selectedCountry.notes || "No notes."}</p>
+                )}
+              </div>
             </div>
+
+            {canEdit && (
+              <div className="country-modal__actions">
+                <button
+                  className="country-modal__btn country-modal__btn--save"
+                  onClick={() =>
+                    markVisitedMutation.mutate({
+                      name: selectedCountry.name,
+                      code: selectedCountry.code,
+                    })
+                  }
+                  disabled={
+                    markVisitedMutation.isPending || removeMutation.isPending
+                  }
+                >
+                  {markVisitedMutation.isPending
+                    ? "Moving..."
+                    : "✓ Mark as Visited"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
