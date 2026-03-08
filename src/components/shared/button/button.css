@@ -9,6 +9,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
 }
 
@@ -36,7 +37,7 @@
 
 .button--danger {
   background: var(--accent-color);
-  border-color: var(--accent-color);;
+  border-color: var(--accent-color);
 }
 
 .button--danger:hover,

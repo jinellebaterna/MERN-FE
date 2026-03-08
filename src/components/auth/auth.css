@@ -8,11 +8,9 @@
   width: 90%;
   max-width: 25rem;
   margin: 0 auto;
-  padding-top: 7rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .authentication form {
@@ -25,4 +23,12 @@
 .authentication h2,
 .authentication p {
   margin: 0px;
+}
+
+.authentication .button {
+  width: 100%;
+}
+
+.authentication > .button {
+  margin-top: 0.75rem;
 }
