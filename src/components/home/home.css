@@ -91,6 +91,17 @@
   flex-shrink: 0;
 }
 
+.traveler-card__avatar--placeholder {
+  background: var(--secondary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
 .traveler-card__info {
   flex: 1;
   cursor: pointer;

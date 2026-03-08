@@ -85,12 +85,21 @@ const FollowersModal = ({
 
             return (
               <li key={listedUser.id} className="followers-modal__row">
-                <img
-                  className="followers-modal__avatar"
-                  src={`${IMG_BASE}/${listedUser.image}`}
-                  alt={listedUser.name}
-                  onClick={() => handleRowClick(listedUser.id)}
-                />
+                {listedUser.image ? (
+                  <img
+                    className="followers-modal__avatar"
+                    src={`${IMG_BASE}/${listedUser.image}`}
+                    alt={listedUser.name}
+                    onClick={() => handleRowClick(listedUser.id)}
+                  />
+                ) : (
+                  <div
+                    className="followers-modal__avatar followers-modal__avatar--placeholder"
+                    onClick={() => handleRowClick(listedUser.id)}
+                  >
+                    {listedUser.name?.[0]?.toUpperCase() ?? "?"}
+                  </div>
+                )}
                 <div
                   className="followers-modal__info"
                   onClick={() => handleRowClick(listedUser.id)}

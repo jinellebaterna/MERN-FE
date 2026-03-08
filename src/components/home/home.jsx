@@ -144,12 +144,22 @@ const Home = () => {
           ).toFixed(1);
           return (
             <div key={user.id} className="traveler-card">
-              <img
-                className="traveler-card__avatar"
-                src={`${IMG_BASE}/${user.image}`}
-                alt={user.name}
-                onClick={() => navigate(`/countries?user=${user.id}`)}
-              />
+              {user.image ? (
+                <img
+                  className="traveler-card__avatar"
+                  src={`${IMG_BASE}/${user.image}`}
+                  alt={user.name}
+                  onClick={() => navigate(`/countries?user=${user.id}`)}
+                />
+              ) : (
+                <div
+                  className="traveler-card__avatar traveler-card__avatar--placeholder"
+                  onClick={() => navigate(`/countries?user=${user.id}`)}
+                >
+                  {user.name?.[0]?.toUpperCase() ?? "?"}
+                </div>
+              )}
+
               <div
                 className="traveler-card__info"
                 onClick={() => navigate(`/countries?user=${user.id}`)}

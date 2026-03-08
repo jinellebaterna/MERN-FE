@@ -68,7 +68,7 @@ const Auth = () => {
           },
           image: {
             value: null,
-            isValid: false,
+            isValid: true,
           },
         },
         false
