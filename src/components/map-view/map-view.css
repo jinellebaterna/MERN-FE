@@ -18,18 +18,23 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.map-popup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 .map-popup-img {
   width: 120px;
   height: 80px;
   object-fit: cover;
   border-radius: 4px;
   display: block;
-  margin-bottom: 0.4rem;
 }
 
 .map-popup-title {
   font-weight: bold;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   font-size: 0.9rem;
 }
 

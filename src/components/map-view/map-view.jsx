@@ -53,17 +53,19 @@ const GeocodedMarker = ({ place, userId, filter }) => {
   return (
     <Marker position={[coords.lat, coords.lon]} icon={icon}>
       <Popup>
-        {place.images?.[0] && (
-          <img
-            className="map-popup-img"
-            src={`http://localhost:5001/${place.images[0]}`}
-            alt={place.title}
-          />
-        )}
-        <p className="map-popup-title">{place.title}</p>
-        <Link className="map-popup-link" to={`/places/view/${place.id}`}>
-          View
-        </Link>
+        <div className="map-popup-container">
+          {place.images?.[0] && (
+            <img
+              className="map-popup-img"
+              src={`http://localhost:5001/${place.images[0]}`}
+              alt={place.title}
+            />
+          )}
+          <p className="map-popup-title">{place.title}</p>
+          <Link className="map-popup-link" to={`/places/view/${place.id}`}>
+            View
+          </Link>
+        </div>
       </Popup>
     </Marker>
   );

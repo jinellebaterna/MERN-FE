@@ -11,7 +11,7 @@ import { fetchWorldGeoJSON } from "../../api/countries";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import "./scratch-map.css";
 
-const VISITED_COLOR = "#7d5ba6";
+const VISITED_COLOR = "var(--secondary-color)";
 const DEFAULT_COLOR = "#d1d5db";
 
 const CountryLayer = ({ geoJSON, visitedCodes }) => {

@@ -4,6 +4,7 @@
   height: 4rem;
   display: flex;
   align-items: center;
+  gap: 1rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -22,7 +23,7 @@
 }
 
 main {
-  margin-top: 5rem; /* keeps content below fixed navbar */
+  padding-top: 5rem; /* keeps content below fixed navbar */
 }
 
 @media (min-width: 768px) {

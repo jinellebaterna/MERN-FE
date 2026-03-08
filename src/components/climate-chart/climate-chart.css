@@ -1,28 +1,120 @@
 .climate-chart {
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .climate-chart h4 {
-  margin: 0 0 0.75rem;
+  margin: 0;
   font-size: 0.9rem;
   text-transform: uppercase;
   color: #666;
+  letter-spacing: 0.05em;
 }
 
-.climate-chart table {
+.climate-chart__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 160px;
+  padding-bottom: 1.5rem;
+  position: relative;
+}
+
+.climate-chart__month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+/* Temperature column */
+.climate-chart__temp-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
+  position: relative;
 }
 
-.climate-chart th,
-.climate-chart td {
-  padding: 0.4rem 0.6rem;
-  text-align: center;
-  border-bottom: 1px solid #eee;
+.climate-chart__temp-track {
+  flex: 1;
+  width: 60%;
+  background: var(--light-gray, #eee);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
 }
 
-.climate-chart th {
-  font-weight: 600;
-  color: #444;
+.climate-chart__temp-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, #5b9bd5, #e07b54);
+  border-radius: 3px;
+}
+
+.climate-chart__temp-label {
+  font-size: 0.6rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  line-height: 1;
+}
+
+/* Precipitation column */
+.climate-chart__precip-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.climate-chart__precip-track {
+  flex: 1;
+  width: 60%;
+  background: var(--light-gray, #eee);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.climate-chart__precip-bar {
+  width: 100%;
+  background: #5b9bd5;
+  opacity: 0.6;
+  border-radius: 3px;
+}
+
+.climate-chart__precip-label {
+  font-size: 0.55rem;
+  color: var(--text-color);
+  opacity: 0.6;
+  line-height: 1;
+}
+
+/* Month label */
+.climate-chart__month-label {
+  position: absolute;
+  bottom: -1.4rem;
+  font-size: 0.65rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* Legend */
+.climate-chart__legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.72rem;
+  color: var(--text-color);
+  opacity: 0.6;
 }

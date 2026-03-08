@@ -7,6 +7,9 @@
 .upload-progress {
   border-radius: 3px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .upload-progress__bar-track {
@@ -28,18 +31,41 @@
   font-size: 0.75rem;
   color: var(--text-color);
   opacity: 0.7;
-  margin-top: 0.25rem;
 }
 
 .place-form {
   list-style: none;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.5rem;
   width: 90%;
   max-width: 40rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 6px;
   background: var(--card-background);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.place-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.place-form hr {
+  border: none;
+  border-top: 1px solid var(--light-gray);
+  margin: 0;
+}
+
+.place-form > .button,
+.place-form form > .button {
+  align-self: flex-start;
+}
+
+.place-form h3 {
+  margin: 0;
 }
 
 .existing-images {
@@ -80,7 +106,6 @@
 .profile__stats {
   display: flex;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .profile__stat-btn {

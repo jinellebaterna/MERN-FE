@@ -15,6 +15,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.25rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -44,11 +45,10 @@
 
 .image-upload__dropzone-icon {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
 }
 
 .image-upload__dropzone p {
-  margin: 0.25rem 0;
+  margin: 0;
   font-size: 0.95rem;
 }
 
