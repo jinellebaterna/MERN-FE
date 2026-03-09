@@ -15,7 +15,12 @@ import {
 import { getFlagEmoji } from "../../utils/flags";
 import { IMG_BASE } from "../../data/data";
 
-const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose }) => {
+const CountryModal = ({
+  country: initialCountry,
+  canEdit,
+  viewedUserId,
+  onClose,
+}) => {
   const auth = useContext(AuthContext);
   const queryClient = useQueryClient();
 
@@ -84,7 +89,12 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
 
   const commentMutation = useMutation({
     mutationFn: ({ code, text }) =>
-      addCountryComment({ userId: viewedUserId, code, text, token: auth.token }),
+      addCountryComment({
+        userId: viewedUserId,
+        code,
+        text,
+        token: auth.token,
+      }),
     onSuccess: (data) => {
       setCountry((prev) => ({
         ...prev,
@@ -96,7 +106,12 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
 
   const deleteCommentMutation = useMutation({
     mutationFn: ({ code, commentId }) =>
-      deleteCountryComment({ userId: viewedUserId, code, commentId, token: auth.token }),
+      deleteCountryComment({
+        userId: viewedUserId,
+        code,
+        commentId,
+        token: auth.token,
+      }),
     onSuccess: (_, { commentId }) => {
       setCountry((prev) => ({
         ...prev,
@@ -140,16 +155,25 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
     setPendingPaths(isValid ? paths : []);
   }, []);
 
-  const { imageInputHandler, uploadingKeys, uploadProgress, uploadError, clearUploadError } =
-    useImageUpload(handleImagePaths);
+  const {
+    imageInputHandler,
+    uploadingKeys,
+    uploadProgress,
+    uploadError,
+    clearUploadError,
+  } = useImageUpload(handleImagePaths);
 
   return (
     <div className="country-modal__backdrop" onClick={onClose}>
       <div className="country-modal" onClick={(e) => e.stopPropagation()}>
         <div className="country-modal__header">
-          <span className="country-modal__flag">{getFlagEmoji(country.code)}</span>
+          <span className="country-modal__flag">
+            {getFlagEmoji(country.code)}
+          </span>
           <h3>{country.name}</h3>
-          <button className="country-modal__close" onClick={onClose}>&times;</button>
+          <button className="country-modal__close" onClick={onClose}>
+            &times;
+          </button>
         </div>
 
         <div className="country-modal__gallery">
@@ -180,7 +204,12 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
           {uploadError && (
             <p style={{ color: "var(--color-danger)", fontSize: "0.85rem" }}>
               {uploadError}
-              <button onClick={clearUploadError} style={{ marginLeft: "0.5rem" }}>✕</button>
+              <button
+                onClick={clearUploadError}
+                style={{ marginLeft: "0.5rem" }}
+              >
+                ✕
+              </button>
             </p>
           )}
 
@@ -234,7 +263,9 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
                   {canEdit && (
                     <button
                       onClick={() => {
-                        const updated = country.cities.filter((c) => c !== city);
+                        const updated = country.cities.filter(
+                          (c) => c !== city
+                        );
                         updateMutation.mutate({
                           code: country.code,
                           story: storyDraft,
@@ -270,7 +301,9 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
 
                     if (e.key === "ArrowDown") {
                       e.preventDefault();
-                      setCityActiveIndex((i) => Math.min(i + 1, filtered.length - 1));
+                      setCityActiveIndex((i) =>
+                        Math.min(i + 1, filtered.length - 1)
+                      );
                     } else if (e.key === "ArrowUp") {
                       e.preventDefault();
                       setCityActiveIndex((i) => Math.max(i - 1, 0));
@@ -317,7 +350,10 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
                                 story: storyDraft,
                                 cities: updated,
                               });
-                              setCountry((prev) => ({ ...prev, cities: updated }));
+                              setCountry((prev) => ({
+                                ...prev,
+                                cities: updated,
+                              }));
                               setCityInput("");
                               setCityActiveIndex(-1);
                             }}
@@ -364,7 +400,9 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
                   <span className="country-modal__comment-author">
                     {comment.user?.name || "User"}
                   </span>
-                  <span className="country-modal__comment-text">{comment.text}</span>
+                  <span className="country-modal__comment-text">
+                    {comment.text}
+                  </span>
                   {(auth.userId === comment.user?._id || canEdit) && (
                     <button
                       className="country-modal__comment-delete"
@@ -409,7 +447,9 @@ const CountryModal = ({ country: initialCountry, canEdit, viewedUserId, onClose 
                 onClick={handleSave}
                 disabled={updateMutation.isPending || imagesMutation.isPending}
               >
-                {updateMutation.isPending || imagesMutation.isPending ? "Saving..." : "Save"}
+                {updateMutation.isPending || imagesMutation.isPending
+                  ? "Saving..."
+                  : "Save"}
               </button>
               <button
                 className="country-modal__btn country-modal__btn--remove"

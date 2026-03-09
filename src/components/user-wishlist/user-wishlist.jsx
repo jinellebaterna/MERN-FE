@@ -15,13 +15,17 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { reorderWishlist, fetchUserWishlist, removeFromWishlist } from "../../api/user";
+import {
+  reorderWishlist,
+  fetchUserWishlist,
+  removeFromWishlist,
+} from "../../api/user";
 
 import { AuthContext } from "../context/auth-context";
 import { getFlagEmoji } from "../../utils/flags";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
-import WishlistModal from "./WishlistModal";
+import WishlistModal from "./wishlist-modal";
 
 import "./user-wishlist.css";
 

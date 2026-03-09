@@ -105,13 +105,12 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   gap: 0.75rem 1.5rem;
   font-size: 0.85rem;
   color: var(--text-color);
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--light-gray);
-  margin-bottom: 0.5rem;
 }
 
 /* Priority + Year row */
@@ -220,4 +219,49 @@
   color: #27ae60;
   animation: fadeInOut 1.5s ease forwards;
   align-self: flex-start;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wishlist-modal__info-strip {
+  animation: fade-up 0.3s ease forwards;
+}
+
+.wishlist-modal__info-skel {
+  display: inline-block;
+  height: 1em;
+  border-radius: 4px;
+  background: var(--light-gray);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.wishlist-modal__info-skel:nth-child(1) {
+  width: 100px;
+}
+.wishlist-modal__info-skel:nth-child(2) {
+  width: 80px;
+}
+.wishlist-modal__info-skel:nth-child(3) {
+  width: 90px;
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
 }

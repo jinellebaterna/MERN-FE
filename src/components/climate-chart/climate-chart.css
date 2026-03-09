@@ -118,3 +118,38 @@
   color: var(--text-color);
   opacity: 0.6;
 }
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.climate-chart__skel-bar {
+  width: 100%;
+  background: var(--light-gray);
+  border-radius: 3px;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* Fade in when data loads */
+@keyframes chart-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.climate-chart--loaded {
+  animation: chart-fade-in 0.35s ease forwards;
+}

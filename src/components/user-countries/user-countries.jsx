@@ -30,7 +30,7 @@ import CountrySearch from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
-import CountryModal from "./CountryModal";
+import CountryModal from "./country-modal";
 import { COUNTRIES } from "../../data/data";
 import "./user-countries.css";
 

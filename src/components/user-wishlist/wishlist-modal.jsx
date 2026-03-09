@@ -34,6 +34,7 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
   );
   const [savedIndicator, setSavedIndicator] = useState(false);
   const [country, setCountry] = useState(initialCountry);
+  const [infoLoading, setInfoLoading] = useState(true);
 
   useEffect(() => {
     fetchCountryInfo(country.code)
@@ -49,7 +50,8 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
         const climate = await fetchMonthlyClimate(lat, lon);
         setBestMonths(getBestMonths(climate));
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setInfoLoading(false));
   }, [country.code, country.name]);
 
   const removeMutation = useMutation({
@@ -99,25 +101,31 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
           </button>
         </div>
 
-        <div className="country-modal__body">
-          {(bestMonths || countryInfo) && (
-            <div className="wishlist-modal__info-strip">
-              {bestMonths && <span>📅 Best Time: {bestMonths}</span>}
-              {countryInfo?.currency && (
-                <span>💰 Currency: {countryInfo.currency}</span>
-              )}
-              {countryInfo?.language && (
-                <span>🗣 Language: {countryInfo.language}</span>
-              )}
-              {weather && (
-                <span>
-                  {WMO_CODES[weather.weather_code] ?? "🌡️ "}{" "}
-                  {weather.temperature_2m}°
-                </span>
-              )}
-            </div>
-          )}
+        {infoLoading ? (
+          <div className="wishlist-modal__info-strip wishlist-modal__info-strip--loading">
+            <span className="wishlist-modal__info-skel" />
+            <span className="wishlist-modal__info-skel" />
+            <span className="wishlist-modal__info-skel" />
+          </div>
+        ) : bestMonths || countryInfo || weather ? (
+          <div className="wishlist-modal__info-strip">
+            {bestMonths && <span>📅 Best Time: {bestMonths}</span>}
+            {countryInfo?.currency && (
+              <span>💰 Currency: {countryInfo.currency}</span>
+            )}
+            {countryInfo?.language && (
+              <span>🗣 Language: {countryInfo.language}</span>
+            )}
+            {weather && (
+              <span>
+                {WMO_CODES[weather.weather_code] ?? "🌡️  "}{" "}
+                {weather.temperature_2m}°
+              </span>
+            )}
+          </div>
+        ) : null}
 
+        <div className="country-modal__body">
           <ClimateChart lat={coords?.lat} lon={coords?.lon} />
 
           {canEdit && savedIndicator && (
