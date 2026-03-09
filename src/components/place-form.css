@@ -4,35 +4,6 @@
   gap: 1rem;
 }
 
-.upload-progress {
-  border-radius: 3px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.upload-progress__bar-track {
-  height: 6px;
-  background: var(--input-border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.upload-progress__bar {
-  height: 100%;
-  background: var(--primary-color);
-  border-radius: 3px;
-  transition: width 0.15s ease;
-}
-
-.upload-progress__label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-color);
-  opacity: 0.7;
-}
-
 .place-form {
   list-style: none;
   margin: 0 auto;

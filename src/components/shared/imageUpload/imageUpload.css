@@ -214,3 +214,33 @@
 :root[data-theme="dark"] .image-upload__dropzone--active {
   box-shadow: 0 4px 16px rgba(155, 127, 196, 0.3);
 }
+
+/* Upload progress bar */
+.upload-progress {
+  border-radius: 3px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.upload-progress__bar-track {
+  height: 6px;
+  background: var(--input-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.upload-progress__bar {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.15s ease;
+}
+
+.upload-progress__label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}

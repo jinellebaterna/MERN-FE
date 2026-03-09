@@ -41,7 +41,7 @@ export const fetchCountryInfo = async (code) => {
   return { currency, language };
 };
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+import { MONTHS } from "../data/data";
 
 export const getBestMonths = (dailyData) => {
   if (!dailyData?.time) return null;

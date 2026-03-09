@@ -203,6 +203,8 @@ export const COUNTRIES = [
 
 export const IMG_BASE = "http://localhost:5001";
 
+export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export const WMO_CODES = {
   0: "Clear sky ☀️ ",
   1: "Mainly clear 🌤️ ",

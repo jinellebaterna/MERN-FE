@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Modal from "../shared/modal/modal";
 import Button from "../shared/button/button";
-
-import { IMG_BASE } from "../../data/data";
+import Avatar from "../shared/avatar/avatar";
 import "./followers-modal.css";
 
 const FollowersModal = ({
@@ -85,21 +84,12 @@ const FollowersModal = ({
 
             return (
               <li key={listedUser.id} className="followers-modal__row">
-                {listedUser.image ? (
-                  <img
-                    className="followers-modal__avatar"
-                    src={`${IMG_BASE}/${listedUser.image}`}
-                    alt={listedUser.name}
-                    onClick={() => handleRowClick(listedUser.id)}
-                  />
-                ) : (
-                  <div
-                    className="followers-modal__avatar followers-modal__avatar--placeholder"
-                    onClick={() => handleRowClick(listedUser.id)}
-                  >
-                    {listedUser.name?.[0]?.toUpperCase() ?? "?"}
-                  </div>
-                )}
+                <Avatar
+                  image={listedUser.image}
+                  name={listedUser.name}
+                  size={40}
+                  onClick={() => handleRowClick(listedUser.id)}
+                />
                 <div
                   className="followers-modal__info"
                   onClick={() => handleRowClick(listedUser.id)}

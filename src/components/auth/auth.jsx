@@ -105,14 +105,15 @@ const Auth = () => {
       />
       <Card className="authentication">
         {currentMutation.isPending && <LoadingSpinner asOverlay />}
-        <h2>{isLoginMode ? "Welcome Back!" : "Create an Account"}</h2>
-        <p>
-          {isLoginMode
-            ? "Login to continue."
-            : "Sign up to start sharing places."}
-        </p>
-        <hr />
         <form onSubmit={authSubmitHandler}>
+          <div>
+            <h2>{isLoginMode ? "Welcome Back!" : "Create an Account"}</h2>
+            <p>
+              {isLoginMode
+                ? "Login to continue."
+                : "Sign up to start sharing places."}
+            </p>
+          </div>
           {!isLoginMode && (
             <>
               <ImageUpload

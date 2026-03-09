@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchMonthlyClimate } from "../../api/weather";
+import { MONTHS } from "../../data/data";
 import "./climate-chart.css";
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const groupByMonth = (daily) => {
   const months = Array.from({ length: 12 }, () => ({

@@ -54,24 +54,6 @@
   background: var(--background-color);
 }
 
-.followers-modal__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.followers-modal__avatar--placeholder {
-  background: var(--secondary-color);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-}
 
 .followers-modal__info {
   display: flex;

@@ -1,11 +1,11 @@
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useRef, useCallback } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAllUsers, followUser, unfollowUser } from "../../../api/user";
 import FollowersModal from "../../followers-modal/followers-modal";
-
-import { IMG_BASE } from "../../../data/data";
+import Avatar from "../avatar/avatar";
+import { useClickOutside } from "../../../hook/use-click-outside";
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
 import "./navLinks.css";
@@ -48,16 +48,8 @@ const NavLinks = () => {
     },
   });
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  const closeDropdown = useCallback(() => setDropdownOpen(false), []);
+  useClickOutside(dropdownRef, closeDropdown);
 
   return (
     <ul className="nav-links">
@@ -98,17 +90,12 @@ const NavLinks = () => {
             className="avatar-btn"
             onClick={() => setDropdownOpen((o) => !o)}
           >
-            {auth.image ? (
-              <img
-                src={`${IMG_BASE}/${auth.image}`}
-                alt="avatar"
-                className="avatar-img"
-              />
-            ) : (
-              <div className="avatar-placeholder">
-                {auth.name?.[0]?.toUpperCase() ?? "?"}
-              </div>
-            )}
+            <Avatar
+              image={auth.image}
+              name={auth.name}
+              size={36}
+              className="avatar-nav"
+            />
           </button>
 
           {dropdownOpen && (

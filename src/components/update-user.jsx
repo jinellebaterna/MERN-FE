@@ -1,6 +1,7 @@
 import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthMutation } from "../hook/use-auth-mutation";
 
 import Input from "./shared/input/input";
 import Button from "./shared/button/button";
@@ -45,34 +46,25 @@ const UpdateUser = () => {
     }
   }, [user, setFormData]);
 
-  const updateMutation = useMutation({
+  const updateMutation = useAuthMutation({
     mutationFn: updateUser,
     onSuccess: (data) => {
       auth.updateProfile(data.user.name, data.user.image);
       queryClient.invalidateQueries(["user", auth.userId]);
       navigate(`/users/${auth.userId}`);
     },
-    onError: (error) => {
-      if (error.message === "UNAUTHORIZED") auth.logout();
-    },
   });
 
-  const changePasswordMutation = useMutation({
+  const changePasswordMutation = useAuthMutation({
     mutationFn: changePassword,
     onSuccess: () => setPwSuccessMsg("Password changed!"),
-    onError: (error) => {
-      if (error.message === "UNAUTHORIZED") auth.logout();
-    },
   });
 
-  const deleteUserMutation = useMutation({
+  const deleteUserMutation = useAuthMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
       auth.logout();
       navigate("/");
-    },
-    onError: (error) => {
-      if (error.message === "UNAUTHORIZED") auth.logout();
     },
   });
 

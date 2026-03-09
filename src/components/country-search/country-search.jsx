@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { COUNTRIES } from "../../data/data";
+import { getFlagEmoji } from "../../utils/flags";
 import "./country-search.css";
 
 const CountrySearch = ({ onSelect, excludeCodes = [] }) => {
@@ -92,13 +93,4 @@ const CountrySearch = ({ onSelect, excludeCodes = [] }) => {
   );
 };
 
-const getFlagEmoji = (code) =>
-  code
-    .toUpperCase()
-    .split("")
-    .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
-    .join("");
-
-// eslint-disable-next-line react-refresh/only-export-components
-export { getFlagEmoji };
 export default CountrySearch;

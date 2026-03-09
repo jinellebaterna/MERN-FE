@@ -1,5 +1,22 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap");
 
+/* SHARED DESIGN TOKENS */
+:root {
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.26);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 20px;
+  --color-danger: #c0392b;
+  --color-success: #27ae60;
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-overlay: 1100;
+  --z-topmost: 2000;
+}
+
 /* LIGHT THEME (DEFAULT) */
 :root[data-theme="light"] {
   color-scheme: light;
