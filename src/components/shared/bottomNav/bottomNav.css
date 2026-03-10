@@ -41,7 +41,7 @@
 
 .bottom-nav__tab:hover,
 .bottom-nav__tab--active {
-  color: white;
+  color: var(--secondary-color);
 }
 
 .bottom-nav__tab span {
