@@ -6,6 +6,7 @@ import MainHeader from "../mainHeader/mainHeader";
 import NavLinks from "../navLinks/navLinks";
 import SideDrawer from "../sideDrawer/sideDrawer";
 import Backdrop from "../backdrop/backdrop";
+import BottomNav from "../bottomNav/bottomNav"; // ← ADD THIS
 
 import "./navigation.css";
 
@@ -15,18 +16,12 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Side Drawer */}
       <SideDrawer show={drawerIsOpen}>
         <nav className="main-navigation__drawer-nav">
-          {/* Pass toggleDrawer to close when link is clicked */}
           <NavLinks onClick={toggleDrawer} />
         </nav>
       </SideDrawer>
-
-      {/* Backdrop */}
       {drawerIsOpen && <Backdrop onClick={toggleDrawer} />}
-
-      {/* Main Header */}
       <MainHeader>
         <button
           className="main-navigation__menu-btn"
@@ -44,6 +39,7 @@ const Navigation = () => {
           <NavLinks />
         </nav>
       </MainHeader>
+      <BottomNav /> {/* ← ADD THIS */}
     </>
   );
 };

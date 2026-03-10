@@ -26,7 +26,7 @@ main {
   padding-top: 5rem; /* keeps content below fixed navbar */
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .main-header {
     justify-content: space-between;
   }

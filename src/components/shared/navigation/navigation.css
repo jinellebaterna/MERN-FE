@@ -40,13 +40,13 @@
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .main-navigation__menu-btn {
-    display: none; /* hide hamburger on desktop */
+    display: none;
   }
 
   .main-navigation__header-nav {
-    display: flex; /* show desktop links */
+    display: flex;
     gap: 1rem;
     align-items: center;
   }
@@ -209,4 +209,10 @@
   padding: 0.5rem 0.75rem;
   color: var(--nav-text);
   margin: 0;
+}
+
+@media (max-width: 1023px) {
+  .main-navigation__menu-btn {
+    display: none;
+  }
 }

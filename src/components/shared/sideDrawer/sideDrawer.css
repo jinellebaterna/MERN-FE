@@ -5,9 +5,15 @@
   width: 70%;
   max-width: 400px;
   height: 100vh;
-  background: white;
-  z-index: 200;
+  background: var(--card-background);
+  z-index: 2000;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.26);
+}
+
+@media (max-width: 1023px) {
+  .side-drawer {
+    display: none; /* bottom nav replaces it */
+  }
 }
 
 /* Animation classes for CSSTransition */
