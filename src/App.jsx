@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useCallback, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import UpdateUser from "./components/update-user";
 import UserCountries from "./components/user-countries/user-countries";
@@ -193,7 +192,6 @@ const App = () => {
           </BrowserRouter>
         </AuthContext.Provider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

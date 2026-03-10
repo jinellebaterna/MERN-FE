@@ -1,44 +1,45 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
 
 import MainHeader from "../mainHeader/mainHeader";
 import NavLinks from "../navLinks/navLinks";
 import SideDrawer from "../sideDrawer/sideDrawer";
 import Backdrop from "../backdrop/backdrop";
+
 import "./navigation.css";
 
 const Navigation = () => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
-
-  const openDrawerHandler = () => {
-    setDrawerIsOpen(true);
-  };
-
-  const closeDrawerHandler = () => {
-    setDrawerIsOpen(false);
-  };
+  const toggleDrawer = () => setDrawerIsOpen((prev) => !prev);
 
   return (
     <>
-      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
-      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
+      {/* Side Drawer */}
+      <SideDrawer show={drawerIsOpen}>
         <nav className="main-navigation__drawer-nav">
-          <NavLinks />
+          {/* Pass toggleDrawer to close when link is clicked */}
+          <NavLinks onClick={toggleDrawer} />
         </nav>
       </SideDrawer>
 
+      {/* Backdrop */}
+      {drawerIsOpen && <Backdrop onClick={toggleDrawer} />}
+
+      {/* Main Header */}
       <MainHeader>
         <button
           className="main-navigation__menu-btn"
-          onClick={openDrawerHandler}
+          onClick={toggleDrawer}
+          aria-label="Open navigation menu"
         >
-          <span />
-          <span />
-          <span />
+          <Menu />
         </button>
+
         <h1 className="main-navigation__title">
           <Link to="/">Wayfarer</Link>
         </h1>
+
         <nav className="main-navigation__header-nav">
           <NavLinks />
         </nav>
