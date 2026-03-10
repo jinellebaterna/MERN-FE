@@ -15,7 +15,6 @@ import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/errorBoundary/errorBoundary";
 import Home from "./components/home/home";
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -92,7 +91,7 @@ const App = () => {
     setUserId(null);
     setTokenExpirationDate(null);
     localStorage.removeItem("userData");
-    queryClient.clear(); // Clear all cached queries on logout
+    queryClient.clear();
   }, []);
 
   const updateProfile = useCallback((name, image) => {
@@ -107,12 +106,10 @@ const App = () => {
     }
   }, []);
 
-  // Auto-logout when token expires (only set timer, don't logout immediately)
   useEffect(() => {
     if (token && tokenExpirationDate) {
       const remainingTime =
         tokenExpirationDate.getTime() - new Date().getTime();
-      // Only set timer if token hasn't expired yet
       if (remainingTime > 0) {
         const logoutTimer = setTimeout(logout, remainingTime);
         return () => {
@@ -155,36 +152,6 @@ const App = () => {
                       )
                     }
                   />
-                  {/* <Route path="/users/:userId" element={<UserProfile />} />
-                  <Route path="/:userId/places" element={<UserPlaces />} />
-                  <Route path="/search" element={<SearchPlaces />} />
-                  <Route
-                    path="/places/new"
-                    element={
-                      isLoggedIn ? (
-                        <NewPlace />
-                      ) : (
-                        <Navigate to="/auth" replace />
-                      )
-                    }
-                  /> */}
-                  {/* <Route path="/places" element={<AllPlaces />} />
-                  <Route path="/map" element={<MapView />} />
-                  <Route
-                    path="/places/view/:placeId"
-                    element={<PlaceDetail />}
-                  />
-                  <Route
-                    path="/places/:placeId"
-                    element={
-                      isLoggedIn ? (
-                        <UpdatePlace />
-                      ) : (
-                        <Navigate to="/auth" replace />
-                      )
-                    }
-                  /> */}
-
                   <Route
                     path="/countries"
                     element={
