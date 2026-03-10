@@ -1,10 +1,7 @@
-import { useContext, useState } from "react";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Home, Globe, Flag, User, X } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchAllUsers, followUser, unfollowUser } from "../../../api/user";
-import { AuthContext } from "../../context/auth-context";
-import { ThemeContext } from "../../context/theme-context";
+import useNavData from "../../../hook/use-nav-data";
 import Avatar from "../avatar/avatar";
 import FollowersModal from "../../followers-modal/followers-modal";
 import ConfirmModal from "../../confirmation-modal/confirmation-modal";
@@ -12,46 +9,28 @@ import useScrollLock from "../../../hook/use-scroll-lock";
 import "./bottomNav.css";
 
 const BottomNav = () => {
-  const auth = useContext(AuthContext);
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const {
+    auth,
+    theme,
+    toggleTheme,
+    allUsers,
+    loggedInUser,
+    followMutation,
+    modalShow,
+    setModalShow,
+    modalTab,
+    setModalTab,
+    showLogoutConfirm,
+    setShowLogoutConfirm,
+    isViewingOtherMap,
+  } = useNavData();
+
   const navigate = useNavigate();
-  const location = useLocation();
-
   const [panelOpen, setPanelOpen] = useState(false);
-  const [modalShow, setModalShow] = useState(false);
-  const [modalTab, setModalTab] = useState("followers");
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-
-  const queryClient = useQueryClient();
-
-  const { data: allUsers = [] } = useQuery({
-    queryKey: ["users"],
-    queryFn: fetchAllUsers,
-    enabled: !!auth.isLoggedIn,
-  });
-
-  const loggedInUser = allUsers.find((u) => u.id === auth.userId);
-
-  const followMutation = useMutation({
-    mutationFn: ({ userId, isFollowing }) =>
-      isFollowing
-        ? unfollowUser({ userId, token: auth.token })
-        : followUser({ userId, token: auth.token }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["user", auth.userId] });
-    },
-  });
 
   useScrollLock(panelOpen);
 
   if (!auth.isLoggedIn) return null;
-
-  const mapParams = new URLSearchParams(location.search);
-  const isViewingOtherMap =
-    (location.pathname === "/map" || location.pathname === "/countries") &&
-    !!mapParams.get("user") &&
-    mapParams.get("user") !== auth.userId;
 
   return (
     <>
@@ -146,7 +125,7 @@ const BottomNav = () => {
           <li className="bottom-sheet__theme-row" onClick={toggleTheme}>
             <span>Theme</span>
             <button className="theme-toggle">
-              {theme === "light" ? "🌙" : "☀️ "}
+              {theme === "light" ? "🌙" : "☀️  "}
             </button>
           </li>
           <li>
