@@ -604,3 +604,34 @@
   font-size: 0.95rem;
   font-weight: 600;
 }
+
+@media (max-width: 1023px) {
+  .user-countries__pending {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .user-countries__pending-flag {
+    flex-shrink: 0;
+  }
+
+  .user-countries__pending-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    font-size: 0.8rem;
+  }
+
+  .user-countries__pending-btn {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .user-countries__pending-cancel {
+    flex-shrink: 0;
+  }
+}
