@@ -103,18 +103,22 @@ const HomeLoggedIn = () => {
                 className="traveler-card__info"
                 onClick={() => navigate(`/countries?user=${user.id}`)}
               >
-                {user.countries?.length > 0 && (
-                  <div className="traveler-card__flags">
-                    {user.countries.slice(0, 5).map((c) => (
-                      <span key={c.code}>{getFlagEmoji(c.code)}</span>
-                    ))}
-                    {user.countries.length > 5 && (
-                      <span className="traveler-card__flags-more">
-                        +{user.countries.length - 5}
-                      </span>
-                    )}
-                  </div>
-                )}
+                <div className="traveler-card__flags">
+                  {user.countries?.length > 0 ? (
+                    user.countries
+                      .slice(0, 5)
+                      .map((c) => (
+                        <span key={c.code}>{getFlagEmoji(c.code)}</span>
+                      ))
+                  ) : (
+                    <span>🌍</span>
+                  )}
+                  {user.countries?.length > 5 && (
+                    <span className="traveler-card__flags-more">
+                      +{user.countries.length - 5}
+                    </span>
+                  )}
+                </div>
                 <div className="traveler-card__name">{user.name}</div>
                 <div className="traveler-card__meta">
                   {user.countries?.length || 0} countries · {coverage}% of the

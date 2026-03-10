@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
 import Avatar from "../avatar/avatar";
 import FollowersModal from "../../followers-modal/followers-modal";
+import ConfirmModal from "../../confirmation-modal/confirmation-modal";
 import useScrollLock from "../../../hook/use-scroll-lock";
 import "./bottomNav.css";
 
@@ -19,6 +20,7 @@ const BottomNav = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [modalTab, setModalTab] = useState("followers");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -150,10 +152,7 @@ const BottomNav = () => {
           <li>
             <button
               className="bottom-sheet__logout"
-              onClick={() => {
-                setPanelOpen(false);
-                auth.logout();
-              }}
+              onClick={() => setShowLogoutConfirm(true)}
             >
               Logout
             </button>
@@ -170,6 +169,15 @@ const BottomNav = () => {
         followMutation={followMutation}
         auth={auth}
         initialTab={modalTab}
+      />
+      <ConfirmModal
+        show={showLogoutConfirm}
+        message="Are you sure you want to log out?"
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          auth.logout();
+        }}
+        onCancel={() => setShowLogoutConfirm(false)}
       />
     </>
   );

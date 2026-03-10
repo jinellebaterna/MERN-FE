@@ -4,10 +4,12 @@ import { Globe, Flag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchAllUsers, followUser, unfollowUser } from "../../../api/user";
 import FollowersModal from "../../followers-modal/followers-modal";
+import ConfirmModal from "../../confirmation-modal/confirmation-modal";
 import Avatar from "../avatar/avatar";
 import { useClickOutside } from "../../../hook/use-click-outside";
 import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
+
 import "./navLinks.css";
 
 const NavLinks = () => {
@@ -18,6 +20,7 @@ const NavLinks = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [modalTab, setModalTab] = useState("followers");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -122,12 +125,7 @@ const NavLinks = () => {
                 </button>
               </li>
               <li>
-                <button
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    auth.logout();
-                  }}
-                >
+                <button onClick={() => setShowLogoutConfirm(true)}>
                   Logout
                 </button>
               </li>
@@ -150,6 +148,15 @@ const NavLinks = () => {
         followMutation={followMutation}
         auth={auth}
         initialTab={modalTab}
+      />
+      <ConfirmModal
+        show={showLogoutConfirm}
+        message="Are you sure you want to log out?"
+        onConfirm={() => {
+          setShowLogoutConfirm(false);
+          auth.logout();
+        }}
+        onCancel={() => setShowLogoutConfirm(false)}
       />
     </ul>
   );
