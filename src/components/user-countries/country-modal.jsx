@@ -13,6 +13,7 @@ import {
   deleteCountryComment,
 } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
+import useScrollLock from "../../hook/use-scroll-lock";
 import { IMG_BASE } from "../../data/data";
 
 const CountryModal = ({
@@ -162,6 +163,8 @@ const CountryModal = ({
     uploadError,
     clearUploadError,
   } = useImageUpload(handleImagePaths);
+
+  useScrollLock(true);
 
   return (
     <div className="country-modal__backdrop" onClick={onClose}>

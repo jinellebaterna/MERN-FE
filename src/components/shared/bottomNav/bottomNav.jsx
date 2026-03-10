@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/auth-context";
 import { ThemeContext } from "../../context/theme-context";
 import Avatar from "../avatar/avatar";
 import FollowersModal from "../../followers-modal/followers-modal";
+import useScrollLock from "../../../hook/use-scroll-lock";
 import "./bottomNav.css";
 
 const BottomNav = () => {
@@ -40,6 +41,8 @@ const BottomNav = () => {
     },
   });
 
+  useScrollLock(panelOpen);
+
   if (!auth.isLoggedIn) return null;
 
   const mapParams = new URLSearchParams(location.search);
@@ -55,6 +58,7 @@ const BottomNav = () => {
         <NavLink
           to="/"
           end
+          onClick={() => setPanelOpen(false)}
           className={({ isActive }) =>
             `bottom-nav__tab${isActive ? " bottom-nav__tab--active" : ""}`
           }
@@ -65,6 +69,7 @@ const BottomNav = () => {
 
         <NavLink
           to="/map"
+          onClick={() => setPanelOpen(false)}
           className={({ isActive }) =>
             `bottom-nav__tab${isActive && !isViewingOtherMap ? " bottom-nav__tab--active" : ""}`
           }
@@ -75,6 +80,7 @@ const BottomNav = () => {
 
         <NavLink
           to="/countries"
+          onClick={() => setPanelOpen(false)}
           className={({ isActive }) =>
             `bottom-nav__tab${isActive && !isViewingOtherMap ? " bottom-nav__tab--active" : ""}`
           }
@@ -102,16 +108,15 @@ const BottomNav = () => {
 
       {/* Profile Bottom Sheet */}
       <div className={`bottom-sheet${panelOpen ? " bottom-sheet--open" : ""}`}>
-        <button
-          className="bottom-sheet__close"
-          onClick={() => setPanelOpen(false)}
-        >
-          <X size={20} />
-        </button>
-
         <div className="bottom-sheet__header">
           <Avatar image={auth.image} name={auth.name} size={48} />
           <span className="bottom-sheet__name">{auth.name}</span>
+          <button
+            className="bottom-sheet__close"
+            onClick={() => setPanelOpen(false)}
+          >
+            <X size={20} />
+          </button>
         </div>
 
         <ul className="bottom-sheet__list">

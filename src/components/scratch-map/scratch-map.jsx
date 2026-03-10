@@ -81,7 +81,7 @@ const ScratchMap = () => {
   const isLoading = countriesLoading || geoLoading;
 
   return (
-    <div className="scratch-map">
+    <div className={`scratch-map${!isOwnMap ? " scratch-map--other" : ""}`}>
       {!isOwnMap && viewedUser && (
         <div className="scratch-map__title">
           {viewedUser.name}'s Map
@@ -98,8 +98,10 @@ const ScratchMap = () => {
           <LoadingSpinner asOverlay />
         </div>
       )}
-
-      <div className="scratch-map__badge">
+      <div
+        className={`scratch-map__badge${isOwnMap ? " scratch-map__badge--clickable" : ""}`}
+        onClick={isOwnMap ? () => navigate("/countries") : undefined}
+      >
         {visitedCodes.size} {visitedCodes.size === 1 ? "country" : "countries"}{" "}
         visited
       </div>

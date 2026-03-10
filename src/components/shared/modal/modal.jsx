@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import ReactDOM from "react-dom";
 import { CSSTransition } from "react-transition-group";
+import useScrollLock from "../../../hook/use-scroll-lock";
 
 import Backdrop from "../backdrop/backdrop";
 import "./modal.css";
@@ -31,8 +32,10 @@ const ModalOverlay = React.forwardRef((props, ref) => {
 const Modal = (props) => {
   const nodeRef = useRef(null);
 
+  useScrollLock(props.show);
+
   return (
-    <React.Fragment>
+    <>
       {props.show && <Backdrop onClick={props.onCancel} />}
       <CSSTransition
         in={props.show}
@@ -44,7 +47,7 @@ const Modal = (props) => {
       >
         <ModalOverlay ref={nodeRef} {...props} />
       </CSSTransition>
-    </React.Fragment>
+    </>
   );
 };
 

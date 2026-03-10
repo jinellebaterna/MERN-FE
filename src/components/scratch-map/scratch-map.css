@@ -109,6 +109,16 @@
 .scratch-map .leaflet-control-container {
   display: none;
 }
+
+.scratch-map__badge--clickable {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.scratch-map__badge--clickable:hover {
+  opacity: 0.85;
+}
+
 @media (max-width: 1023px) {
   /* Shrink map so it doesn't bleed under the bottom nav */
   .scratch-map {
@@ -119,5 +129,10 @@
   .scratch-map__badge {
     bottom: auto;
     top: 1rem;
+  }
+
+  /* Hide visited badge when viewing someone else's map */
+  .scratch-map--other .scratch-map__badge {
+    display: none;
   }
 }

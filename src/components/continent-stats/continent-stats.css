@@ -14,7 +14,9 @@
   gap: 0.25rem;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition:
+    box-shadow 0.15s,
+    border-color 0.15s;
 }
 
 .continent-stats__card:hover {
@@ -23,7 +25,11 @@
 
 .continent-stats__card--active {
   border-color: var(--primary-color);
-  background: color-mix(in srgb, var(--primary-color) 8%, var(--card-background));
+  background: color-mix(
+    in srgb,
+    var(--primary-color) 8%,
+    var(--card-background)
+  );
 }
 
 .continent-stats__name {
@@ -51,4 +57,26 @@
   border-radius: 3px;
   transition: width 0.4s ease;
   min-width: 0%;
+}
+
+@media (max-width: 1023px) {
+  .continent-stats {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    /* hide scrollbar but keep it functional */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .continent-stats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .continent-stats__card {
+    flex-shrink: 0;
+    min-width: 130px;
+  }
 }
