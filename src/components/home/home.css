@@ -391,7 +391,7 @@
   }
 }
 .home__feature {
-  background: white;
+  background: var(--card-background);
   padding: 2rem;
   border-radius: 10px;
   text-align: center;

@@ -136,9 +136,9 @@ const BottomNav = () => {
               My Profile
             </button>
           </li>
-          <li className="bottom-sheet__theme-row">
+          <li className="bottom-sheet__theme-row" onClick={toggleTheme}>
             <span>Theme</span>
-            <button className="theme-toggle" onClick={toggleTheme}>
+            <button className="theme-toggle">
               {theme === "light" ? "🌙" : "☀️ "}
             </button>
           </li>

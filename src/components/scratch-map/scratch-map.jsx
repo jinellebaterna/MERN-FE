@@ -114,7 +114,7 @@ const ScratchMap = () => {
           width: "100%",
           background: "var(--background-color)",
         }}
-        zoomControl={true}
+        zoomControl={false}
         scrollWheelZoom={true}
       >
         {geoJSON && (
