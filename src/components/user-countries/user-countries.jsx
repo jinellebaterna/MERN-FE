@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -67,9 +67,11 @@ const SortableCountryCard = ({ country, onClick, canEdit }) => {
 const UserCountries = () => {
   const auth = useContext(AuthContext);
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+  const searchRef = useRef(null);
+
   const viewedUserId = searchParams.get("user") || auth.userId;
   const canEdit = auth.userId === viewedUserId;
-  const queryClient = useQueryClient();
 
   const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -158,6 +160,7 @@ const UserCountries = () => {
       {canEdit && (
         <div className="user-countries__search-wrap">
           <CountrySearch
+            ref={searchRef}
             excludeCodes={[
               ...countries.map((c) => c.code),
               ...wishlist.map((c) => c.code),
@@ -210,10 +213,22 @@ const UserCountries = () => {
       </div>
 
       {countries.length === 0 && (
-        <div className="user-countries__empty">
-          {canEdit
-            ? "No countries yet. Search above to add your first visited country!"
-            : "No countries visited yet."}
+        <div className="user-countries__empty-cta">
+          <span className="user-countries__empty-icon">🌍</span>
+          <h3>No countries yet!</h3>
+          <p>
+            {canEdit
+              ? "Search above or click below to add your first visited country."
+              : "This traveler hasn't added any countries yet."}
+          </p>
+          {canEdit && (
+            <button
+              className="user-countries__empty-btn"
+              onClick={() => searchRef.current?.focus()}
+            >
+              Add Your First Country
+            </button>
+          )}
         </div>
       )}
 

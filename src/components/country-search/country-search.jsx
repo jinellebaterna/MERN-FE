@@ -1,13 +1,12 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, forwardRef } from "react";
 import { COUNTRIES } from "../../data/data";
 import { getFlagEmoji } from "../../utils/flags";
 import "./country-search.css";
 
-const CountrySearch = ({ onSelect, excludeCodes = [] }) => {
+const CountrySearch = forwardRef(({ onSelect, excludeCodes = [] }, ref) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const inputRef = useRef(null);
   const listRef = useRef(null);
 
   useEffect(() => {
@@ -63,7 +62,7 @@ const CountrySearch = ({ onSelect, excludeCodes = [] }) => {
   return (
     <div className="country-search">
       <input
-        ref={inputRef}
+        ref={ref}
         className="country-search__input"
         type="text"
         placeholder="Search for a country..."
@@ -91,6 +90,6 @@ const CountrySearch = ({ onSelect, excludeCodes = [] }) => {
       )}
     </div>
   );
-};
+});
 
 export default CountrySearch;

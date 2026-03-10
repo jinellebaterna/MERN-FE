@@ -427,3 +427,69 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.onboarding-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  flex-wrap: wrap;
+}
+
+.onboarding-banner__icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.onboarding-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.onboarding-banner__text strong {
+  font-size: 1rem;
+}
+
+.onboarding-banner__cta {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.onboarding-banner__cta:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.onboarding-banner__close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.onboarding-banner__close:hover {
+  color: #fff;
+}

@@ -44,6 +44,7 @@ const Auth = () => {
   const signupMutation = useMutation({
     mutationFn: signupUser,
     onSuccess: (data) => {
+      localStorage.setItem("wayfarer_new_user", "true");
       auth.login(data.userId, data.token, null, data.name, data.image);
     },
   });

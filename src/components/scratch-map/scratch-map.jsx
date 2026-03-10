@@ -98,6 +98,20 @@ const ScratchMap = () => {
           <LoadingSpinner asOverlay />
         </div>
       )}
+
+      {visitedCodes.size === 0 && isOwnMap && !isLoading && (
+        <div className="scratch-map__empty">
+          <span className="scratch-map__empty-icon">🗺️ </span>
+          <h3>Your map is empty!</h3>
+          <p>Start adding countries you've visited.</p>
+          <button
+            className="scratch-map__empty-btn"
+            onClick={() => navigate("/countries")}
+          >
+            Add Countries
+          </button>
+        </div>
+      )}
       <div
         className={`scratch-map__badge${isOwnMap ? " scratch-map__badge--clickable" : ""}`}
         onClick={isOwnMap ? () => navigate("/countries") : undefined}

@@ -14,6 +14,9 @@ const HomeLoggedIn = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [modalUser, setModalUser] = useState(null);
+  const [showBanner, setShowBanner] = useState(
+    () => localStorage.getItem("wayfarer_new_user") === "true"
+  );
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users"],
@@ -35,8 +38,34 @@ const HomeLoggedIn = () => {
 
   const loggedInUserData = users.find((u) => u.id === auth.userId);
 
+  const dismissBanner = () => {
+    localStorage.removeItem("wayfarer_new_user");
+    setShowBanner(false);
+  };
+
   return (
     <div className="home">
+      {showBanner && (
+        <div className="onboarding-banner">
+          <span className="onboarding-banner__icon">🌍</span>
+          <div className="onboarding-banner__text">
+            <strong>Welcome to Wayfarer!</strong>
+            <span>Start by adding your first visited country.</span>
+          </div>
+          <button
+            className="onboarding-banner__cta"
+            onClick={() => {
+              dismissBanner();
+              navigate("/countries");
+            }}
+          >
+            Add Countries
+          </button>
+          <button className="onboarding-banner__close" onClick={dismissBanner}>
+            ✕
+          </button>
+        </div>
+      )}
       <div className="home__header">
         <h2>Discover Travelers</h2>
         <input

@@ -635,3 +635,47 @@
     flex-shrink: 0;
   }
 }
+
+.user-countries__empty-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.user-countries__empty-icon {
+  font-size: 2.5rem;
+}
+
+.user-countries__empty-cta h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.user-countries__empty-cta p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  opacity: 0.65;
+  max-width: 300px;
+}
+
+.user-countries__empty-btn {
+  margin-top: 0.5rem;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.user-countries__empty-btn:hover {
+  opacity: 0.85;
+}
