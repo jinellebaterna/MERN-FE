@@ -23,7 +23,7 @@
 }
 
 main {
-  padding-top: 4rem; /* keeps content below fixed navbar */
+  padding-top: 5rem; /* keeps content below fixed navbar */
 }
 
 @media (min-width: 1024px) {

@@ -187,3 +187,36 @@
 .scratch-map__empty-btn:hover {
   opacity: 0.85;
 }
+
+.scratch-map__legend {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.scratch-map__legend-item {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  color: #fff;
+}
+
+.scratch-map__legend-item--visited {
+  background: var(--secondary-color);
+}
+
+.scratch-map__legend-item--wishlist {
+  background: var(--accent-color);
+}
+
+@media (max-width: 1023px) {
+  .scratch-map__legend {
+    bottom: 1.5rem;
+    right: 0.75rem;
+  }
+}

@@ -149,3 +149,7 @@
   background: #fdecea !important;
   color: #e05555 !important;
 }
+
+.bottom-sheet .theme-toggle:hover {
+  transform: none;
+}

@@ -6,15 +6,20 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { AuthContext } from "../context/auth-context";
-import { fetchUserCountries, fetchUserById } from "../../api/user";
+import {
+  fetchUserCountries,
+  fetchUserById,
+  fetchUserWishlist,
+} from "../../api/user";
 import { fetchWorldGeoJSON } from "../../api/countries";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import "./scratch-map.css";
 
 const VISITED_COLOR = "var(--secondary-color)";
 const DEFAULT_COLOR = "#d1d5db";
+const WISHLIST_COLOR = "var(--accent-color)";
 
-const CountryLayer = ({ geoJSON, visitedCodes }) => {
+const CountryLayer = ({ geoJSON, visitedCodes, wishlistCodes }) => {
   const map = useMap();
   const layerRef = useRef(null);
 
@@ -27,9 +32,14 @@ const CountryLayer = ({ geoJSON, visitedCodes }) => {
       style: (feature) => {
         const code = feature.properties["ISO3166-1-Alpha-2"];
         const visited = visitedCodes.has(code);
+        const wishlisted = wishlistCodes.has(code);
         return {
-          fillColor: visited ? VISITED_COLOR : DEFAULT_COLOR,
-          fillOpacity: visited ? 0.75 : 0.4,
+          fillColor: visited
+            ? VISITED_COLOR
+            : wishlisted
+              ? WISHLIST_COLOR
+              : DEFAULT_COLOR,
+          fillOpacity: visited ? 0.75 : wishlisted ? 0.6 : 0.4,
           color: "#fff",
           weight: 0.5,
         };
@@ -42,7 +52,7 @@ const CountryLayer = ({ geoJSON, visitedCodes }) => {
         layerRef.current = null;
       }
     };
-  }, [geoJSON, visitedCodes, map]);
+  }, [geoJSON, visitedCodes, wishlistCodes, map]);
 
   return null;
 };
@@ -66,6 +76,17 @@ const ScratchMap = () => {
     queryFn: () => fetchUserCountries(viewedUserId),
     enabled: !!viewedUserId,
   });
+
+  const { data: wishlist = [] } = useQuery({
+    queryKey: ["wishlist", viewedUserId],
+    queryFn: () => fetchUserWishlist(viewedUserId),
+    enabled: !!viewedUserId && isOwnMap,
+  });
+
+  const wishlistCodes = useMemo(
+    () => new Set(wishlist.map((c) => c.code)),
+    [wishlist]
+  );
 
   const { data: geoJSON, isLoading: geoLoading } = useQuery({
     queryKey: ["worldGeoJSON"],
@@ -134,9 +155,24 @@ const ScratchMap = () => {
         scrollWheelZoom={true}
       >
         {geoJSON && (
-          <CountryLayer geoJSON={geoJSON} visitedCodes={visitedCodes} />
+          <CountryLayer
+            geoJSON={geoJSON}
+            visitedCodes={visitedCodes}
+            wishlistCodes={wishlistCodes}
+          />
         )}
       </MapContainer>
+
+      {isOwnMap && (
+        <div className="scratch-map__legend">
+          <span className="scratch-map__legend-item scratch-map__legend-item--visited">
+            Visited
+          </span>
+          <span className="scratch-map__legend-item scratch-map__legend-item--wishlist">
+            Wishlist
+          </span>
+        </div>
+      )}
     </div>
   );
 };
