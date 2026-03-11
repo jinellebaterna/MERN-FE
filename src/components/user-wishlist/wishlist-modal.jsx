@@ -153,7 +153,9 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
                   }}
                 >
                   {PRIORITY_OPTIONS.map((option) => (
-                    <option value={option}>{option}</option>
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
                   ))}
                 </select>
               </div>
