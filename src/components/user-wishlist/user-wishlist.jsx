@@ -1,17 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
   rectSortingStrategy,
-  arrayMove,
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -20,6 +13,7 @@ import {
   fetchUserWishlist,
   removeFromWishlist,
 } from "../../api/user";
+import useSortableList from "../../hook/use-sortable-list";
 
 import { AuthContext } from "../context/auth-context";
 import { getFlagEmoji } from "../../utils/flags";
@@ -101,6 +95,9 @@ const UserWishlist = () => {
 
   const [localWishlist, setLocalWishlist] = useState(wishlist);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setLocalWishlist(wishlist), [wishlist]);
+
   const removeMutation = useMutation({
     mutationFn: (code) =>
       removeFromWishlist({ userId: auth.userId, code, token: auth.token }),
@@ -109,32 +106,17 @@ const UserWishlist = () => {
     onError: (err) => setError(err.message),
   });
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setLocalWishlist(wishlist), [wishlist]);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  );
-
   const reorderMutation = useMutation({
     mutationFn: reorderWishlist,
     onError: () =>
       queryClient.invalidateQueries({ queryKey: ["wishlist", viewedUserId] }),
   });
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const oldIndex = localWishlist.findIndex((c) => c.code === active.id);
-    const newIndex = localWishlist.findIndex((c) => c.code === over.id);
-    const reordered = arrayMove(localWishlist, oldIndex, newIndex);
-    setLocalWishlist(reordered);
-    reorderMutation.mutate({
-      userId: auth.userId,
-      codes: reordered.map((c) => c.code),
-      token: auth.token,
-    });
-  };
+  const { sensors, handleDragEnd } = useSortableList({
+    items: localWishlist,
+    setItems: setLocalWishlist,
+    reorderMutation,
+  });
 
   if (isLoading) return <LoadingSpinner asOverlay />;
   if (!canEdit) return null;

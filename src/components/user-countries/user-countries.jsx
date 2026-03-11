@@ -1,20 +1,14 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
   rectSortingStrategy,
-  arrayMove,
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import useSortableList from "../../hook/use-sortable-list";
 
 import { AuthContext } from "../context/auth-context";
 import {
@@ -95,29 +89,17 @@ const UserCountries = () => {
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setLocalCountries(countries), [countries]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  );
-
   const reorderMutation = useMutation({
     mutationFn: reorderCountries,
     onError: () =>
       queryClient.invalidateQueries({ queryKey: ["countries", viewedUserId] }),
   });
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const oldIndex = localCountries.findIndex((c) => c.code === active.id);
-    const newIndex = localCountries.findIndex((c) => c.code === over.id);
-    const reordered = arrayMove(localCountries, oldIndex, newIndex);
-    setLocalCountries(reordered);
-    reorderMutation.mutate({
-      userId: auth.userId,
-      codes: reordered.map((c) => c.code),
-      token: auth.token,
-    });
-  };
+  const { sensors, handleDragEnd } = useSortableList({
+    items: localCountries,
+    setItems: setLocalCountries,
+    reorderMutation,
+  });
 
   const { data: wishlist = [] } = useQuery({
     queryKey: ["wishlist", viewedUserId],
