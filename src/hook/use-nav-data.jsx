@@ -1,15 +1,16 @@
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchAllUsers, followUser, unfollowUser } from "../api/user";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllUsers } from "../api/user";
 import { AuthContext } from "../components/context/auth-context";
 import { ThemeContext } from "../components/context/theme-context";
+import useFollowMutation from "../hook/use-follow-mutation";
 
 const useNavData = () => {
   const auth = useContext(AuthContext);
+
   const { theme, toggleTheme } = useContext(ThemeContext);
   const location = useLocation();
-  const queryClient = useQueryClient();
 
   const [modalShow, setModalShow] = useState(false);
   const [modalTab, setModalTab] = useState("followers");
@@ -22,17 +23,7 @@ const useNavData = () => {
   });
 
   const loggedInUser = allUsers.find((u) => u.id === auth.userId);
-
-  const followMutation = useMutation({
-    mutationFn: ({ userId, isFollowing }) =>
-      isFollowing
-        ? unfollowUser({ userId, token: auth.token })
-        : followUser({ userId, token: auth.token }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      queryClient.invalidateQueries({ queryKey: ["user", auth.userId] });
-    },
-  });
+  const followMutation = useFollowMutation();
 
   const mapParams = new URLSearchParams(location.search);
   const isViewingOtherMap =

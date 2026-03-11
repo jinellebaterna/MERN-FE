@@ -1,17 +1,17 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../context/auth-context";
-import { fetchAllUsers, followUser, unfollowUser } from "../../api/user";
+import { fetchAllUsers } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import FollowersModal from "../followers-modal/followers-modal";
 import Avatar from "../shared/avatar/avatar";
+import useFollowMutation from "../../hook/use-follow-mutation";
 
 const HomeLoggedIn = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [modalUser, setModalUser] = useState(null);
   const [showBanner, setShowBanner] = useState(
@@ -24,13 +24,7 @@ const HomeLoggedIn = () => {
     enabled: !!auth.isLoggedIn,
   });
 
-  const followMutation = useMutation({
-    mutationFn: ({ userId, isFollowing }) =>
-      isFollowing
-        ? unfollowUser({ userId, token: auth.token })
-        : followUser({ userId, token: auth.token }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
-  });
+  const followMutation = useFollowMutation();
 
   const filtered = users
     .filter((u) => u.id !== auth.userId)
@@ -136,7 +130,7 @@ const HomeLoggedIn = () => {
               </div>
               <div className="traveler-card__actions">
                 <button
-                  className={`traveler-card__follow${isFollowing ? " traveler-card__follow--following" : ""}`}
+                  className={`traveler-card__follow${isFollowing ? "traveler-card__follow--following" : ""}`}
                   onClick={() =>
                     followMutation.mutate({ userId: user.id, isFollowing })
                   }
