@@ -72,6 +72,7 @@ export const COUNTRIES = [
   { name: "Guyana", code: "GY", continent: "South America" },
   { name: "Haiti", code: "HT", continent: "North America" },
   { name: "Honduras", code: "HN", continent: "North America" },
+  { name: "Hong Kong", code: "HK", continent: "Asia" },
   { name: "Hungary", code: "HU", continent: "Europe" },
   { name: "Iceland", code: "IS", continent: "Europe" },
   { name: "India", code: "IN", continent: "Asia" },
@@ -203,7 +204,20 @@ export const COUNTRIES = [
 
 export const IMG_BASE = "http://localhost:5001";
 
-export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export const WMO_CODES = {
   0: "Clear sky ☀️ ",
@@ -225,4 +239,20 @@ export const WMO_CODES = {
   81: "Showers 🌦️ ",
   82: "Heavy showers 🌦️ ",
   95: "Thunderstorm ⛈️ ",
+};
+
+export const CONTINENT_ORDER = [
+  "Africa",
+  "Asia",
+  "Europe",
+  "North America",
+  "South America",
+  "Oceania",
+];
+
+export const PRIORITY_OPTIONS = ["low", "medium", "high"];
+
+export const CACHE_DURATIONS = {
+  DEFAULT: 1000 * 60 * 5,
+  CLIMATE: 1000 * 60 * 60 * 24,
 };

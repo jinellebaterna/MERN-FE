@@ -6,18 +6,19 @@ import UpdateUser from "./components/update-user";
 import UserCountries from "./components/user-countries/user-countries";
 import UserWishlist from "./components/user-wishlist/user-wishlist";
 import ScratchMap from "./components/scratch-map/scratch-map";
-
 import Auth from "./components/auth/auth";
 import Navigation from "./components/shared/navigation/navigation";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/errorBoundary/errorBoundary";
+
+import { CACHE_DURATIONS } from "./data/data";
 import Home from "./components/home/home";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // Data is fresh for 5 minutes
+      staleTime: CACHE_DURATIONS.DEFAULT, // Data is fresh for 5 minutes
       retry: 1,
     },
   },

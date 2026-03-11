@@ -153,3 +153,8 @@
 .climate-chart--loaded {
   animation: chart-fade-in 0.35s ease forwards;
 }
+
+.climate-chart__skeleton .climate-chart__temp-track,
+.climate-chart__skeleton .climate-chart__precip-track {
+  height: 100%;
+}

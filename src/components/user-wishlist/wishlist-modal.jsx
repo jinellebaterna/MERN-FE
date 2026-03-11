@@ -14,7 +14,7 @@ import {
   getBestMonths,
 } from "../../api/weather";
 import { getFlagEmoji } from "../../utils/flags";
-import { WMO_CODES } from "../../data/data";
+import { WMO_CODES, PRIORITY_OPTIONS } from "../../data/data";
 import ClimateChart from "../climate-chart/climate-chart";
 
 const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
@@ -44,11 +44,12 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
     geocodeAddress(country.name)
       .then(async ({ lat, lon }) => {
         setCoords({ lat, lon });
-        fetchWeather(lat, lon)
-          .then(setWeather)
-          .catch(() => {});
-        const climate = await fetchMonthlyClimate(lat, lon);
+        const [climate, weatherData] = await Promise.all([
+          fetchMonthlyClimate(lat, lon),
+          fetchWeather(lat, lon).catch(() => null),
+        ]);
         setBestMonths(getBestMonths(climate));
+        setWeather(weatherData);
       })
       .catch(() => {})
       .finally(() => setInfoLoading(false));
@@ -106,6 +107,7 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
             <span className="wishlist-modal__info-skel" />
             <span className="wishlist-modal__info-skel" />
             <span className="wishlist-modal__info-skel" />
+            <span className="wishlist-modal__info-skel" />
           </div>
         ) : bestMonths || countryInfo || weather ? (
           <div className="wishlist-modal__info-strip">
@@ -150,9 +152,9 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
                     });
                   }}
                 >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
+                  {PRIORITY_OPTIONS.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
                 </select>
               </div>
               <div className="wishlist-modal__field">

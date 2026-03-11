@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchMonthlyClimate } from "../../api/weather";
-import { MONTHS } from "../../data/data";
+import { MONTHS, CACHE_DURATIONS } from "../../data/data";
 import "./climate-chart.css";
 
 const groupByMonth = (daily) => {
@@ -41,7 +41,7 @@ const ClimateChart = ({ lat, lon }) => {
       return groupByMonth(daily);
     },
     enabled: !!lat && !!lon,
-    staleTime: 1000 * 60 * 60 * 24,
+    staleTime: CACHE_DURATIONS.CLIMATE,
   });
 
   if (isLoading)

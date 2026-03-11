@@ -1,14 +1,5 @@
-import { COUNTRIES } from "../../data/data";
+import { COUNTRIES, CONTINENT_ORDER } from "../../data/data";
 import "./continent-stats.css";
-
-const CONTINENT_ORDER = [
-  "Africa",
-  "Asia",
-  "Europe",
-  "North America",
-  "South America",
-  "Oceania",
-];
 
 const ContinentStats = ({ countries, selectedContinent, onSelect }) => {
   const totals = COUNTRIES.reduce((acc, c) => {
