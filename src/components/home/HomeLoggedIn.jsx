@@ -130,7 +130,7 @@ const HomeLoggedIn = () => {
               </div>
               <div className="traveler-card__actions">
                 <button
-                  className={`traveler-card__follow${isFollowing ? "traveler-card__follow--following" : ""}`}
+                  className={`traveler-card__follow${isFollowing ? " traveler-card__follow--following" : ""}`}
                   onClick={() =>
                     followMutation.mutate({ userId: user.id, isFollowing })
                   }

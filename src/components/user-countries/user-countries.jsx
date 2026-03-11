@@ -2,12 +2,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import {
-  SortableContext,
-  rectSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import useSortableList from "../../hook/use-sortable-list";
 
 import { AuthContext } from "../context/auth-context";
@@ -25,30 +20,22 @@ import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import CountryModal from "./country-modal";
+import useSortableItem from "../../hook/use-sortable-item";
 import { COUNTRIES } from "../../data/data";
 import "./user-countries.css";
 
 const SortableCountryCard = ({ country, onClick, canEdit }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: country.code });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: canEdit ? "grab" : "pointer",
-  };
+  const { setNodeRef, style, attributes, listeners } = useSortableItem(
+    country.code,
+    canEdit,
+    "pointer"
+  );
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...(canEdit ? listeners : {})}
+      {...listeners}
       className="country-card"
       onClick={() => onClick(country)}
     >

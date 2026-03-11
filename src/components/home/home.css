@@ -494,3 +494,9 @@
 .onboarding-banner__close:hover {
   color: #fff;
 }
+
+.traveler-card__follow--following {
+  background: var(--light-gray);
+  border-color: var(--light-gray);
+  color: var(--text-color);
+}

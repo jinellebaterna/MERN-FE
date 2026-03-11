@@ -2,12 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import {
-  SortableContext,
-  rectSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import {
   reorderWishlist,
   fetchUserWishlist,
@@ -19,6 +14,7 @@ import { AuthContext } from "../context/auth-context";
 import { getFlagEmoji } from "../../utils/flags";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
+import useSortableItem from "../../hook/use-sortable-item";
 import WishlistModal from "./wishlist-modal";
 
 import "./user-wishlist.css";
@@ -30,26 +26,16 @@ const SortableWishlistCard = ({
   isRemoving,
   onClick,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: country.code });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: canEdit ? "grab" : "default",
-  };
+  const { setNodeRef, style, attributes, listeners } = useSortableItem(
+    country.code,
+    canEdit
+  );
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...(canEdit ? listeners : {})}
+      {...listeners}
       className="wishlist-card"
       onClick={() => onClick(country)}
     >
