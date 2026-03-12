@@ -17,9 +17,9 @@ import { getFlagEmoji } from "../../utils/flags";
 import { formatDate } from "../../utils/formatDate";
 import useScrollLock from "../../hook/use-scroll-lock";
 import { MONTHS } from "../../data/data";
-import CountryGallery from "./CountryGallery";
-import CountryCities from "./CountryCities";
-import CountryComments from "./CountryComments";
+import CountryGallery from "./country-gallery";
+import CountryCities from "./country-cities";
+import CountryComments from "./country-comments";
 
 const CountryModal = ({
   country: initialCountry,

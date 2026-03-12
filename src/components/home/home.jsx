@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../../components/context/auth-context";
-import HomeGuest from "./HomeGuest";
-import HomeLoggedIn from "./HomeLoggedIn";
+import HomeGuest from "./home-guest";
+import HomeLoggedIn from "./home-loggedin";
 import "./home.css";
 
 const Home = () => {
