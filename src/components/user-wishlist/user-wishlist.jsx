@@ -15,6 +15,7 @@ import { getFlagEmoji } from "../../utils/flags";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import useSortableItem from "../../hook/use-sortable-item";
+import useErrorHandler from "../../hook/use-error-handler";
 import WishlistModal from "./wishlist-modal";
 
 import "./user-wishlist.css";
@@ -70,7 +71,7 @@ const UserWishlist = () => {
   const viewedUserId = searchParams.get("user") || auth.userId;
   const canEdit = auth.userId === viewedUserId;
   const queryClient = useQueryClient();
-  const [error, setError] = useState(null);
+  const { error, setError, clearError } = useErrorHandler();
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   const { data: wishlist = [], isLoading } = useQuery({
@@ -109,7 +110,7 @@ const UserWishlist = () => {
 
   return (
     <div className="user-wishlist">
-      <ErrorModal error={error} onClear={() => setError(null)} />
+      <ErrorModal error={error} onClear={clearError} />
 
       <div className="user-wishlist__header">
         <h2>

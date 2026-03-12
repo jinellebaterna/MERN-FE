@@ -21,6 +21,7 @@ import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import CountryModal from "./country-modal";
 import useSortableItem from "../../hook/use-sortable-item";
+import useErrorHandler from "../../hook/use-error-handler";
 import { COUNTRIES } from "../../data/data";
 import "./user-countries.css";
 
@@ -54,11 +55,11 @@ const UserCountries = () => {
   const viewedUserId = searchParams.get("user") || auth.userId;
   const canEdit = auth.userId === viewedUserId;
 
-  const [error, setError] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedContinent, setSelectedContinent] = useState(null);
   const [pendingCountry, setPendingCountry] = useState(null);
   const [view, setView] = useState("grid");
+  const { error, setError, clearError } = useErrorHandler();
 
   const { data: viewedUser } = useQuery({
     queryKey: ["user", viewedUserId],
@@ -138,7 +139,7 @@ const UserCountries = () => {
 
   return (
     <div className="user-countries">
-      <ErrorModal error={error} onClear={() => setError(null)} />
+      <ErrorModal error={error} onClear={clearError} />
       {canEdit && (
         <div className="user-countries__search-wrap">
           <CountrySearch

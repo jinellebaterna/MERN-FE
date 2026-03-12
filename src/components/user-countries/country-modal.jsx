@@ -215,6 +215,20 @@ const CountryModal = ({
     });
   };
 
+  const handleCitiesChange = (newCities) => {
+    setCountry((prev) => ({ ...prev, cities: newCities }));
+    updateMutation.mutate({
+      code: country.code,
+      story: storyDraft,
+      cities: newCities,
+      ratings: ratingsDraft,
+      visitedAt:
+        visitedMonth && visitedYear
+          ? `${visitedYear}-${String(visitedMonth).padStart(2, "0")}`
+          : null,
+    });
+  };
+
   useScrollLock(true);
 
   return (
@@ -399,12 +413,7 @@ const CountryModal = ({
                         const updated = country.cities.filter(
                           (c) => c !== city
                         );
-                        updateMutation.mutate({
-                          code: country.code,
-                          story: storyDraft,
-                          cities: updated,
-                        });
-                        setCountry((prev) => ({ ...prev, cities: updated }));
+                        handleCitiesChange(updated);
                       }}
                     >
                       &times;
@@ -450,12 +459,7 @@ const CountryModal = ({
                           ? filtered[cityActiveIndex]
                           : cityInput.trim();
                       const updated = [...(country.cities || []), toAdd];
-                      updateMutation.mutate({
-                        code: country.code,
-                        story: storyDraft,
-                        cities: updated,
-                      });
-                      setCountry((prev) => ({ ...prev, cities: updated }));
+                      handleCitiesChange(updated);
                       setCityInput("");
                       setCityActiveIndex(-1);
                     }
@@ -478,15 +482,7 @@ const CountryModal = ({
                             className={`country-modal__city-option${i === cityActiveIndex ? " country-modal__city-option--active" : ""}`}
                             onMouseDown={() => {
                               const updated = [...(country.cities || []), city];
-                              updateMutation.mutate({
-                                code: country.code,
-                                story: storyDraft,
-                                cities: updated,
-                              });
-                              setCountry((prev) => ({
-                                ...prev,
-                                cities: updated,
-                              }));
+                              handleCitiesChange(updated);
                               setCityInput("");
                               setCityActiveIndex(-1);
                             }}
