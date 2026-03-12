@@ -12,6 +12,7 @@ import useSortableList from "../../hook/use-sortable-list";
 
 import { AuthContext } from "../context/auth-context";
 import { getFlagEmoji } from "../../utils/flags";
+import { formatDate } from "../../utils/formatDate";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import useSortableItem from "../../hook/use-sortable-item";
@@ -43,10 +44,7 @@ const SortableWishlistCard = ({
       <div className="wishlist-card__flag">{getFlagEmoji(country.code)}</div>
       <div className="wishlist-card__name">{country.name}</div>
       <div className="wishlist-card__date">
-        {new Date(country.addedAt).toLocaleDateString(undefined, {
-          month: "short",
-          year: "numeric",
-        })}
+        {formatDate(country.addedAt)}
       </div>
       {canEdit && (
         <button

@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: center;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 50%;
@@ -89,7 +89,7 @@
 
 .wishlist-card__remove:hover {
   opacity: 1;
-  color: #c0392b;
+  color: var(--color-danger);
 }
 
 /* Card date */
@@ -161,38 +161,6 @@
   margin: 0;
 }
 
-/* Modal actions footer */
-.country-modal__actions {
-  padding: 0.75rem 1.25rem 1rem;
-  border-top: 1px solid var(--light-gray);
-  display: flex;
-  justify-content: flex-end;
-}
-
-.country-modal__btn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: opacity 0.15s;
-}
-
-.country-modal__btn--save {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-.country-modal__btn--save:hover {
-  opacity: 0.85;
-}
-
-.country-modal__btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Auto-save indicator */
 @keyframes fadeInOut {
   0% {
@@ -215,7 +183,7 @@
   display: inline-block;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #27ae60;
+  color: var(--color-success);
   animation: fadeInOut 1.5s ease forwards;
   align-self: flex-start;
 }

@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: center;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 50%;
@@ -121,7 +121,7 @@
 .country-modal__backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -225,7 +225,7 @@
 }
 
 .country-modal__remove-photo:hover {
-  background: #c0392b;
+  background: var(--color-danger);
 }
 
 .country-modal__actions {
@@ -253,7 +253,7 @@
 
 .country-modal__btn--upload {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
 }
 
 .country-modal__btn--upload:hover:not(:disabled) {
@@ -262,14 +262,14 @@
 
 .country-modal__btn--remove {
   background: transparent;
-  color: #c0392b;
-  border: 1px solid #c0392b;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
   margin-left: auto;
 }
 
 .country-modal__btn--remove:hover:not(:disabled) {
-  background: #c0392b;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--button-text);
 }
 
 /* Travel story */
@@ -312,7 +312,7 @@
 
 .country-modal__btn--save {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
 }
 
 .country-modal__btn--save:hover:not(:disabled) {
@@ -466,7 +466,7 @@
 
 .user-countries__pending-btn--visited {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
 }
 
 .user-countries__pending-btn--wishlist {
@@ -577,7 +577,7 @@
 
 .country-modal__comment-delete:hover {
   opacity: 1;
-  color: #c0392b;
+  color: var(--color-danger);
 }
 
 .country-modal__comment-input input {
@@ -670,7 +670,7 @@
 .user-countries__empty-btn {
   margin-top: 0.5rem;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   border: none;
   border-radius: 20px;
   padding: 0.5rem 1.25rem;
@@ -726,7 +726,7 @@
 
 .view-toggle-btn--active {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   border-color: var(--primary-color);
 }
 
@@ -832,7 +832,7 @@
 
 .country-modal__visited-clear:hover {
   opacity: 1;
-  color: #c0392b;
+  color: var(--color-danger);
 }
 
 .country-modal__upload-hint {

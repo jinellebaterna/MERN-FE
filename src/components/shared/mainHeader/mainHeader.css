@@ -8,17 +8,17 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: var(--primary-color); /* muted purple primary color */
-  color: white; /* text and icons contrast */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* softer shadow to match muted theme */
+  background: var(--primary-color);
+  color: var(--nav-text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   padding: 0 1rem;
   z-index: 5;
-  border-bottom: 1px solid var(--light-gray); /* subtle border for modern feel */
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .main-header a,
 .main-header button {
-  color: white; /* ensures links/buttons are visible */
+  color: var(--nav-text);
   text-decoration: none;
 }
 

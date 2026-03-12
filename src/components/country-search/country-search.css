@@ -51,7 +51,7 @@
 .country-search__item:hover,
 .country-search__item--active {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
 }
 
 .country-search__flag {

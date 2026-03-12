@@ -23,7 +23,7 @@
 .home--guest button {
   padding: 0.75rem 2rem;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -107,7 +107,7 @@
   border-radius: 20px;
   border: 1px solid var(--primary-color);
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -167,7 +167,7 @@
 
 .home__hero-btn--primary {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
 }
 
 .home__features {
@@ -212,7 +212,7 @@
 .home__cta {
   text-align: center;
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   padding: 4rem 1rem;
   display: flex;
   flex-direction: column;
@@ -231,7 +231,7 @@
 }
 
 .home__cta .home__hero-btn--primary {
-  background: #fff;
+  background: var(--card-background);
   color: var(--primary-color);
 }
 

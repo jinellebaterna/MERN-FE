@@ -15,11 +15,11 @@
 }
 
 .star-rating__star--filled {
-  color: #f5a623;
+  color: var(--star-color);
 }
 
 .star-rating__star:not(:disabled):hover {
-  color: #f5a623;
+  color: var(--star-color);
 }
 
 .star-rating__star:disabled {

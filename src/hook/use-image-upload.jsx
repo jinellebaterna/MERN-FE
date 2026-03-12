@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { uploadFiles } from "../api/upload";
-
-const fileKey = (f) => `${f.name}-${f.size}`;
+import { fileKey } from "../utils/fileKey";
 
 export const useImageUpload = (onInputCallback) => {
   const pathMapRef = useRef(new Map());

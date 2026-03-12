@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../context/auth-context";
 import { ThemeContext } from "../context/theme-context";
 import {
@@ -8,13 +8,12 @@ import {
   fetchUserCountries,
   fetchUserWishlist,
   fetchAllUsers,
-  followUser,
-  unfollowUser,
   updateUser,
   changePassword,
   deleteUser,
 } from "../../api/user";
 import { useAuthMutation } from "../../hook/use-auth-mutation";
+import useFollowMutation from "../../hook/use-follow-mutation";
 import { useForm } from "../../hook/form-hook";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../utils/validators";
 import Avatar from "../shared/avatar/avatar";
@@ -62,7 +61,7 @@ const Profile = () => {
   });
 
   const { data: allUsers = [] } = useQuery({
-    queryKey: ["allUsers"],
+    queryKey: ["users"],
     queryFn: fetchAllUsers,
   });
 
@@ -72,16 +71,7 @@ const Profile = () => {
     }
   }, [user, setFormData]);
 
-  const followMutation = useMutation({
-    mutationFn: ({ userId, isFollowing }) =>
-      isFollowing
-        ? unfollowUser({ userId, token: auth.token })
-        : followUser({ userId, token: auth.token }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user", auth.userId] });
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
-    },
-  });
+  const followMutation = useFollowMutation();
 
   const updateMutation = useAuthMutation({
     mutationFn: updateUser,

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../api/cities";
-import ImageUpload from "../shared/imageUpload/imageUpload";
 import StarRating from "../shared/starRating/starRating";
 import "../shared/starRating/starRating.css";
 import { useImageUpload } from "../../hook/use-image-upload";
@@ -15,8 +14,12 @@ import {
   deleteCountryComment,
 } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
+import { formatDate } from "../../utils/formatDate";
 import useScrollLock from "../../hook/use-scroll-lock";
-import { IMG_BASE, MONTHS } from "../../data/data";
+import { MONTHS } from "../../data/data";
+import CountryGallery from "./CountryGallery";
+import CountryCities from "./CountryCities";
+import CountryComments from "./CountryComments";
 
 const CountryModal = ({
   country: initialCountry,
@@ -245,70 +248,18 @@ const CountryModal = ({
         </div>
 
         <div className="country-modal__body">
-          <div className="country-modal__gallery">
-            {country.images.length === 0 && (
-              <p className="country-modal__no-photos">No photos yet.</p>
-            )}
-            {country.images.map((img) => (
-              <div key={img} className="country-modal__photo-wrap">
-                <img
-                  src={`${IMG_BASE}/${img}`}
-                  alt={country.name}
-                  className="country-modal__photo"
-                />
-                {canEdit && (
-                  <button
-                    className="country-modal__remove-photo"
-                    onClick={() => handleRemoveImage(img)}
-                    title="Remove photo"
-                  >
-                    &times;
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          {uploadError && (
-            <p style={{ color: "var(--color-danger)", fontSize: "0.85rem" }}>
-              {uploadError}
-              <button
-                onClick={clearUploadError}
-                style={{ marginLeft: "0.5rem" }}
-              >
-                ✕
-              </button>
-            </p>
-          )}
-
-          {canEdit && (
-            <div className="country-modal__upload-section">
-              <h4>Add Photos</h4>
-              <p className="country-modal__upload-hint">
-                Upload your top 5 photos from this trip
-              </p>
-              <ImageUpload
-                key={imageUploadKey}
-                id="country-images"
-                multiple
-                maxFiles={5}
-                onInput={imageInputHandler}
-                uploadingKeys={uploadingKeys}
-              />
-              {uploadProgress !== null && (
-                <div className="upload-progress">
-                  <div className="upload-progress__bar-track">
-                    <div
-                      className="upload-progress__bar"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                  <span className="upload-progress__label">
-                    Uploading... {uploadProgress}%
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+          <CountryGallery
+            country={country}
+            canEdit={canEdit}
+            // pendingPaths={pendingPaths}
+            imageUploadKey={imageUploadKey}
+            imageInputHandler={imageInputHandler}
+            uploadingKeys={uploadingKeys}
+            uploadProgress={uploadProgress}
+            uploadError={uploadError}
+            clearUploadError={clearUploadError}
+            onRemoveImage={handleRemoveImage}
+          />
 
           {canEdit && (
             <div className="country-modal__visited-date">
@@ -357,13 +308,7 @@ const CountryModal = ({
           )}
           {!canEdit && country.visitedAt && (
             <div className="country-modal__visited-date">
-              <span>
-                🗓 Visited:{" "}
-                {new Date(country.visitedAt).toLocaleDateString(undefined, {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </span>
+              <span>🗓 Visited: {formatDate(country.visitedAt, "long")}</span>
             </div>
           )}
 
@@ -401,101 +346,16 @@ const CountryModal = ({
             )}
           </div>
 
-          <div className="country-modal__cities">
-            <h4>Cities Visited</h4>
-            <div className="country-modal__city-tags">
-              {(country.cities || []).map((city) => (
-                <span key={city} className="city-tag">
-                  {city}
-                  {canEdit && (
-                    <button
-                      onClick={() => {
-                        const updated = country.cities.filter(
-                          (c) => c !== city
-                        );
-                        handleCitiesChange(updated);
-                      }}
-                    >
-                      &times;
-                    </button>
-                  )}
-                </span>
-              ))}
-            </div>
-            {canEdit && (
-              <div className="country-modal__city-input">
-                <input
-                  value={cityInput}
-                  onChange={(e) => {
-                    setCityInput(e.target.value);
-                    setCityActiveIndex(-1);
-                  }}
-                  placeholder="Add a city..."
-                  autoComplete="off"
-                  onKeyDown={(e) => {
-                    const filtered = citySuggestions
-                      .filter(
-                        (c) =>
-                          c.toLowerCase().includes(cityInput.toLowerCase()) &&
-                          !(country.cities || []).includes(c)
-                      )
-                      .slice(0, 8);
-
-                    if (e.key === "ArrowDown") {
-                      e.preventDefault();
-                      setCityActiveIndex((i) =>
-                        Math.min(i + 1, filtered.length - 1)
-                      );
-                    } else if (e.key === "ArrowUp") {
-                      e.preventDefault();
-                      setCityActiveIndex((i) => Math.max(i - 1, 0));
-                    } else if (e.key === "Escape") {
-                      setCityActiveIndex(-1);
-                      setCityInput("");
-                    } else if (e.key === "Enter" && cityInput.trim()) {
-                      e.preventDefault();
-                      const toAdd =
-                        cityActiveIndex >= 0 && filtered[cityActiveIndex]
-                          ? filtered[cityActiveIndex]
-                          : cityInput.trim();
-                      const updated = [...(country.cities || []), toAdd];
-                      handleCitiesChange(updated);
-                      setCityInput("");
-                      setCityActiveIndex(-1);
-                    }
-                  }}
-                />
-                {cityInput.trim() &&
-                  (() => {
-                    const filtered = citySuggestions
-                      .filter(
-                        (c) =>
-                          c.toLowerCase().includes(cityInput.toLowerCase()) &&
-                          !(country.cities || []).includes(c)
-                      )
-                      .slice(0, 8);
-                    return filtered.length > 0 ? (
-                      <ul className="country-modal__city-dropdown">
-                        {filtered.map((city, i) => (
-                          <li
-                            key={city}
-                            className={`country-modal__city-option${i === cityActiveIndex ? " country-modal__city-option--active" : ""}`}
-                            onMouseDown={() => {
-                              const updated = [...(country.cities || []), city];
-                              handleCitiesChange(updated);
-                              setCityInput("");
-                              setCityActiveIndex(-1);
-                            }}
-                          >
-                            {city}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null;
-                  })()}
-              </div>
-            )}
-          </div>
+          <CountryCities
+            country={country}
+            canEdit={canEdit}
+            cityInput={cityInput}
+            setCityInput={setCityInput}
+            citySuggestions={citySuggestions}
+            cityActiveIndex={cityActiveIndex}
+            setCityActiveIndex={setCityActiveIndex}
+            onCitiesChange={handleCitiesChange}
+          />
 
           <div className="country-modal__social">
             <div className="country-modal__likes">
@@ -519,52 +379,14 @@ const CountryModal = ({
               )}
             </div>
 
-            <div className="country-modal__comments">
-              <h4>Comments</h4>
-              {(country.comments || []).length === 0 && (
-                <p className="country-modal__no-comments">No comments yet.</p>
-              )}
-              {(country.comments || []).map((comment) => (
-                <div key={comment.id} className="country-modal__comment">
-                  <span className="country-modal__comment-author">
-                    {comment.user?.name || "User"}
-                  </span>
-                  <span className="country-modal__comment-text">
-                    {comment.text}
-                  </span>
-                  {(auth.userId === comment.user?._id || canEdit) && (
-                    <button
-                      className="country-modal__comment-delete"
-                      onClick={() =>
-                        deleteCommentMutation.mutate({
-                          code: country.code,
-                          commentId: comment.id,
-                        })
-                      }
-                    >
-                      &times;
-                    </button>
-                  )}
-                </div>
-              ))}
-              {auth.isLoggedIn && (
-                <div className="country-modal__comment-input">
-                  <input
-                    value={commentInput}
-                    onChange={(e) => setCommentInput(e.target.value)}
-                    placeholder="Add a comment..."
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && commentInput.trim()) {
-                        commentMutation.mutate({
-                          code: country.code,
-                          text: commentInput,
-                        });
-                      }
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            <CountryComments
+              country={country}
+              canEdit={canEdit}
+              commentInput={commentInput}
+              setCommentInput={setCommentInput}
+              commentMutation={commentMutation}
+              deleteCommentMutation={deleteCommentMutation}
+            />
           </div>
         </div>
 

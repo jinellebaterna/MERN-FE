@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import "./imageUpload.css";
+import { fileKey } from "../../../utils/fileKey";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const WARN_FILE_SIZE = 8 * 1024 * 1024; // warn at 8MB
@@ -8,8 +9,6 @@ const formatSize = (bytes) => {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
-
-const fileKey = (f) => `${f.name}-${f.size}`;
 
 const ImageUpload = (props) => {
   const uploadingKeys = props.uploadingKeys || new Set();
@@ -42,10 +41,10 @@ const ImageUpload = (props) => {
 
   const processFiles = useCallback(
     (newFiles) => {
-      const existingKeys = new Set(files.map((f) => `${f.name}-${f.size}`));
+      const existingKeys = new Set(files.map(fileKey));
       const dupes = [];
       const unique = newFiles.filter((f) => {
-        const key = `${f.name}-${f.size}`;
+        const key = fileKey(f);
         if (existingKeys.has(key)) {
           dupes.push(f.name);
           return false;

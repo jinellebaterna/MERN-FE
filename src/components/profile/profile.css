@@ -105,7 +105,7 @@
 
 .profile-followers__tab--active {
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   border-color: var(--primary-color);
 }
 
@@ -160,7 +160,7 @@
   border-radius: 20px;
   border: 1px solid var(--primary-color);
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   font-size: 0.8rem;
   cursor: pointer;
   white-space: nowrap;
@@ -204,7 +204,7 @@
 }
 
 .profile-settings__success {
-  color: #2e7d32;
+  color: var(--color-success);
   font-size: 0.85rem;
   margin: 0.5rem 0;
 }

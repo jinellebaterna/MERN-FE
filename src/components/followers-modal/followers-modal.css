@@ -82,7 +82,7 @@
   border-radius: 20px;
   border: 1px solid var(--primary-color);
   background: var(--primary-color);
-  color: #fff;
+  color: var(--button-text);
   font: inherit;
   font-size: 0.78rem;
   font-weight: 600;

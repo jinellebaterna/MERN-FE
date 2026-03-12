@@ -126,7 +126,7 @@
 
 .bottom-sheet__list li button:hover {
   background: var(--secondary-color);
-  color: white;
+  color: var(--nav-hover-text);
 }
 
 .bottom-sheet__theme-row {

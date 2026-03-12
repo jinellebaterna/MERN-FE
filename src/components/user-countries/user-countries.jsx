@@ -15,6 +15,7 @@ import {
   reorderCountries,
 } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
+import { formatDate } from "../../utils/formatDate";
 import CountrySearch from "../country-search/country-search";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
@@ -265,12 +266,7 @@ const UserCountries = () => {
                           {country.name}
                         </span>
                         <span className="timeline-entry__date">
-                          {new Date(
-                            country.visitedAt || country.addedAt
-                          ).toLocaleDateString(undefined, {
-                            month: "short",
-                            year: "numeric",
-                          })}
+                          {formatDate(country.visitedAt || country.addedAt)}
                         </span>
                       </div>
                     </div>

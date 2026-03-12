@@ -22,7 +22,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(245, 245, 245, 0.9); /* soft off-white overlay */
+  background: color-mix(in srgb, var(--background-color) 90%, transparent);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -52,7 +52,7 @@
 .nav-links button:hover,
 .nav-links button:active {
   background: var(--nav-hover-text);
-  color: white;
+  color: var(--nav-bg);
 }
 
 @media (min-width: 1024px) {
@@ -66,13 +66,13 @@
   }
 
   .nav-links a {
-    color: white;
+    color: var(--nav-text);
     text-decoration: none;
   }
 
   .nav-links button {
-    border: 1px solid white;
-    color: white;
+    border: 1px solid var(--nav-text);
+    color: var(--nav-text);
     background: transparent;
   }
 
@@ -97,7 +97,7 @@
 }
 
 .avatar-nav {
-  border: 2px solid white;
+  border: 2px solid var(--nav-text);
 }
 
 .avatar-dropdown {
