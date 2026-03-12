@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useCallback, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import UpdateUser from "./components/update-user";
 import UserCountries from "./components/user-countries/user-countries";
 import UserWishlist from "./components/user-wishlist/user-wishlist";
 import ScratchMap from "./components/scratch-map/scratch-map";
 import Auth from "./components/auth/auth";
 import Navigation from "./components/shared/navigation/navigation";
+import Profile from "./components/profile/profile";
 import { AuthContext } from "./components/context/auth-context";
 import { ThemeProvider } from "./components/context/theme-context";
 import ErrorBoundary from "./components/shared/errorBoundary/errorBoundary";
@@ -143,16 +143,6 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route
-                    path="/users/edit"
-                    element={
-                      isLoggedIn ? (
-                        <UpdateUser />
-                      ) : (
-                        <Navigate to="/auth" replace />
-                      )
-                    }
-                  />
-                  <Route
                     path="/countries"
                     element={
                       isLoggedIn ? (
@@ -173,6 +163,12 @@ const App = () => {
                       ) : (
                         <Navigate to="/auth" replace />
                       )
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      isLoggedIn ? <Profile /> : <Navigate to="/auth" replace />
                     }
                   />
                   <Route
