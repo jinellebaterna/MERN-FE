@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { fetchCitiesForCountry } from "../../api/cities";
 import ImageUpload from "../shared/imageUpload/imageUpload";
+import StarRating from "../shared/starRating/starRating";
+import "../shared/starRating/starRating.css";
 import { useImageUpload } from "../../hook/use-image-upload";
 import { AuthContext } from "../context/auth-context";
 import {
@@ -33,6 +35,13 @@ const CountryModal = ({
   const [commentInput, setCommentInput] = useState("");
   const [pendingPaths, setPendingPaths] = useState([]);
   const [imageUploadKey, setImageUploadKey] = useState(0);
+  const [ratingsDraft, setRatingsDraft] = useState({
+    food: country.ratings?.food ?? 0,
+    nature: country.ratings?.nature ?? 0,
+    cost: country.ratings?.cost ?? 0,
+    transport: country.ratings?.transport ?? 0,
+    shopping: country.ratings?.shopping ?? 0,
+  });
 
   useEffect(() => {
     fetchCitiesForCountry(country.name)
@@ -56,12 +65,13 @@ const CountryModal = ({
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ code, story, cities }) =>
+    mutationFn: ({ code, story, cities, ratings }) =>
       updateCountry({
         userId: auth.userId,
         code,
         story,
         cities,
+        ratings,
         token: auth.token,
       }),
     onSuccess: (data) => {
@@ -127,6 +137,7 @@ const CountryModal = ({
         code: country.code,
         story: storyDraft,
         cities: country.cities,
+        ratings: ratingsDraft,
       }),
     ];
     if (pendingPaths.length > 0) {
@@ -163,6 +174,17 @@ const CountryModal = ({
     uploadError,
     clearUploadError,
   } = useImageUpload(handleImagePaths);
+
+  const handleRatingChange = (category, value) => {
+    const updated = { ...ratingsDraft, [category]: value };
+    setRatingsDraft(updated);
+    updateMutation.mutate({
+      code: country.code,
+      story: storyDraft,
+      cities: country.cities,
+      ratings: updated,
+    });
+  };
 
   useScrollLock(true);
 
@@ -242,6 +264,25 @@ const CountryModal = ({
               )}
             </div>
           )}
+          <div className="country-modal__ratings">
+            <h4>{canEdit ? "My Ratings" : "Ratings"}</h4>
+            {[
+              { key: "food", label: "🍜 Food" },
+              { key: "nature", label: "🌿 Nature" },
+              { key: "cost", label: "💸 Cost" },
+              { key: "transport", label: "🚌 Transport" },
+              { key: "shopping", label: "🛍️  Shopping" },
+            ].map(({ key, label }) => (
+              <div key={key} className="country-modal__rating-row">
+                <span className="country-modal__rating-label">{label}</span>
+                <StarRating
+                  value={ratingsDraft[key]}
+                  onChange={(val) => handleRatingChange(key, val)}
+                  readOnly={!canEdit}
+                />
+              </div>
+            ))}
+          </div>
 
           <div className="country-modal__story">
             <h4>Travel Story</h4>

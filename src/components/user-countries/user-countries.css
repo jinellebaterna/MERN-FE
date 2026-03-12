@@ -679,3 +679,25 @@
 .user-countries__empty-btn:hover {
   opacity: 0.85;
 }
+
+.country-modal__ratings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.country-modal__ratings h4 {
+  margin: 0;
+}
+
+.country-modal__rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.country-modal__rating-label {
+  color: var(--text-color);
+  opacity: 0.75;
+}

@@ -63,11 +63,18 @@ export const updateCountryImages = ({
     json: { addImages, removeImages },
   });
 
-export const updateCountry = ({ userId, code, story, cities, token }) =>
+export const updateCountry = ({
+  userId,
+  code,
+  story,
+  cities,
+  ratings,
+  token,
+}) =>
   apiFetch(`/api/users/${userId}/countries/${code}`, {
     method: "PATCH",
     token,
-    json: { story, cities },
+    json: { story, cities, ratings },
   });
 
 export const fetchUserWishlist = (userId) =>
