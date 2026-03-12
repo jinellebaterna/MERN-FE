@@ -176,9 +176,7 @@
 }
 
 .country-modal__gallery {
-  overflow-y: auto;
-  max-height: 200px;
-  /* padding: 1rem; */
+  padding: 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.75rem;
@@ -599,8 +597,14 @@
   border-color: var(--primary-color);
 }
 
+.country-modal__upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .country-modal__upload-section h4 {
-  margin: 0 0 0.75rem;
+  margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
 }
@@ -700,4 +704,140 @@
 .country-modal__rating-label {
   color: var(--text-color);
   opacity: 0.75;
+}
+
+/* View toggle */
+.user-countries__view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.view-toggle-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--light-gray);
+  background: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-color);
+  line-height: 0;
+}
+
+.view-toggle-btn--active {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+/* Timeline */
+.user-countries__timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.timeline-year__label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+}
+
+.timeline-year__entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-left: 2px solid var(--light-gray);
+  padding-left: 1rem;
+}
+
+.timeline-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: var(--card-background);
+  box-shadow: 0 1px 3px var(--shadow-color);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.timeline-entry:hover {
+  opacity: 0.85;
+}
+
+.timeline-entry__flag {
+  font-size: 1.5rem;
+}
+
+.timeline-entry__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-entry__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.timeline-entry__date {
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.55;
+}
+
+/* Visited date field in modal */
+.country-modal__visited-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.country-modal__visited-date label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.country-modal__visited-selects {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.country-modal__visited-selects select {
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.9rem;
+  background: var(--card-background);
+  color: var(--text-color);
+}
+
+.country-modal__visited-clear {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-color);
+  opacity: 0.4;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+
+.country-modal__visited-clear:hover {
+  opacity: 1;
+  color: #c0392b;
+}
+
+.country-modal__upload-hint {
+  font-size: 0.8rem;
+  color: var(--text-color);
+  opacity: 0.55;
+  margin: 0;
 }

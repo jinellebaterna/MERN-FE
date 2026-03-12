@@ -69,12 +69,13 @@ export const updateCountry = ({
   story,
   cities,
   ratings,
+  visitedAt,
   token,
 }) =>
   apiFetch(`/api/users/${userId}/countries/${code}`, {
     method: "PATCH",
     token,
-    json: { story, cities, ratings },
+    json: { story, cities, ratings, visitedAt },
   });
 
 export const fetchUserWishlist = (userId) =>

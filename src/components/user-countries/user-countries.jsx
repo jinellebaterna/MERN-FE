@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import useSortableList from "../../hook/use-sortable-list";
-
+import { LayoutGrid, Clock } from "lucide-react";
 import { AuthContext } from "../context/auth-context";
 import {
   fetchUserCountries,
@@ -58,6 +58,7 @@ const UserCountries = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedContinent, setSelectedContinent] = useState(null);
   const [pendingCountry, setPendingCountry] = useState(null);
+  const [view, setView] = useState("grid");
 
   const { data: viewedUser } = useQuery({
     queryKey: ["user", viewedUserId],
@@ -123,6 +124,18 @@ const UserCountries = () => {
 
   if (isLoading) return <LoadingSpinner asOverlay />;
 
+  const sortedForTimeline = [...countries].sort(
+    (a, b) =>
+      new Date(b.visitedAt || b.addedAt) - new Date(a.visitedAt || a.addedAt)
+  );
+
+  const groupedByYear = sortedForTimeline.reduce((acc, c) => {
+    const year = new Date(c.visitedAt || c.addedAt).getFullYear();
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(c);
+    return acc;
+  }, {});
+
   return (
     <div className="user-countries">
       <ErrorModal error={error} onClear={() => setError(null)} />
@@ -179,6 +192,22 @@ const UserCountries = () => {
             : `${viewedUser?.name ?? "Their"} Countries`}
           <span className="user-countries__count">{countries.length}</span>
         </h2>
+        <div className="user-countries__view-toggle">
+          <button
+            className={`view-toggle-btn ${view === "grid" ? "view-toggle-btn--active" : ""}`}
+            onClick={() => setView("grid")}
+            title="Grid view"
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            className={`view-toggle-btn ${view === "timeline" ? "view-toggle-btn--active" : ""}`}
+            onClick={() => setView("timeline")}
+            title="Timeline view"
+          >
+            <Clock size={16} />
+          </button>
+        </div>
       </div>
 
       {countries.length === 0 && (
@@ -213,27 +242,65 @@ const UserCountries = () => {
             No countries visited in {selectedContinent} yet.
           </div>
         )}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={canEdit ? handleDragEnd : undefined}
-      >
-        <SortableContext
-          items={localCountries.map((c) => c.code)}
-          strategy={rectSortingStrategy}
-        >
-          <div className="user-countries__grid">
-            {displayedCountries.map((country) => (
-              <SortableCountryCard
-                key={country.code}
-                country={country}
-                onClick={setSelectedCountry}
-                canEdit={canEdit}
-              />
+      {view === "timeline" ? (
+        <div className="user-countries__timeline">
+          {Object.entries(groupedByYear)
+            .sort(([a], [b]) => b - a)
+            .map(([year, items]) => (
+              <div key={year} className="timeline-year">
+                <div className="timeline-year__label">{year}</div>
+                <div className="timeline-year__entries">
+                  {items.map((country) => (
+                    <div
+                      key={country.code}
+                      className="timeline-entry"
+                      onClick={() => setSelectedCountry(country)}
+                    >
+                      <span className="timeline-entry__flag">
+                        {getFlagEmoji(country.code)}
+                      </span>
+                      <div className="timeline-entry__info">
+                        <span className="timeline-entry__name">
+                          {country.name}
+                        </span>
+                        <span className="timeline-entry__date">
+                          {new Date(
+                            country.visitedAt || country.addedAt
+                          ).toLocaleDateString(undefined, {
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+        </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={canEdit ? handleDragEnd : undefined}
+        >
+          <SortableContext
+            items={localCountries.map((c) => c.code)}
+            strategy={rectSortingStrategy}
+          >
+            <div className="user-countries__grid">
+              {displayedCountries.map((country) => (
+                <SortableCountryCard
+                  key={country.code}
+                  country={country}
+                  onClick={setSelectedCountry}
+                  canEdit={canEdit}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
 
       {selectedCountry && (
         <CountryModal

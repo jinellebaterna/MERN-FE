@@ -16,7 +16,7 @@ import {
 } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
 import useScrollLock from "../../hook/use-scroll-lock";
-import { IMG_BASE } from "../../data/data";
+import { IMG_BASE, MONTHS } from "../../data/data";
 
 const CountryModal = ({
   country: initialCountry,
@@ -42,6 +42,16 @@ const CountryModal = ({
     transport: country.ratings?.transport ?? 0,
     shopping: country.ratings?.shopping ?? 0,
   });
+  const [visitedMonth, setVisitedMonth] = useState(
+    initialCountry.visitedAt
+      ? new Date(initialCountry.visitedAt).getMonth() + 1
+      : ""
+  );
+  const [visitedYear, setVisitedYear] = useState(
+    initialCountry.visitedAt
+      ? new Date(initialCountry.visitedAt).getFullYear()
+      : ""
+  );
 
   useEffect(() => {
     fetchCitiesForCountry(country.name)
@@ -65,13 +75,14 @@ const CountryModal = ({
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ code, story, cities, ratings }) =>
+    mutationFn: ({ code, story, cities, ratings, visitedAt }) =>
       updateCountry({
         userId: auth.userId,
         code,
         story,
         cities,
         ratings,
+        visitedAt,
         token: auth.token,
       }),
     onSuccess: (data) => {
@@ -138,6 +149,10 @@ const CountryModal = ({
         story: storyDraft,
         cities: country.cities,
         ratings: ratingsDraft,
+        visitedAt:
+          visitedMonth && visitedYear
+            ? `${visitedYear}-${String(visitedMonth).padStart(2, "0")}`
+            : null,
       }),
     ];
     if (pendingPaths.length > 0) {
@@ -186,6 +201,20 @@ const CountryModal = ({
     });
   };
 
+  const handleVisitedAtChange = (month, year) => {
+    setVisitedMonth(month);
+    setVisitedYear(year);
+    const visitedAt =
+      month && year ? `${year}-${String(month).padStart(2, "0")}` : null;
+    updateMutation.mutate({
+      code: country.code,
+      story: storyDraft,
+      cities: country.cities,
+      ratings: ratingsDraft,
+      visitedAt,
+    });
+  };
+
   useScrollLock(true);
 
   return (
@@ -201,31 +230,30 @@ const CountryModal = ({
           </button>
         </div>
 
-        <div className="country-modal__gallery">
-          {country.images.length === 0 && (
-            <p className="country-modal__no-photos">No photos yet.</p>
-          )}
-          {country.images.map((img) => (
-            <div key={img} className="country-modal__photo-wrap">
-              <img
-                src={`${IMG_BASE}/${img}`}
-                alt={country.name}
-                className="country-modal__photo"
-              />
-              {canEdit && (
-                <button
-                  className="country-modal__remove-photo"
-                  onClick={() => handleRemoveImage(img)}
-                  title="Remove photo"
-                >
-                  &times;
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
         <div className="country-modal__body">
+          <div className="country-modal__gallery">
+            {country.images.length === 0 && (
+              <p className="country-modal__no-photos">No photos yet.</p>
+            )}
+            {country.images.map((img) => (
+              <div key={img} className="country-modal__photo-wrap">
+                <img
+                  src={`${IMG_BASE}/${img}`}
+                  alt={country.name}
+                  className="country-modal__photo"
+                />
+                {canEdit && (
+                  <button
+                    className="country-modal__remove-photo"
+                    onClick={() => handleRemoveImage(img)}
+                    title="Remove photo"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
           {uploadError && (
             <p style={{ color: "var(--color-danger)", fontSize: "0.85rem" }}>
               {uploadError}
@@ -241,11 +269,14 @@ const CountryModal = ({
           {canEdit && (
             <div className="country-modal__upload-section">
               <h4>Add Photos</h4>
+              <p className="country-modal__upload-hint">
+                Upload your top 5 photos from this trip
+              </p>
               <ImageUpload
                 key={imageUploadKey}
                 id="country-images"
                 multiple
-                maxFiles={10}
+                maxFiles={5}
                 onInput={imageInputHandler}
                 uploadingKeys={uploadingKeys}
               />
@@ -264,6 +295,64 @@ const CountryModal = ({
               )}
             </div>
           )}
+
+          {canEdit && (
+            <div className="country-modal__visited-date">
+              <label>🗓 Date Visited</label>
+              <div className="country-modal__visited-selects">
+                <select
+                  value={visitedMonth}
+                  onChange={(e) =>
+                    handleVisitedAtChange(e.target.value, visitedYear)
+                  }
+                >
+                  <option value="">Month</option>
+                  {MONTHS.map((m, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={visitedYear}
+                  onChange={(e) =>
+                    handleVisitedAtChange(visitedMonth, e.target.value)
+                  }
+                >
+                  <option value="">Year</option>
+                  {Array.from(
+                    { length: new Date().getFullYear() - 1949 },
+                    (_, i) => new Date().getFullYear() - i
+                  ).map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+                {(visitedMonth || visitedYear) && (
+                  <button
+                    type="button"
+                    className="country-modal__visited-clear"
+                    onClick={() => handleVisitedAtChange("", "")}
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+          {!canEdit && country.visitedAt && (
+            <div className="country-modal__visited-date">
+              <span>
+                🗓 Visited:{" "}
+                {new Date(country.visitedAt).toLocaleDateString(undefined, {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+          )}
+
           <div className="country-modal__ratings">
             <h4>{canEdit ? "My Ratings" : "Ratings"}</h4>
             {[
