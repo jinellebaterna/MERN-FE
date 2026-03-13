@@ -6,6 +6,7 @@ import L from "leaflet";
 import { AuthContext } from "../shared/context/auth-context";
 import { searchPlaces } from "../../api/places";
 import { geocodeAddress } from "../../api/weather";
+import { IMG_BASE } from "../../data/data";
 import "leaflet/dist/leaflet.css";
 import "./map-view.css";
 
@@ -32,7 +33,7 @@ const greenIcon = makeIcon("green");
 const violetIcon = makeIcon("violet");
 const greyIcon = makeIcon("grey");
 
-const GeocodedMarker = ({ place, userId, filter }) => {
+const GeocodedMarker = ({ place, userId }) => {
   const isVisited = userId && place.visitedBy?.includes(userId);
   const isWantToVisit = userId && place.wantToVisitBy?.includes(userId);
 
@@ -45,9 +46,6 @@ const GeocodedMarker = ({ place, userId, filter }) => {
 
   if (!coords) return null;
 
-  if (filter === "visited" && !isVisited) return null;
-  if (filter === "want" && !isWantToVisit) return null;
-
   const icon = isVisited ? greenIcon : isWantToVisit ? violetIcon : greyIcon;
 
   return (
@@ -57,7 +55,7 @@ const GeocodedMarker = ({ place, userId, filter }) => {
           {place.images?.[0] && (
             <img
               className="map-popup-img"
-              src={`http://localhost:5001/${place.images[0]}`}
+              src={`${IMG_BASE}/${place.images[0]}`}
               alt={place.title}
             />
           )}
@@ -75,33 +73,42 @@ const MapView = () => {
   const auth = useContext(AuthContext);
   const [filter, setFilter] = useState("all");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["places", "map"],
     queryFn: () => searchPlaces({ limit: 100 }),
   });
 
   const places = data?.places ?? [];
 
+  const visiblePlaces =
+    filter === "all"
+      ? places
+      : places.filter((place) =>
+          filter === "visited"
+            ? place.visitedBy?.includes(auth.userId)
+            : place.wantToVisitBy?.includes(auth.userId)
+        );
+
   return (
     <div className="map-page">
       {auth.isLoggedIn && (
         <div className="map-filter-panel">
           {["all", "visited", "want"].map((f) => (
-            <span
+            <button
               key={f}
               className={`filter-chip ${filter === f ? "filter-chip--active" : ""}`}
               onClick={() => setFilter(f)}
-              style={{ cursor: "pointer" }}
             >
               {f === "all"
                 ? "All"
                 : f === "visited"
                   ? "✓ Visited"
                   : "♡ Want to Visit"}
-            </span>
+            </button>
           ))}
         </div>
       )}
+      {isError && <p style={{ padding: "1rem" }}>Failed to load places.</p>}
       {isLoading ? (
         <p style={{ padding: "1rem" }}>Loading map...</p>
       ) : (
@@ -114,12 +121,11 @@ const MapView = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {places.map((place) => (
+          {visiblePlaces.map((place) => (
             <GeocodedMarker
               key={place.id}
               place={place}
               userId={auth.userId}
-              filter={filter}
             />
           ))}
         </MapContainer>

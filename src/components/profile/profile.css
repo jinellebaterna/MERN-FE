@@ -249,3 +249,10 @@
   flex: 1;
   font-size: 0.82rem;
 }
+
+.profile-settings__delete {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+}

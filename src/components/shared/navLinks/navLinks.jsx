@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Globe, Flag } from "lucide-react";
-import ConfirmModal from "../../confirmation-modal/confirmation-modal";
 import Avatar from "../avatar/avatar";
 import useNavData from "../../../hook/use-nav-data";
 import "./navLinks.css";

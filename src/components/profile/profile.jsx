@@ -349,7 +349,7 @@ const Profile = () => {
             onCancel={() => setShowDeleteModal(false)}
             header="Delete Account"
             footer={
-              <>
+              <div className="profile-settings__delete">
                 <Button inverse onClick={() => setShowDeleteModal(false)}>
                   CANCEL
                 </Button>
@@ -365,7 +365,7 @@ const Profile = () => {
                 >
                   CONFIRM DELETE
                 </Button>
-              </>
+              </div>
             }
           >
             <p>Are you sure? This cannot be undone.</p>
