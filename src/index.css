@@ -19,6 +19,8 @@
   --z-modal: 1000;
   --z-overlay: 1100;
   --z-topmost: 2000;
+  --chart-temp-cool: #5b9bd5;
+  --chart-temp-warm: #e07b54;
 }
 
 /* LIGHT THEME (DEFAULT) */

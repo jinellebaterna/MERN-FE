@@ -1,45 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchMonthlyClimate } from "../../api/weather";
+import { fetchMonthlyClimate, groupByMonth } from "../../api/weather";
 import { MONTHS, CACHE_DURATIONS } from "../../data/data";
 import "./climate-chart.css";
-
-const groupByMonth = (daily) => {
-  const months = Array.from({ length: 12 }, () => ({
-    tempMax: [],
-    tempMin: [],
-    precip: [],
-  }));
-
-  daily.time.forEach((dateStr, i) => {
-    const month = new Date(dateStr).getMonth();
-    if (daily.temperature_2m_max[i] != null)
-      months[month].tempMax.push(daily.temperature_2m_max[i]);
-    if (daily.temperature_2m_min[i] != null)
-      months[month].tempMin.push(daily.temperature_2m_min[i]);
-    if (daily.precipitation_sum[i] != null)
-      months[month].precip.push(daily.precipitation_sum[i]);
-  });
-
-  return months.map((m) => ({
-    avgHigh: m.tempMax.length
-      ? m.tempMax.reduce((a, b) => a + b, 0) / m.tempMax.length
-      : null,
-    avgLow: m.tempMin.length
-      ? m.tempMin.reduce((a, b) => a + b, 0) / m.tempMin.length
-      : null,
-    precip: m.precip.length ? m.precip.reduce((a, b) => a + b, 0) : null,
-  }));
-};
 
 const SKELETON_HEIGHTS = [60, 45, 70, 55, 80, 65, 50, 75, 60, 45, 70, 55];
 
 const ClimateChart = ({ lat, lon }) => {
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: daily,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["climate", lat, lon],
-    queryFn: async () => {
-      const daily = await fetchMonthlyClimate(lat, lon);
-      return groupByMonth(daily);
-    },
+    queryFn: () => fetchMonthlyClimate(lat, lon),
     enabled: !!lat && !!lon,
     staleTime: CACHE_DURATIONS.CLIMATE,
   });
@@ -74,7 +47,9 @@ const ClimateChart = ({ lat, lon }) => {
       </div>
     );
 
-  if (isError || !data) return null;
+  if (isError || !daily) return null;
+  const data = groupByMonth(daily);
+
   const validTemps = data.filter(
     (d) => d.avgHigh !== null && d.avgLow !== null
   );

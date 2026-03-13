@@ -1,3 +1,5 @@
+import { MONTHS } from "../data/data";
+
 export const geocodeAddress = async (address) => {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&addressdetails=1`;
   const res = await fetch(url, { headers: { "Accept-Language": "en" } });
@@ -41,26 +43,56 @@ export const fetchCountryInfo = async (code) => {
   return { currency, language };
 };
 
-import { MONTHS } from "../data/data";
-
 export const getBestMonths = (dailyData) => {
   if (!dailyData?.time) return null;
   const monthly = Array.from({ length: 12 }, () => ({ temps: [], precip: 0 }));
   dailyData.time.forEach((date, i) => {
     const m = new Date(date).getMonth();
-    const avg = (dailyData.temperature_2m_max[i] + dailyData.temperature_2m_min[i]) / 2;
+    const avg =
+      (dailyData.temperature_2m_max[i] + dailyData.temperature_2m_min[i]) / 2;
     monthly[m].temps.push(avg);
     monthly[m].precip += dailyData.precipitation_sum[i] || 0;
   });
   const good = monthly
     .map((m, i) => {
-      const avgTemp = m.temps.reduce((s, t) => s + t, 0) / (m.temps.length || 1);
+      const avgTemp =
+        m.temps.reduce((s, t) => s + t, 0) / (m.temps.length || 1);
       return { i, avgTemp, precip: m.precip };
     })
-    .filter(({ avgTemp, precip }) => avgTemp >= 10 && avgTemp <= 28 && precip < 100)
+    .filter(
+      ({ avgTemp, precip }) => avgTemp >= 10 && avgTemp <= 28 && precip < 100
+    )
     .map(({ i }) => i);
   if (!good.length) return null;
   const first = MONTHS[good[0]];
   const last = MONTHS[good[good.length - 1]];
   return first === last ? first : `${first}–${last}`;
+};
+
+export const groupByMonth = (daily) => {
+  const months = Array.from({ length: 12 }, () => ({
+    tempMax: [],
+    tempMin: [],
+    precip: [],
+  }));
+
+  daily.time.forEach((dateStr, i) => {
+    const month = new Date(dateStr).getMonth();
+    if (daily.temperature_2m_max[i] != null)
+      months[month].tempMax.push(daily.temperature_2m_max[i]);
+    if (daily.temperature_2m_min[i] != null)
+      months[month].tempMin.push(daily.temperature_2m_min[i]);
+    if (daily.precipitation_sum[i] != null)
+      months[month].precip.push(daily.precipitation_sum[i]);
+  });
+
+  return months.map((m) => ({
+    avgHigh: m.tempMax.length
+      ? m.tempMax.reduce((a, b) => a + b, 0) / m.tempMax.length
+      : null,
+    avgLow: m.tempMin.length
+      ? m.tempMin.reduce((a, b) => a + b, 0) / m.tempMin.length
+      : null,
+    precip: m.precip.length ? m.precip.reduce((a, b) => a + b, 0) : null,
+  }));
 };

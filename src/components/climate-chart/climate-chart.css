@@ -55,7 +55,11 @@
   position: absolute;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, #5b9bd5, #e07b54);
+  background: linear-gradient(
+    to top,
+    var(--chart-temp-cool),
+    var(--chart-temp-warm)
+  );
   border-radius: 3px;
 }
 
@@ -89,7 +93,7 @@
 
 .climate-chart__precip-bar {
   width: 100%;
-  background: #5b9bd5;
+  background: var(--chart-temp-cool);
   opacity: 0.6;
   border-radius: 3px;
 }

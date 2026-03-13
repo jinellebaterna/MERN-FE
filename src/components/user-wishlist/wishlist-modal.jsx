@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../context/auth-context";
 import {
   addUserCountry,
@@ -8,13 +8,13 @@ import {
 } from "../../api/user";
 import {
   geocodeAddress,
-  fetchMonthlyClimate,
   fetchCountryInfo,
   fetchWeather,
   getBestMonths,
+  fetchMonthlyClimate,
 } from "../../api/weather";
 import { getFlagEmoji } from "../../utils/flags";
-import { WMO_CODES, PRIORITY_OPTIONS } from "../../data/data";
+import { WMO_CODES, PRIORITY_OPTIONS, CACHE_DURATIONS } from "../../data/data";
 import ClimateChart from "../climate-chart/climate-chart";
 
 const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
@@ -23,7 +23,6 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
 
   const [coords, setCoords] = useState(null);
   const [countryInfo, setCountryInfo] = useState(null);
-  const [bestMonths, setBestMonths] = useState(null);
   const [weather, setWeather] = useState(null);
   const [notesDraft, setNotesDraft] = useState(initialCountry.notes || "");
   const [priorityDraft, setPriorityDraft] = useState(
@@ -44,16 +43,20 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
     geocodeAddress(country.name)
       .then(async ({ lat, lon }) => {
         setCoords({ lat, lon });
-        const [climate, weatherData] = await Promise.all([
-          fetchMonthlyClimate(lat, lon),
-          fetchWeather(lat, lon).catch(() => null),
-        ]);
-        setBestMonths(getBestMonths(climate));
+        const weatherData = await fetchWeather(lat, lon).catch(() => null);
         setWeather(weatherData);
       })
       .catch(() => {})
       .finally(() => setInfoLoading(false));
   }, [country.code, country.name]);
+
+  const { data: climateData } = useQuery({
+    queryKey: ["climate", coords?.lat, coords?.lon],
+    queryFn: () => fetchMonthlyClimate(coords.lat, coords.lon),
+    enabled: !!coords,
+    staleTime: CACHE_DURATIONS.CLIMATE,
+  });
+  const bestMonths = climateData ? getBestMonths(climateData) : null;
 
   const removeMutation = useMutation({
     mutationFn: (code) =>
