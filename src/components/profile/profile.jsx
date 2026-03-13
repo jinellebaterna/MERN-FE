@@ -26,14 +26,12 @@ import "./profile.css";
 
 const Profile = () => {
   const auth = useContext(AuthContext);
-  const { theme, toggleTheme } = useContext(ThemeContext);
-
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
   const [tab, setTab] = useState("overview");
   const [followersTab, setFollowersTab] = useState("followers");
-
-  // Settings state
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -129,7 +127,6 @@ const Profile = () => {
       />
       {updateMutation.isPending && <LoadingSpinner asOverlay />}
 
-      {/* Page Tabs */}
       <div className="profile-page__tabs">
         <button
           className={`profile-page__tab${tab === "overview" ? " profile-page__tab--active" : ""}`}
