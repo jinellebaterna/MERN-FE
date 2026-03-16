@@ -500,3 +500,10 @@
   border-color: var(--light-gray);
   color: var(--text-color);
 }
+
+.traveler-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}

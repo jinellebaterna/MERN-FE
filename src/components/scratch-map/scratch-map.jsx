@@ -1,4 +1,4 @@
-import { useContext, useMemo, useEffect, useRef } from "react";
+import { useContext, useMemo, useEffect, useRef, useState } from "react";
 import { MapContainer, useMap } from "react-leaflet";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -13,13 +13,12 @@ import {
 } from "../../api/user";
 import { fetchWorldGeoJSON } from "../../api/countries";
 import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
+import useMapColors from "../../hook/use-map-colors.jsx";
 import "./scratch-map.css";
 
-const VISITED_COLOR = "var(--secondary-color)";
 const DEFAULT_COLOR = "#d1d5db";
-const WISHLIST_COLOR = "var(--accent-color)";
 
-const CountryLayer = ({ geoJSON, visitedCodes, wishlistCodes }) => {
+const CountryLayer = ({ geoJSON, visitedCodes, wishlistCodes, visitedColor, wishlistColor }) => {
   const map = useMap();
   const layerRef = useRef(null);
 
@@ -35,9 +34,9 @@ const CountryLayer = ({ geoJSON, visitedCodes, wishlistCodes }) => {
         const wishlisted = wishlistCodes.has(code);
         return {
           fillColor: visited
-            ? VISITED_COLOR
+            ? visitedColor
             : wishlisted
-              ? WISHLIST_COLOR
+              ? wishlistColor
               : DEFAULT_COLOR,
           fillOpacity: visited ? 0.75 : wishlisted ? 0.6 : 0.4,
           color: "#fff",
@@ -52,7 +51,7 @@ const CountryLayer = ({ geoJSON, visitedCodes, wishlistCodes }) => {
         layerRef.current = null;
       }
     };
-  }, [geoJSON, visitedCodes, wishlistCodes, map]);
+  }, [geoJSON, visitedCodes, wishlistCodes, visitedColor, wishlistColor, map]);
 
   return null;
 };
@@ -62,6 +61,8 @@ const ScratchMap = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const viewedUserId = searchParams.get("user") || auth.userId;
+  const [showColorPanel, setShowColorPanel] = useState(false);
+  const { visitedColor, wishlistColor, setVisitedColor, setWishlistColor, reset } = useMapColors();
 
   const isOwnMap = viewedUserId === auth.userId;
 
@@ -159,19 +160,63 @@ const ScratchMap = () => {
             geoJSON={geoJSON}
             visitedCodes={visitedCodes}
             wishlistCodes={wishlistCodes}
+            visitedColor={visitedColor}
+            wishlistColor={wishlistColor}
           />
         )}
       </MapContainer>
 
       {isOwnMap && (
-        <div className="scratch-map__legend">
-          <span className="scratch-map__legend-item scratch-map__legend-item--visited">
-            Visited
-          </span>
-          <span className="scratch-map__legend-item scratch-map__legend-item--wishlist">
-            Wishlist
-          </span>
-        </div>
+        <>
+          <button
+            className="scratch-map__palette-btn"
+            onClick={() => setShowColorPanel((v) => !v)}
+            title="Customize map colors"
+          >
+            🎨
+          </button>
+
+          {showColorPanel && (
+            <div className="scratch-map__color-panel">
+              <div className="scratch-map__color-row">
+                <span className="scratch-map__color-label">Visited</span>
+                <input
+                  type="color"
+                  value={visitedColor}
+                  onChange={(e) => setVisitedColor(e.target.value)}
+                  className="scratch-map__color-input"
+                />
+              </div>
+              <div className="scratch-map__color-row">
+                <span className="scratch-map__color-label">Wishlist</span>
+                <input
+                  type="color"
+                  value={wishlistColor}
+                  onChange={(e) => setWishlistColor(e.target.value)}
+                  className="scratch-map__color-input"
+                />
+              </div>
+              <button className="scratch-map__color-reset" onClick={reset}>
+                Reset
+              </button>
+            </div>
+          )}
+
+          <div className="scratch-map__legend">
+            <span
+              className="scratch-map__legend-item"
+              style={{ background: visitedColor }}
+            >
+              Visited
+            </span>
+            <span
+              className="scratch-map__legend-item"
+              style={{ background: wishlistColor }}
+            >
+              Wishlist
+            </span>
+          </div>
+        </>
       )}
     </div>
   );

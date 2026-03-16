@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../context/auth-context";
 import { fetchAllUsers } from "../../api/user";
 import { getFlagEmoji } from "../../utils/flags";
-import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import FollowersModal from "../followers-modal/followers-modal";
 import Avatar from "../shared/avatar/avatar";
 import useFollowMutation from "../../hook/use-follow-mutation";
+import SkeletonCard from "../shared/skeleton/SkeletonCard";
 
 const HomeLoggedIn = () => {
   const auth = useContext(AuthContext);
@@ -71,14 +71,14 @@ const HomeLoggedIn = () => {
         />
       </div>
 
-      {isLoading && <LoadingSpinner asOverlay />}
-
       {!isLoading && filtered.length === 0 && (
         <p className="home__empty">No travelers found.</p>
       )}
 
       <div className="home__grid">
-        {filtered.map((user) => {
+        {isLoading
+          ? <SkeletonCard type="traveler" />
+          : filtered.map((user) => {
           const isFollowing = user.followers?.includes(auth.userId);
           const coverage = (
             ((user.countries?.length || 0) / 195) *
@@ -149,6 +149,7 @@ const HomeLoggedIn = () => {
           );
         })}
       </div>
+
       <FollowersModal
         show={!!modalUser}
         targetUser={modalUser}

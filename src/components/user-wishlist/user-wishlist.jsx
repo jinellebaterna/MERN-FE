@@ -13,10 +13,10 @@ import useSortableList from "../../hook/use-sortable-list";
 import { AuthContext } from "../context/auth-context";
 import { getFlagEmoji } from "../../utils/flags";
 import { formatDate } from "../../utils/formatDate";
-import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import useSortableItem from "../../hook/use-sortable-item";
 import useErrorHandler from "../../hook/use-error-handler";
+import SkeletonCard from "../shared/skeleton/SkeletonCard";
 import WishlistModal from "./wishlist-modal";
 
 import "./user-wishlist.css";
@@ -103,8 +103,19 @@ const UserWishlist = () => {
     reorderMutation,
   });
 
-  if (isLoading) return <LoadingSpinner asOverlay />;
   if (!canEdit) return null;
+
+  if (isLoading)
+    return (
+      <div className="user-wishlist">
+        <div className="user-wishlist__header">
+          <h2>My Bucket List</h2>
+        </div>
+        <div className="user-wishlist__grid">
+          <SkeletonCard type="wishlist" />
+        </div>
+      </div>
+    );
 
   return (
     <div className="user-wishlist">

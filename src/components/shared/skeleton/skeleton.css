@@ -1,0 +1,74 @@
+/* Country card skeleton */
+.country-card--skeleton {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
+}
+
+.country-card__flag-skel {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.country-card__name-skel {
+  width: 70%;
+  height: 0.75rem;
+}
+
+/* Wishlist card skeleton */
+.wishlist-card--skeleton {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 0.75rem;
+}
+
+.wishlist-card__flag-skel {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.wishlist-card__name-skel {
+  width: 75%;
+  height: 0.75rem;
+}
+
+.wishlist-card__date-skel {
+  width: 50%;
+  height: 0.6rem;
+}
+
+/* Traveler card skeleton */
+.traveler-card--skeleton {
+  pointer-events: none;
+  align-items: flex-start;
+}
+
+.traveler-card__avatar-skel {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.traveler-card__flags-skel {
+  width: 120px;
+  height: 0.85rem;
+}
+
+.traveler-card__name-skel {
+  width: 100px;
+  height: 0.85rem;
+}
+
+.traveler-card__meta-skel {
+  width: 160px;
+  height: 0.75rem;
+}

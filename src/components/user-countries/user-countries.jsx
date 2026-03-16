@@ -17,12 +17,12 @@ import {
 import { getFlagEmoji } from "../../utils/flags";
 import { formatDate } from "../../utils/formatDate";
 import CountrySearch from "../country-search/country-search";
-import LoadingSpinner from "../shared/loadingSpinner/loadingSpinner";
 import ErrorModal from "../shared/errorModal/errorModal";
 import ContinentStats from "../continent-stats/continent-stats";
 import CountryModal from "./country-modal";
 import useSortableItem from "../../hook/use-sortable-item";
 import useErrorHandler from "../../hook/use-error-handler";
+import SkeletonCard from "../shared/skeleton/SkeletonCard";
 import { COUNTRIES } from "../../data/data";
 import "./user-countries.css";
 
@@ -124,7 +124,17 @@ const UserCountries = () => {
       })
     : localCountries;
 
-  if (isLoading) return <LoadingSpinner asOverlay />;
+  if (isLoading)
+    return (
+      <div className="user-countries">
+        <div className="user-countries__header">
+          <h2>My Countries</h2>
+        </div>
+        <div className="user-countries__grid">
+          <SkeletonCard type="country" />
+        </div>
+      </div>
+    );
 
   const sortedForTimeline = [...countries].sort(
     (a, b) =>
