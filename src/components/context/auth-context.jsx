@@ -6,6 +6,7 @@ export const AuthContext = createContext({
   userId: null,
   name: null,
   image: null,
+  passportCountry: null,
   login: () => {},
   logout: () => {},
   updateProfile: () => {},

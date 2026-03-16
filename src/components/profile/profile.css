@@ -203,6 +203,35 @@
   margin: 0;
 }
 
+.profile-settings__passport {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.profile-settings__passport-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.profile-settings__passport-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  background: var(--card-background);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.profile-settings__passport-hint {
+  font-size: 0.78rem;
+  color: var(--text-color);
+  opacity: 0.6;
+}
+
 .profile-settings__success {
   color: var(--color-success);
   font-size: 0.85rem;

@@ -37,7 +37,7 @@ const Auth = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      auth.login(data.userId, data.token, null, data.name, data.image);
+      auth.login(data.userId, data.token, null, data.name, data.image, data.passportCountry);
     },
   });
 
@@ -45,7 +45,7 @@ const Auth = () => {
     mutationFn: signupUser,
     onSuccess: (data) => {
       localStorage.setItem("wayfarer_new_user", "true");
-      auth.login(data.userId, data.token, null, data.name, data.image);
+      auth.login(data.userId, data.token, null, data.name, data.image, data.passportCountry);
     },
   });
 

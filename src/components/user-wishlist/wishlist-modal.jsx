@@ -12,10 +12,33 @@ import {
   fetchWeather,
   getBestMonths,
   fetchMonthlyClimate,
+  fetchVisaRequirement,
 } from "../../api/weather";
 import { getFlagEmoji } from "../../utils/flags";
-import { WMO_CODES, PRIORITY_OPTIONS, CACHE_DURATIONS } from "../../data/data";
+import { WMO_CODES, PRIORITY_OPTIONS, CACHE_DURATIONS, COUNTRIES } from "../../data/data";
 import ClimateChart from "../climate-chart/climate-chart";
+
+const buildFlightLinks = (countryName, countryCode) => ({
+  google: `https://www.google.com/travel/flights?q=flights+to+${encodeURIComponent(countryName)}`,
+  skyscanner: `https://www.skyscanner.com/flights-to/${countryCode.toLowerCase()}/`,
+});
+
+const VISA_BADGE = {
+  VF: { label: "Visa Free", cls: "vf" },
+  VOA: { label: "Visa on Arrival", cls: "voa" },
+  ETA: { label: "eVisa", cls: "eta" },
+  VR: { label: "Visa Required", cls: "vr" },
+  NA: { label: "No Admission", cls: "na" },
+  citizen: { label: "Your Country", cls: "vf" },
+};
+
+const getVisaBadge = (req) => {
+  if (!req) return null;
+  if (VISA_BADGE[req]) return VISA_BADGE[req];
+  const n = Number(req);
+  if (!isNaN(n) && n > 0) return { label: `Visa Free · ${n} days`, cls: "vf" };
+  return { label: req, cls: "vf" };
+};
 
 const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
   const auth = useContext(AuthContext);
@@ -57,6 +80,18 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
     staleTime: CACHE_DURATIONS.CLIMATE,
   });
   const bestMonths = climateData ? getBestMonths(climateData) : null;
+
+  const passportName = auth.passportCountry
+    ? COUNTRIES.find((c) => c.code === auth.passportCountry)?.name ?? null
+    : null;
+
+  const { data: visaReq, isLoading: visaLoading } = useQuery({
+    queryKey: ["visa", passportName, country.name],
+    queryFn: () => fetchVisaRequirement(passportName, country.name),
+    enabled: !!passportName,
+    staleTime: Infinity,
+  });
+  const visaBadge = passportName ? getVisaBadge(visaReq) : null;
 
   const removeMutation = useMutation({
     mutationFn: (code) =>
@@ -131,6 +166,34 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
         ) : null}
 
         <div className="country-modal__body">
+          {(() => {
+            const { google, skyscanner } = buildFlightLinks(country.name, country.code);
+            return (
+              <div className="wishlist-modal__links">
+                <span className="wishlist-modal__links-label">✈️ Flights</span>
+                <a href={google} target="_blank" rel="noopener noreferrer" className="wishlist-modal__link-btn">
+                  Google Flights
+                </a>
+                <a href={skyscanner} target="_blank" rel="noopener noreferrer" className="wishlist-modal__link-btn">
+                  Skyscanner
+                </a>
+                <span className="wishlist-modal__links-divider" />
+                <span className="wishlist-modal__links-label">🛂 Visa</span>
+                {!auth.passportCountry ? (
+                  <span className="wishlist-modal__link-hint">Set passport in profile</span>
+                ) : visaLoading ? (
+                  <span className="wishlist-modal__visa-loading" />
+                ) : visaBadge ? (
+                  <span className={`wishlist-modal__visa-badge wishlist-modal__visa-badge--${visaBadge.cls}`}>
+                    {visaBadge.label}
+                  </span>
+                ) : (
+                  <span className="wishlist-modal__link-hint">No data</span>
+                )}
+              </div>
+            );
+          })()}
+
           <ClimateChart lat={coords?.lat} lon={coords?.lon} />
 
           {canEdit && savedIndicator && (

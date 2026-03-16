@@ -12,6 +12,7 @@ import {
   changePassword,
   deleteUser,
 } from "../../api/user";
+import { COUNTRIES } from "../../data/data";
 import { useAuthMutation } from "../../hook/use-auth-mutation";
 import useFollowMutation from "../../hook/use-follow-mutation";
 import { useForm } from "../../hook/form-hook";
@@ -37,6 +38,7 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [pwSuccessMsg, setPwSuccessMsg] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [passportDraft, setPassportDraft] = useState(auth.passportCountry || "");
 
   const [formState, inputHandler, setFormData] = useForm(
     { name: { value: "", isValid: false } },
@@ -74,7 +76,7 @@ const Profile = () => {
   const updateMutation = useAuthMutation({
     mutationFn: updateUser,
     onSuccess: (data) => {
-      auth.updateProfile(data.user.name, data.user.image);
+      auth.updateProfile(data.user.name, data.user.image, data.user.passportCountry);
       queryClient.invalidateQueries(["user", auth.userId]);
     },
   });
@@ -250,6 +252,7 @@ const Profile = () => {
                 userData: {
                   name: formState.inputs.name.value,
                   image: selectedImage,
+                  passportCountry: passportDraft || null,
                 },
                 token: auth.token,
               });
@@ -274,6 +277,26 @@ const Profile = () => {
               initialValue={formState.inputs.name.value}
               initialValid={formState.inputs.name.isValid}
             />
+            <div className="profile-settings__passport">
+              <label className="profile-settings__passport-label">🛂 Passport Country</label>
+              <select
+                className="profile-settings__passport-select"
+                value={passportDraft}
+                onChange={(e) => setPassportDraft(e.target.value)}
+              >
+                <option value="">— Not set —</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code}>{c.name}</option>
+                ))}
+              </select>
+              <span className="profile-settings__passport-hint">Used to show visa requirements on your wishlist.</span>
+            </div>
+            <Button
+              type="submit"
+              disabled={!formState.isValid || updateMutation.isPending}
+            >
+              {updateMutation.isPending ? "SAVING..." : "SAVE CHANGES"}
+            </Button>
           </form>
 
           <hr className="profile-settings__divider" />

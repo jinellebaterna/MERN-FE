@@ -66,11 +66,17 @@ const App = () => {
     return data?.image || null;
   });
 
-  const login = useCallback((uid, token, expirationDate, name, image) => {
+  const [passportCountry, setPassportCountry] = useState(() => {
+    const data = getStoredData();
+    return data?.passportCountry || null;
+  });
+
+  const login = useCallback((uid, token, expirationDate, name, image, passportCountry) => {
     setToken(token);
     setUserId(uid);
     setName(name);
     setImage(image);
+    setPassportCountry(passportCountry || null);
     const tokenExpiryDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(tokenExpiryDate);
@@ -82,6 +88,7 @@ const App = () => {
         expiration: tokenExpiryDate.toISOString(),
         name: name,
         image: image,
+        passportCountry: passportCountry || null,
       })
     );
   }, []);
@@ -94,14 +101,15 @@ const App = () => {
     queryClient.clear();
   }, []);
 
-  const updateProfile = useCallback((name, image) => {
+  const updateProfile = useCallback((name, image, passportCountry) => {
     setName(name);
     setImage(image);
+    setPassportCountry(passportCountry ?? null);
     const storedData = JSON.parse(localStorage.getItem("userData"));
     if (storedData) {
       localStorage.setItem(
         "userData",
-        JSON.stringify({ ...storedData, name, image })
+        JSON.stringify({ ...storedData, name, image, passportCountry: passportCountry ?? null })
       );
     }
   }, []);
@@ -131,6 +139,7 @@ const App = () => {
             userId: userId,
             name: name,
             image: image,
+            passportCountry: passportCountry,
             login: login,
             logout: logout,
             updateProfile: updateProfile,

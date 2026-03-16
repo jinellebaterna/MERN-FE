@@ -1,4 +1,4 @@
-import { MONTHS } from "../data/data";
+import { MONTHS, IMG_BASE } from "../data/data";
 
 export const geocodeAddress = async (address) => {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&addressdetails=1`;
@@ -30,6 +30,15 @@ export const fetchMonthlyClimate = async (lat, lon) => {
   if (!res.ok) throw new Error("Climate fetch failed");
   const data = await res.json();
   return data.daily;
+};
+
+export const fetchVisaRequirement = async (passportName, destName) => {
+  const res = await fetch(
+    `${IMG_BASE}/api/visa/${encodeURIComponent(passportName)}/${encodeURIComponent(destName)}`
+  );
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.requirement ?? null;
 };
 
 export const fetchCountryInfo = async (code) => {

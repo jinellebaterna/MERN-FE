@@ -15,7 +15,11 @@ export const updateUser = async ({ userId, userData, token }) => {
   return apiFetch(`/api/users/${userId}`, {
     method: "PATCH",
     token,
-    json: { name: userData.name, ...(imagePath && { image: imagePath }) },
+    json: {
+      name: userData.name,
+      ...(imagePath && { image: imagePath }),
+      ...(userData.passportCountry !== undefined && { passportCountry: userData.passportCountry }),
+    },
   });
 };
 
