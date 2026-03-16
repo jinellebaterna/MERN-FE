@@ -47,9 +47,19 @@ export const fetchCountryInfo = async (code) => {
   );
   if (!res.ok) return null;
   const data = await res.json();
-  const currency = Object.values(data.currencies || {})[0]?.symbol || null;
+  const currencyEntry = Object.entries(data.currencies || {})[0];
+  const currencyCode = currencyEntry?.[0] || null;
+  const currency = currencyEntry?.[1]?.symbol || null;
   const language = Object.values(data.languages || {})[0] || null;
-  return { currency, language };
+  return { currency, currencyCode, language };
+};
+
+export const fetchExchangeRate = async (fromCode, toCode) => {
+  if (!fromCode || !toCode || fromCode === toCode) return 1;
+  const res = await fetch(`https://open.er-api.com/v6/latest/${fromCode}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.rates?.[toCode] ?? null;
 };
 
 export const getBestMonths = (dailyData) => {

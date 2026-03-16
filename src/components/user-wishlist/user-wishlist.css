@@ -100,6 +100,20 @@
   text-align: center;
 }
 
+/* Wishlist body override — gap handled by section padding */
+.country-modal__body--wishlist {
+  gap: 0;
+}
+
+.wishlist-modal__section {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.wishlist-modal__section:last-child {
+  border-bottom: none;
+}
+
 /* Info strip */
 .wishlist-modal__info-strip {
   display: grid;
@@ -114,6 +128,12 @@
 
 /* Priority + Year row */
 .wishlist-modal__planning {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wishlist-modal__fields-row {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
@@ -226,8 +246,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--light-gray);
 }
 
 .wishlist-modal__links-label {
@@ -244,6 +262,12 @@
   height: 1.2rem;
   background: var(--light-gray);
   margin: 0 0.25rem;
+}
+
+@media (max-width: 480px) {
+  .wishlist-modal__links-divider {
+    display: none;
+  }
 }
 
 .wishlist-modal__link-btn {
@@ -306,6 +330,66 @@
 .wishlist-modal__visa-badge--na {
   background: #f3f4f6;
   color: #6b7280;
+}
+
+/* Currency converter */
+.wishlist-modal__converter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.wishlist-modal__converter-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.wishlist-modal__converter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wishlist-modal__converter-input {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  background: var(--card-background);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.wishlist-modal__converter-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.wishlist-modal__converter-code {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.wishlist-modal__converter-arrow {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.4;
+}
+
+.wishlist-modal__converter-result {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 60px;
 }
 
 .wishlist-modal__visa-loading {

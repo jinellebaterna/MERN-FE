@@ -13,6 +13,7 @@ import {
   getBestMonths,
   fetchMonthlyClimate,
   fetchVisaRequirement,
+  fetchExchangeRate,
 } from "../../api/weather";
 import { getFlagEmoji } from "../../utils/flags";
 import { WMO_CODES, PRIORITY_OPTIONS, CACHE_DURATIONS, COUNTRIES } from "../../data/data";
@@ -93,6 +94,30 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
   });
   const visaBadge = passportName ? getVisaBadge(visaReq) : null;
 
+  const [converterAmount, setConverterAmount] = useState("100");
+
+  const { data: homeInfo } = useQuery({
+    queryKey: ["countryInfo", auth.passportCountry],
+    queryFn: () => fetchCountryInfo(auth.passportCountry),
+    enabled: !!auth.passportCountry,
+    staleTime: CACHE_DURATIONS.CLIMATE,
+  });
+
+  const homeCurrencyCode = homeInfo?.currencyCode ?? null;
+  const destCurrencyCode = countryInfo?.currencyCode ?? null;
+
+  const { data: exchangeRate } = useQuery({
+    queryKey: ["exchangeRate", homeCurrencyCode, destCurrencyCode],
+    queryFn: () => fetchExchangeRate(homeCurrencyCode, destCurrencyCode),
+    enabled: !!homeCurrencyCode && !!destCurrencyCode,
+    staleTime: 60 * 60 * 1000, // 1 hour
+  });
+
+  const convertedAmount =
+    exchangeRate != null && converterAmount !== ""
+      ? (parseFloat(converterAmount) * exchangeRate).toFixed(2)
+      : null;
+
   const removeMutation = useMutation({
     mutationFn: (code) =>
       removeFromWishlist({ userId: auth.userId, code, token: auth.token }),
@@ -165,11 +190,11 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
           </div>
         ) : null}
 
-        <div className="country-modal__body">
+        <div className="country-modal__body country-modal__body--wishlist">
           {(() => {
             const { google, skyscanner } = buildFlightLinks(country.name, country.code);
             return (
-              <div className="wishlist-modal__links">
+              <div className="wishlist-modal__section wishlist-modal__links">
                 <span className="wishlist-modal__links-label">✈️ Flights</span>
                 <a href={google} target="_blank" rel="noopener noreferrer" className="wishlist-modal__link-btn">
                   Google Flights
@@ -194,62 +219,86 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
             );
           })()}
 
-          <ClimateChart lat={coords?.lat} lon={coords?.lon} />
-
-          {canEdit && savedIndicator && (
-            <span className="wishlist-modal__saved">Saved ✓</span>
-          )}
-
-          {canEdit && (
-            <div className="wishlist-modal__planning">
-              <div className="wishlist-modal__field">
-                <label>🔥 Priority</label>
-                <select
-                  value={priorityDraft}
-                  onChange={(e) => {
-                    setPriorityDraft(e.target.value);
-                    detailsMutation.mutate({
-                      code: country.code,
-                      notes: notesDraft,
-                      priority: e.target.value,
-                      targetYear: targetYearDraft
-                        ? Number(targetYearDraft)
-                        : null,
-                    });
-                  }}
-                >
-                  {PRIORITY_OPTIONS.map((option) => (
-                    <option value={option} key={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="wishlist-modal__field">
-                <label>🎯 Target Year</label>
+          {homeCurrencyCode && destCurrencyCode && homeCurrencyCode !== destCurrencyCode && (
+            <div className="wishlist-modal__section wishlist-modal__converter">
+              <span className="wishlist-modal__converter-label">💱 Currency</span>
+              <div className="wishlist-modal__converter-row">
                 <input
+                  className="wishlist-modal__converter-input"
                   type="number"
-                  value={targetYearDraft}
-                  min={new Date().getFullYear()}
-                  max={2100}
-                  placeholder="e.g. 2027"
-                  onChange={(e) => setTargetYearDraft(e.target.value)}
-                  onBlur={() =>
-                    detailsMutation.mutate({
-                      code: country.code,
-                      notes: notesDraft,
-                      priority: priorityDraft,
-                      targetYear: targetYearDraft
-                        ? Number(targetYearDraft)
-                        : null,
-                    })
-                  }
+                  min="0"
+                  value={converterAmount}
+                  onChange={(e) => setConverterAmount(e.target.value)}
                 />
+                <span className="wishlist-modal__converter-code">{homeCurrencyCode}</span>
+                <span className="wishlist-modal__converter-arrow">→</span>
+                <span className="wishlist-modal__converter-result">
+                  {convertedAmount !== null ? convertedAmount : "—"}
+                </span>
+                <span className="wishlist-modal__converter-code">{destCurrencyCode}</span>
               </div>
             </div>
           )}
 
-          <div className="country-modal__notes">
+          <div className="wishlist-modal__section">
+            <ClimateChart lat={coords?.lat} lon={coords?.lon} />
+          </div>
+
+          {canEdit && (
+            <div className="wishlist-modal__section wishlist-modal__planning">
+              {savedIndicator && (
+                <span className="wishlist-modal__saved">Saved ✓</span>
+              )}
+              <div className="wishlist-modal__fields-row">
+                <div className="wishlist-modal__field">
+                  <label>🔥 Priority</label>
+                  <select
+                    value={priorityDraft}
+                    onChange={(e) => {
+                      setPriorityDraft(e.target.value);
+                      detailsMutation.mutate({
+                        code: country.code,
+                        notes: notesDraft,
+                        priority: e.target.value,
+                        targetYear: targetYearDraft
+                          ? Number(targetYearDraft)
+                          : null,
+                      });
+                    }}
+                  >
+                    {PRIORITY_OPTIONS.map((option) => (
+                      <option value={option} key={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="wishlist-modal__field">
+                  <label>🎯 Target Year</label>
+                  <input
+                    type="number"
+                    value={targetYearDraft}
+                    min={new Date().getFullYear()}
+                    max={2100}
+                    placeholder="e.g. 2027"
+                    onChange={(e) => setTargetYearDraft(e.target.value)}
+                    onBlur={() =>
+                      detailsMutation.mutate({
+                        code: country.code,
+                        notes: notesDraft,
+                        priority: priorityDraft,
+                        targetYear: targetYearDraft
+                          ? Number(targetYearDraft)
+                          : null,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="wishlist-modal__section country-modal__notes">
             <h4>📝 Notes</h4>
             {canEdit ? (
               <textarea
