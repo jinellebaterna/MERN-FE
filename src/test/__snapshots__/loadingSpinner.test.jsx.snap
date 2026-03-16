@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoadingSpinner snapshots > matches snapshot with overlay 1`] = `
+<div>
+  <div
+    class="loading-spinner__overlay"
+  >
+    <div
+      class="lds-dual-ring"
+    />
+  </div>
+</div>
+`;
+
+exports[`LoadingSpinner snapshots > matches snapshot without overlay 1`] = `
+<div>
+  <div
+    class="undefined"
+  >
+    <div
+      class="lds-dual-ring"
+    />
+  </div>
+</div>
+`;

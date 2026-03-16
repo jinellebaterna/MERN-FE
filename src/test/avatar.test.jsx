@@ -59,3 +59,25 @@ describe("Avatar", () => {
     expect(placeholder).toHaveStyle({ width: "60px", height: "60px" });
   });
 });
+
+describe("Avatar snapshots", () => {
+  // Captures the placeholder state — initial letter, default size.
+  it("matches snapshot for placeholder avatar", () => {
+    const { container } = render(<Avatar name="Jinelle" />);
+    expect(container).toMatchSnapshot();
+  });
+
+  // Captures the image state — img element with full src URL.
+  it("matches snapshot for image avatar", () => {
+    const { container } = render(
+      <Avatar image="uploads/photo.jpg" name="Jinelle" />
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  // Captures the clickable state — verifies the --clickable class is in the snapshot.
+  it("matches snapshot for clickable avatar", () => {
+    const { container } = render(<Avatar name="Jinelle" onClick={() => {}} />);
+    expect(container).toMatchSnapshot();
+  });
+});

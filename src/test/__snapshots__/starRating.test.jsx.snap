@@ -1,0 +1,138 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StarRating snapshots > matches snapshot in readOnly mode 1`] = `
+<div>
+  <div
+    class="star-rating"
+  >
+    <button
+      aria-label="1 star"
+      class="star-rating__star star-rating__star--filled"
+      disabled=""
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="2 star"
+      class="star-rating__star star-rating__star--filled"
+      disabled=""
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="3 star"
+      class="star-rating__star star-rating__star--filled"
+      disabled=""
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="4 star"
+      class="star-rating__star star-rating__star--filled"
+      disabled=""
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="5 star"
+      class="star-rating__star "
+      disabled=""
+      type="button"
+    >
+      ★
+    </button>
+  </div>
+</div>
+`;
+
+exports[`StarRating snapshots > matches snapshot with value 0 1`] = `
+<div>
+  <div
+    class="star-rating"
+  >
+    <button
+      aria-label="1 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="2 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="3 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="4 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="5 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+  </div>
+</div>
+`;
+
+exports[`StarRating snapshots > matches snapshot with value 3 1`] = `
+<div>
+  <div
+    class="star-rating"
+  >
+    <button
+      aria-label="1 star"
+      class="star-rating__star star-rating__star--filled"
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="2 star"
+      class="star-rating__star star-rating__star--filled"
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="3 star"
+      class="star-rating__star star-rating__star--filled"
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="4 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+    <button
+      aria-label="5 star"
+      class="star-rating__star "
+      type="button"
+    >
+      ★
+    </button>
+  </div>
+</div>
+`;

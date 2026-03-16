@@ -63,3 +63,27 @@ describe("StarRating", () => {
     });
   });
 });
+
+describe("StarRating snapshots", () => {
+  // Captures the full rendered output with no stars filled.
+  // Fails if the HTML structure or class names change unexpectedly.
+  it("matches snapshot with value 0", () => {
+    const { container } = render(<StarRating value={0} onChange={vi.fn()} />);
+    expect(container).toMatchSnapshot();
+  });
+
+  // Captures the rendered output with 3 stars filled.
+  // Detects regressions in how the filled class is applied.
+  it("matches snapshot with value 3", () => {
+    const { container } = render(<StarRating value={3} onChange={vi.fn()} />);
+    expect(container).toMatchSnapshot();
+  });
+
+  // Captures the disabled/readOnly state.
+  it("matches snapshot in readOnly mode", () => {
+    const { container } = render(
+      <StarRating value={4} onChange={vi.fn()} readOnly />
+    );
+    expect(container).toMatchSnapshot();
+  });
+});

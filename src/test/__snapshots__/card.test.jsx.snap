@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card snapshots > matches snapshot with children 1`] = `
+<div>
+  <div
+    class="card "
+  >
+    Hello
+  </div>
+</div>
+`;
+
+exports[`Card snapshots > matches snapshot with custom className 1`] = `
+<div>
+  <div
+    class="card my-custom-card"
+  >
+    Content
+  </div>
+</div>
+`;
