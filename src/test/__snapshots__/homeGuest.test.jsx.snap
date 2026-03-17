@@ -1,0 +1,143 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HomeGuest > matches snapshot 1`] = `
+<div>
+  <div
+    class="home home--guest"
+  >
+    <div
+      class="home__hero"
+    >
+      <h1>
+        Map Your Journey Across the World
+      </h1>
+      <p>
+        Track every country you've visited, capture your stories, and connect with travelers around the world.
+      </p>
+      <div
+        class="home__hero-actions"
+      >
+        <button
+          class="home__hero-btn home__hero-btn--primary"
+        >
+          Get Started
+        </button>
+      </div>
+    </div>
+    <div
+      class="home__features"
+    >
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          🗺️ 
+        </div>
+        <h3>
+          Interactive Map
+        </h3>
+        <p>
+          Visualize every country you've visited on your personal world map.
+        </p>
+      </div>
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          📍
+        </div>
+        <h3>
+          Pin Cities
+        </h3>
+        <p>
+          Mark cities and destinations you explored in each country.
+        </p>
+      </div>
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          📷
+        </div>
+        <h3>
+          Photo Memories
+        </h3>
+        <p>
+          Upload photos from your trips and create a travel gallery.
+        </p>
+      </div>
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          ✈️ 
+        </div>
+        <h3>
+          Bucket List
+        </h3>
+        <p>
+          Track countries you dream of visiting next.
+        </p>
+      </div>
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          🌍
+        </div>
+        <h3>
+          Follow Travelers
+        </h3>
+        <p>
+          Follow other travelers, view their maps and country stories.
+        </p>
+      </div>
+      <div
+        class="home__feature"
+      >
+        <div
+          class="home__feature-icon"
+        >
+          📖
+        </div>
+        <h3>
+          Travel Stories
+        </h3>
+        <p>
+          Write about your experiences and keep a journal for each country.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="home__cta"
+  >
+    <h2>
+      Start Your Wayfarer Journey
+    </h2>
+    <p>
+      Track Every Country. Remember Every Story.
+    </p>
+    <button
+      class="home__hero-btn home__hero-btn--primary"
+    >
+      Create Free Account
+    </button>
+  </div>
+  <footer
+    class="home__footer"
+  >
+    © 2026 Wayfarer — Track Every Country. Remember Every Story.
+  </footer>
+</div>
+`;

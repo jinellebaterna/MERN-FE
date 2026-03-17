@@ -1,0 +1,59 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SkeletonCard > matches snapshot for type country 1`] = `
+<div>
+  <div
+    class="country-card country-card--skeleton"
+  >
+    <div
+      class="skeleton-block country-card__flag-skel"
+    />
+    <div
+      class="skeleton-block country-card__name-skel"
+    />
+  </div>
+</div>
+`;
+
+exports[`SkeletonCard > matches snapshot for type traveler 1`] = `
+<div>
+  <div
+    class="traveler-card traveler-card--skeleton"
+  >
+    <div
+      class="skeleton-block traveler-card__avatar-skel"
+    />
+    <div
+      class="traveler-card__info"
+    >
+      <div
+        class="skeleton-block traveler-card__flags-skel"
+      />
+      <div
+        class="skeleton-block traveler-card__name-skel"
+      />
+      <div
+        class="skeleton-block traveler-card__meta-skel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SkeletonCard > matches snapshot for type wishlist 1`] = `
+<div>
+  <div
+    class="wishlist-card wishlist-card--skeleton"
+  >
+    <div
+      class="skeleton-block wishlist-card__flag-skel"
+    />
+    <div
+      class="skeleton-block wishlist-card__name-skel"
+    />
+    <div
+      class="skeleton-block wishlist-card__date-skel"
+    />
+  </div>
+</div>
+`;

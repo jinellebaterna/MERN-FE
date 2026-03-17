@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SideDrawer > matches snapshot when closed 1`] = `<div />`;
+
+exports[`SideDrawer > matches snapshot when open 1`] = `
+<div>
+  <aside
+    class="side-drawer"
+  >
+    <nav>
+      Links
+    </nav>
+  </aside>
+</div>
+`;

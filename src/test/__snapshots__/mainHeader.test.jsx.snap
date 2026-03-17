@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MainHeader > matches snapshot with children 1`] = `
+<div>
+  <header
+    class="main-header"
+  >
+    <nav>
+      Navigation
+    </nav>
+  </header>
+</div>
+`;
+
+exports[`MainHeader > matches snapshot without children 1`] = `
+<div>
+  <header
+    class="main-header"
+  />
+</div>
+`;

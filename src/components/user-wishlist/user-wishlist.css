@@ -393,6 +393,22 @@
   min-width: 60px;
 }
 
+/* Advisory badge */
+.wishlist-modal__advisory-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.wishlist-modal__advisory-badge--low    { background: #d4edda; color: #155724; }
+.wishlist-modal__advisory-badge--medium { background: #fff3cd; color: #856404; }
+.wishlist-modal__advisory-badge--high   { background: #ffe0b2; color: #7f4600; }
+.wishlist-modal__advisory-badge--extreme { background: #f8d7da; color: #721c24; }
+
 .wishlist-modal__visa-loading {
   display: inline-block;
   width: 80px;

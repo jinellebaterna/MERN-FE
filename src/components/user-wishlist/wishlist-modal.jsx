@@ -14,6 +14,7 @@ import {
   fetchMonthlyClimate,
   fetchVisaRequirement,
   fetchExchangeRate,
+  fetchTravelAdvisory,
 } from "../../api/weather";
 import { getFlagEmoji } from "../../utils/flags";
 import { WMO_CODES, PRIORITY_OPTIONS, CACHE_DURATIONS, COUNTRIES } from "../../data/data";
@@ -31,6 +32,15 @@ const VISA_BADGE = {
   VR: { label: "Visa Required", cls: "vr" },
   NA: { label: "No Admission", cls: "na" },
   citizen: { label: "Your Country", cls: "vf" },
+};
+
+const getAdvisoryBadge = (advisory) => {
+  if (!advisory) return null;
+  const score = advisory.score;
+  if (score <= 2.0) return { label: `${score} Normal precautions`, cls: "low" };
+  if (score <= 3.0) return { label: `${score} Exercise caution`, cls: "medium" };
+  if (score <= 4.0) return { label: `${score} Avoid non-essential travel`, cls: "high" };
+  return { label: `${score} Avoid all travel`, cls: "extreme" };
 };
 
 const getVisaBadge = (req) => {
@@ -93,6 +103,14 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
     staleTime: Infinity,
   });
   const visaBadge = passportName ? getVisaBadge(visaReq) : null;
+
+  const { data: advisoryData, isLoading: advisoryLoading, isError: advisoryError } = useQuery({
+    queryKey: ["travelAdvisory", country.code],
+    queryFn: () => fetchTravelAdvisory(country.code),
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 2,
+  });
+  const advisoryBadge = advisoryData ? getAdvisoryBadge(advisoryData) : null;
 
   const [converterAmount, setConverterAmount] = useState("100");
 
@@ -212,6 +230,19 @@ const WishlistModal = ({ country: initialCountry, canEdit, onClose }) => {
                   <span className={`wishlist-modal__visa-badge wishlist-modal__visa-badge--${visaBadge.cls}`}>
                     {visaBadge.label}
                   </span>
+                ) : (
+                  <span className="wishlist-modal__link-hint">No data</span>
+                )}
+                <span className="wishlist-modal__links-divider" />
+                <span className="wishlist-modal__links-label">⚠️ Safety</span>
+                {advisoryLoading ? (
+                  <span className="wishlist-modal__visa-loading" />
+                ) : advisoryBadge ? (
+                  <span className={`wishlist-modal__advisory-badge wishlist-modal__advisory-badge--${advisoryBadge.cls}`}>
+                    {advisoryBadge.label}
+                  </span>
+                ) : advisoryError ? (
+                  <span className="wishlist-modal__link-hint">Unavailable</span>
                 ) : (
                   <span className="wishlist-modal__link-hint">No data</span>
                 )}

@@ -25,7 +25,7 @@ describe("fetchCountryInfo", () => {
     });
 
     const result = await fetchCountryInfo("NO");
-    expect(result).toEqual({ currency: "kr", language: "Norwegian Nynorsk" });
+    expect(result).toEqual({ currency: "kr", currencyCode: "NOK", language: "Norwegian Nynorsk" });
   });
 
   // When the API response has no currencies or languages (empty objects),
@@ -37,7 +37,7 @@ describe("fetchCountryInfo", () => {
     });
 
     const result = await fetchCountryInfo("XX");
-    expect(result).toEqual({ currency: null, language: null });
+    expect(result).toEqual({ currency: null, currencyCode: null, language: null });
   });
 
   // When the currency entry exists but has no symbol field,

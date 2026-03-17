@@ -41,6 +41,13 @@ export const fetchVisaRequirement = async (passportName, destName) => {
   return data.requirement ?? null;
 };
 
+export const fetchTravelAdvisory = async (countryCode) => {
+  const res = await fetch(`${IMG_BASE}/api/travel-advisory`);
+  if (!res.ok) throw new Error(`Advisory API error: ${res.status}`);
+  const data = await res.json();
+  return data.data?.[countryCode.toUpperCase()]?.advisory ?? null;
+};
+
 export const fetchCountryInfo = async (code) => {
   const res = await fetch(
     `https://restcountries.com/v3.1/alpha/${code}?fields=currencies,languages`
